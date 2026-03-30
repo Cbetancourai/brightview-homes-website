@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Management — Coming Soon — Brightview Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; min-height: 100vh; }
+
+:root {
+  --navy:       #1E3A52;
+  --navy-dark:  #152B3E;
+  --navy-mid:   #2A4E6E;
+  --navy-light: #EEF2F6;
+  --navy-bd:    #C5D3DF;
+  --gold:       #C9933A;
+  --gold-light: #FBF4E8;
+  --gold-bd:    #E8C98A;
+  --gray-bg:    #F5F7F9;
+  --gray-bd:    rgba(30,58,82,.12);
+  --gray-text:  #5A7080;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', sans-serif;
+  --nav-h:      60px;
+}
+
+.bv-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--nav-h); background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; border-bottom: 2px solid var(--gold); }
+.nav-logo { text-decoration: none; display: flex; align-items: center; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 1.75rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; letter-spacing: .02em; }
+.nav-links a:hover { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+.cs-page {
+  margin-top: var(--nav-h); min-height: calc(100vh - var(--nav-h));
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #0F2030 0%, var(--navy) 50%, var(--navy-mid) 100%);
+  position: relative; overflow: hidden; padding: 3rem 1.75rem;
+}
+.cs-page::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(201,147,58,.05) 0%, transparent 60%);
+}
+.cs-bg-letter {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-family: var(--serif); font-size: 400px; font-weight: 600;
+  color: rgba(255,255,255,.02); line-height: 1; pointer-events: none;
+}
+
+.cs-content {
+  position: relative; z-index: 1; text-align: center; max-width: 580px;
+}
+.cs-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 16px; border-radius: 4px;
+  background: rgba(201,147,58,.15); border: 1px solid rgba(201,147,58,.3);
+  font-size: 11px; font-weight: 500; color: var(--gold);
+  letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1.5rem;
+}
+.cs-title {
+  font-family: var(--serif); font-size: 48px; font-weight: 500;
+  color: #fff; line-height: 1.1; margin-bottom: .75rem;
+}
+.cs-sub {
+  font-size: 16px; color: rgba(255,255,255,.65); line-height: 1.75;
+  margin-bottom: 2.5rem;
+}
+
+.cs-form-box {
+  border: 1px solid rgba(201,147,58,.25); border-radius: 8px;
+  background: rgba(255,255,255,.04); padding: 2rem;
+  backdrop-filter: blur(4px);
+}
+.cs-form-title {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: #fff; margin-bottom: 6px;
+}
+.cs-form-sub {
+  font-size: 13px; color: rgba(255,255,255,.5); margin-bottom: 1.5rem;
+}
+
+.cs-ghl-placeholder {
+  min-height: 180px; border: 1px dashed rgba(255,255,255,.15);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px; padding: 1.5rem;
+}
+.cs-ghl-placeholder p { font-size: 13px; color: rgba(255,255,255,.4); }
+.cs-ghl-placeholder code { font-size: 11px; color: var(--gold); background: rgba(201,147,58,.1); padding: 2px 8px; border-radius: 3px; }
+
+.cs-features {
+  margin-top: 2rem; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+}
+.cs-feature {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: rgba(255,255,255,.6);
+}
+.cs-feature-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0;
+}
+
+.cs-back {
+  margin-top: 2rem; font-size: 13px; color: rgba(255,255,255,.4);
+}
+.cs-back a { color: var(--gold); text-decoration: none; transition: color .15s; }
+.cs-back a:hover { color: #fff; }
+
+@media (max-width: 600px) {
+  .cs-title { font-size: 32px; }
+  .cs-features { flex-direction: column; align-items: center; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html"><img src="logo.png" alt="Brightview Homes"></a>
+  <div class="nav-links">
+    <a href="communities.html">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<div class="cs-page">
+  <div class="cs-bg-letter">PM</div>
+  <div class="cs-content">
+    <div class="cs-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Coming Soon
+    </div>
+    <h1 class="cs-title">Property Management</h1>
+    <p class="cs-sub">Brightview is launching a state-of-the-art property management company designed specifically for new construction rental properties across Central Florida. Tenant placement, maintenance coordination, rent collection, and investor reporting — all under one roof.</p>
+
+    <div class="cs-form-box">
+      <div class="cs-form-title">Join the Interest List</div>
+      <div class="cs-form-sub">Be the first to know when we launch. Drop your email and we'll keep you updated.</div>
+
+      <div class="cs-ghl-placeholder">
+        <!--
+          ═══════════════════════════════════════
+          GO HIGH LEVEL FORM EMBED
+          ═══════════════════════════════════════
+          Replace with your GHL interest list form.
+
+          Recommended fields:
+            - Full Name
+            - Email
+            - Phone (optional)
+            - "I'm an existing Brightview investor" (checkbox)
+            - Number of rental properties you own (optional dropdown)
+          ═══════════════════════════════════════
+        -->
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(201,147,58,.4)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <p>GHL interest list form goes here.</p>
+        <code>&lt;iframe src="your-ghl-form-url" ...&gt;</code>
+      </div>
+    </div>
+
+    <div class="cs-features">
+      <div class="cs-feature"><div class="cs-feature-dot"></div> Tenant Placement</div>
+      <div class="cs-feature"><div class="cs-feature-dot"></div> Rent Collection</div>
+      <div class="cs-feature"><div class="cs-feature-dot"></div> Maintenance</div>
+      <div class="cs-feature"><div class="cs-feature-dot"></div> Investor Reporting</div>
+    </div>
+
+    <div class="cs-back"><a href="index.html">&larr; Back to Brightview Homes</a></div>
+  </div>
+</div>
+
+</body>
+</html>

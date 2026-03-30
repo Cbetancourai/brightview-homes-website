@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floor Plans — Brightview Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:       #1E3A52;
+  --navy-dark:  #152B3E;
+  --navy-mid:   #2A4E6E;
+  --navy-light: #EEF2F6;
+  --navy-bd:    #C5D3DF;
+  --gold:       #C9933A;
+  --gold-light: #FBF4E8;
+  --gold-bd:    #E8C98A;
+  --gray-bg:    #F5F7F9;
+  --gray-bd:    rgba(30,58,82,.12);
+  --gray-text:  #5A7080;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', sans-serif;
+  --nav-h:      60px;
+}
+
+/* ── NAV ── */
+.bv-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h); background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.75rem; border-bottom: 2px solid var(--gold);
+}
+.nav-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.nav-logo-star { color: var(--gold); }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.footer-brand-logo img { height: 30px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ── PAGE VISIBILITY ── */
+.page { display: none; padding-top: var(--nav-h); }
+.page.active { display: block; }
+
+/* ════════════════════════════
+   PAGE 1 — FLOOR PLAN BROWSE
+════════════════════════════ */
+.fp-page-hero {
+  background: var(--navy); padding: 2.5rem 1.75rem 2rem;
+  border-bottom: 3px solid var(--gold);
+}
+.fp-page-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
+.fp-page-hero h1 { font-family: var(--serif); font-size: 40px; font-weight: 500; color: #fff; margin-bottom: 6px; line-height: 1.1; }
+.fp-page-hero p { font-size: 14px; color: rgba(255,255,255,.7); max-width: 560px; line-height: 1.7; }
+.fp-page-hero-stats { display: flex; gap: 2.5rem; margin-top: 1.25rem; }
+.fp-stat-item { text-align: center; }
+.fp-stat-val { font-family: var(--serif); font-size: 28px; font-weight: 500; color: var(--gold); line-height: 1; }
+.fp-stat-label { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 2px; letter-spacing: .05em; }
+
+.fp-controls-bar {
+  display: flex; gap: 10px; padding: .9rem 1.75rem;
+  border-bottom: 1px solid var(--gray-bd); background: var(--gray-bg);
+  align-items: center; flex-wrap: wrap; position: sticky; top: var(--nav-h); z-index: 10;
+}
+.fp-fsel {
+  font-family: var(--sans); font-size: 12px; padding: 7px 28px 7px 11px;
+  border: 1px solid var(--navy-bd); border-radius: 4px;
+  background: #fff; color: var(--navy); cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%231E3A52'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 9px center;
+}
+.fp-fsel:focus { outline: none; border-color: var(--gold); }
+.fp-result-count { font-size: 12px; color: var(--gray-text); margin-left: auto; }
+.fp-result-count strong { color: var(--navy); }
+
+.fp-grid-wrap { padding: 1.75rem; }
+.fp-browse-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+/* browse card */
+.fpb-card {
+  border: 1px solid var(--navy-bd); border-radius: 8px;
+  overflow: hidden; cursor: pointer;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  background: #fff;
+}
+.fpb-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(30,58,82,.12); }
+
+.fpb-card-hero {
+  background: var(--navy); height: 170px;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 1rem 1.1rem; position: relative; overflow: hidden;
+}
+.fpb-card-bg-letter {
+  position: absolute; right: -1rem; top: 50%; transform: translateY(-50%);
+  font-family: var(--serif); font-size: 130px; font-weight: 600;
+  color: rgba(255,255,255,.06); line-height: 1; pointer-events: none;
+}
+.fpb-card-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: .35;
+}
+.fpb-card-hero-content { position: relative; z-index: 1; }
+.fpb-card-badge {
+  font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 3px;
+  background: var(--gold); color: #fff; display: inline-block;
+  margin-bottom: 7px; letter-spacing: .05em; text-transform: uppercase;
+}
+.fpb-card-name { font-family: var(--serif); font-size: 24px; font-weight: 500; color: #fff; line-height: 1.1; }
+.fpb-card-price { font-size: 14px; color: rgba(255,255,255,.75); }
+.fpb-card-price strong { color: var(--gold); font-size: 17px; }
+.fpb-card-sqft { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 2px; }
+
+.fpb-card-body { padding: 1rem 1.1rem; }
+.fpb-specs-row { display: flex; justify-content: space-between; padding: .55rem 0; border-bottom: 1px solid var(--gray-bd); }
+.fpb-specs-row:last-child { border-bottom: none; }
+.fpb-spec-label { font-size: 11px; color: var(--gray-text); text-transform: uppercase; letter-spacing: .06em; }
+.fpb-spec-val { font-size: 13px; font-weight: 500; color: var(--navy); }
+
+.fpb-card-footer { padding: .85rem 1.1rem; border-top: 1px solid var(--gray-bd); display: flex; gap: 8px; }
+.fpb-btn-primary {
+  flex: 1; padding: .6rem; background: var(--navy); border: none; border-radius: 4px;
+  color: #fff; font-family: var(--sans); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: background .15s; text-align: center;
+}
+.fpb-btn-primary:hover { background: var(--navy-dark); }
+.fpb-btn-tour {
+  flex: 1; padding: .6rem; background: transparent;
+  border: 1.5px solid var(--gold); border-radius: 4px;
+  color: var(--gold); font-family: var(--sans); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: background .15s, color .15s; text-align: center;
+}
+.fpb-btn-tour:hover { background: var(--gold); color: #fff; }
+
+/* ════════════════════════════
+   PAGE 2 — PLAN DETAIL
+════════════════════════════ */
+.pd-breadcrumb {
+  padding: .65rem 1.75rem; border-bottom: 1px solid var(--gray-bd);
+  font-size: 12px; color: var(--gray-text); display: flex; align-items: center; gap: 7px;
+  background: var(--gray-bg);
+}
+.bc-btn { background: none; border: none; font-size: 12px; color: var(--gold); cursor: pointer; font-family: var(--sans); padding: 0; }
+.bc-btn:hover { text-decoration: underline; }
+.bc-sep { color: var(--navy-bd); }
+
+/* hero image strip */
+.pd-hero {
+  background: var(--navy); position: relative; overflow: hidden;
+  display: flex; align-items: flex-end; min-height: 320px;
+}
+.pd-hero-bg-letter {
+  position: absolute; right: 2rem; top: 50%; transform: translateY(-50%);
+  font-family: var(--serif); font-size: 280px; font-weight: 600;
+  color: rgba(255,255,255,.04); line-height: 1; pointer-events: none;
+}
+.pd-hero-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: .25;
+}
+.pd-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(30,58,82,.95) 40%, rgba(30,58,82,.4) 100%);
+}
+.pd-hero-content { position: relative; z-index: 1; padding: 2rem 1.75rem 2rem; flex: 1; }
+.pd-hero-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
+.pd-hero-name { font-family: var(--serif); font-size: 52px; font-weight: 500; color: #fff; line-height: 1.05; margin-bottom: 6px; }
+.pd-hero-price { font-size: 22px; font-weight: 500; color: var(--gold); margin-bottom: 4px; }
+.pd-hero-type { font-size: 13px; color: rgba(255,255,255,.65); }
+
+/* hero sidebar (contact) */
+.pd-hero-sidebar {
+  position: relative; z-index: 1; width: 280px; flex-shrink: 0;
+  background: rgba(21,43,62,.9); border-left: 1px solid rgba(201,147,58,.3);
+  padding: 1.5rem; display: flex; flex-direction: column; gap: 14px;
+  align-self: stretch; justify-content: center;
+}
+.pd-contact-title { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.pd-contact-phone { font-family: var(--serif); font-size: 22px; color: #fff; }
+.pd-contact-addr { font-size: 12px; color: rgba(255,255,255,.6); line-height: 1.6; margin-top: 2px; }
+.pd-btn-primary { width: 100%; padding: .75rem; background: var(--gold); border: none; border-radius: 4px; color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer; transition: background .15s; margin-top: 8px; }
+.pd-btn-primary:hover { background: #b07e2a; }
+.pd-btn-outline { width: 100%; padding: .7rem; background: transparent; border: 1.5px solid rgba(255,255,255,.3); border-radius: 4px; color: rgba(255,255,255,.8); font-family: var(--sans); font-size: 13px; cursor: pointer; transition: border-color .15s; margin-top: 6px; }
+.pd-btn-outline:hover { border-color: #fff; color: #fff; }
+
+/* stat bar */
+.pd-stat-bar {
+  display: flex; border-bottom: 1px solid var(--gray-bd);
+  background: #fff; overflow-x: auto;
+}
+.pd-stat {
+  flex: 1; min-width: 110px; padding: 1.1rem 1rem; text-align: center;
+  border-right: 1px solid var(--gray-bd); display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.pd-stat:last-child { border-right: none; }
+.pd-stat svg { color: var(--gold); opacity: .85; }
+.pd-stat-label { font-size: 11px; color: var(--gray-text); text-transform: uppercase; letter-spacing: .07em; }
+.pd-stat-val { font-family: var(--serif); font-size: 26px; font-weight: 500; color: var(--navy); line-height: 1; }
+.pd-stat-sub { font-size: 11px; color: var(--gold); font-weight: 500; }
+
+/* sub-nav tabs */
+.pd-tabs { display: flex; border-bottom: 2px solid var(--gray-bd); padding: 0 1.75rem; background: #fff; position: sticky; top: var(--nav-h); z-index: 9; }
+.pd-tab { padding: .9rem 1.25rem; font-size: 13px; font-weight: 500; color: var(--gray-text); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .15s, border-color .15s; }
+.pd-tab.active { color: var(--navy); border-bottom-color: var(--gold); }
+.pd-tab:hover { color: var(--navy); }
+
+/* body layout */
+.pd-body { display: grid; grid-template-columns: 1fr 300px; }
+.pd-main { padding: 2rem 1.75rem; border-right: 1px solid var(--gray-bd); }
+.pd-sidebar { padding: 1.5rem; background: var(--gray-bg); display: flex; flex-direction: column; gap: 16px; }
+
+/* section headings */
+.pd-section-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; font-weight: 500; }
+.pd-section-title { font-family: var(--serif); font-size: 28px; font-weight: 500; color: var(--navy); margin-bottom: .75rem; }
+.pd-desc { font-size: 14px; color: #4A6070; line-height: 1.85; margin-bottom: 1.5rem; max-width: 640px; }
+
+.pd-highlights { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+.pd-highlights li { font-size: 13px; color: #4A6070; padding-left: 20px; position: relative; line-height: 1.6; }
+.pd-highlights li::before { content: '★'; position: absolute; left: 0; top: 0; font-size: 9px; color: var(--gold); line-height: 2; }
+
+/* floor plan diagram */
+.pd-floorplan-section { margin-bottom: 2rem; }
+.pd-floor-tabs { display: flex; gap: 8px; margin-bottom: 1rem; }
+.floor-tab { padding: 6px 18px; border: 1.5px solid var(--navy-bd); border-radius: 4px; font-size: 12px; font-weight: 500; color: var(--gray-text); cursor: pointer; font-family: var(--sans); background: #fff; transition: all .15s; }
+.floor-tab.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.floor-tab:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
+
+.pd-floorplan-canvas {
+  border: 1px solid var(--navy-bd); border-radius: 6px;
+  background: var(--gray-bg); padding: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 340px; position: relative; overflow: hidden;
+}
+.pd-floorplan-canvas svg { max-width: 100%; }
+.fp-diagram-label { font-family: var(--sans); font-size: 9px; fill: var(--gray-text); text-transform: uppercase; letter-spacing: .06em; }
+.fp-diagram-room { font-family: var(--serif); font-size: 11px; fill: var(--navy); font-weight: 500; }
+.fp-diagram-dim { font-family: var(--sans); font-size: 9px; fill: var(--gray-text); }
+
+/* exterior styles */
+.pd-exterior-section { margin-bottom: 2rem; }
+.pd-ext-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.pd-ext-card {
+  border: 2px solid transparent; border-radius: 6px; overflow: hidden; cursor: pointer;
+  transition: border-color .15s; background: var(--navy);
+}
+.pd-ext-card.selected { border-color: var(--gold); }
+.pd-ext-card:hover { border-color: var(--navy-bd); }
+.pd-ext-img {
+  height: 140px; background: var(--navy-mid);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.pd-ext-img-bg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 72px; color: rgba(255,255,255,.08); font-weight: 600;
+}
+.pd-ext-label {
+  padding: .6rem .8rem; background: var(--navy);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,.85);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pd-ext-check { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.3); display: flex; align-items: center; justify-content: center; }
+.pd-ext-card.selected .pd-ext-check { background: var(--gold); border-color: var(--gold); }
+
+/* sidebar boxes */
+.pd-sb-box { border: 1px solid var(--navy-bd); border-radius: 6px; padding: 1.1rem; background: #fff; border-top: 3px solid var(--gold); }
+.pd-sb-title { font-size: 10px; font-weight: 500; color: var(--navy); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px; }
+.pd-sb-price-main { font-family: var(--serif); font-size: 26px; font-weight: 500; color: var(--navy); }
+.pd-sb-price-label { font-size: 12px; color: var(--gray-text); margin-bottom: 12px; }
+.pd-sb-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--gray-bd); }
+.pd-sb-row:last-child { border-bottom: none; }
+.pd-sb-row-label { color: var(--gray-text); }
+.pd-sb-row-val { font-weight: 500; color: var(--navy); }
+.pd-sb-btn { width: 100%; padding: .75rem; border-radius: 4px; font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 8px; text-align: center; }
+.pd-sb-btn-navy { background: var(--navy); border: none; color: #fff; transition: background .15s; }
+.pd-sb-btn-navy:hover { background: var(--navy-dark); }
+.pd-sb-btn-gold { background: var(--gold); border: none; color: #fff; transition: background .15s; }
+.pd-sb-btn-gold:hover { background: #b07e2a; }
+.pd-sb-btn-outline { background: transparent; border: 1.5px solid var(--navy-bd); color: var(--navy); transition: border-color .15s; }
+.pd-sb-btn-outline:hover { border-color: var(--navy); }
+
+.also-row a { display: block; font-size: 13px; color: var(--navy); text-decoration: none; padding: 6px 0; border-bottom: 1px solid var(--gray-bd); transition: color .15s; }
+.also-row a:last-child { border-bottom: none; }
+.also-row a:hover { color: var(--gold); }
+
+/* photo gallery */
+.pd-photo {
+  border: 1px solid var(--navy-bd); border-radius: 6px; overflow: hidden;
+  cursor: pointer; transition: border-color .15s, transform .15s;
+  aspect-ratio: 4/3; background: var(--navy-light);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.pd-photo:hover { border-color: var(--gold); transform: translateY(-2px); }
+.pd-photo-placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--gray-text); font-size: 11px; text-align: center; padding: 1rem;
+}
+.pd-photo img { width: 100%; height: 100%; object-fit: cover; }
+.pd-photo-label {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 6px 10px;
+  background: rgba(30,58,82,.85); font-size: 11px; color: rgba(255,255,255,.8);
+}
+
+/* tour embed */
+.pd-tour-placeholder {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; min-height: 400px; color: var(--gray-text); text-align: center; padding: 2rem;
+}
+.pd-tour-placeholder p { font-size: 13px; line-height: 1.6; }
+.pd-tour-placeholder a { color: var(--gold); text-decoration: none; font-weight: 500; }
+.pd-tour-placeholder a:hover { text-decoration: underline; }
+
+/* related plans */
+.pd-related { padding: 0 1.75rem 2.5rem; border-top: 1px solid var(--gray-bd); }
+.pd-related-title { font-family: var(--serif); font-size: 26px; font-weight: 500; color: var(--navy); margin: 1.5rem 0 1rem; }
+.pd-related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.pd-rel-card {
+  border: 1px solid var(--navy-bd); border-radius: 6px; overflow: hidden;
+  cursor: pointer; transition: border-color .15s, transform .15s;
+}
+.pd-rel-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.pd-rel-top { background: var(--navy); padding: .85rem 1rem; }
+.pd-rel-name { font-family: var(--serif); font-size: 16px; color: #fff; font-weight: 500; }
+.pd-rel-price { font-size: 12px; color: var(--gold); font-weight: 500; }
+.pd-rel-body { padding: .7rem 1rem; display: flex; justify-content: space-between; font-size: 12px; }
+.pd-rel-spec { color: var(--gray-text); }
+
+/* footer */
+.bv-footer-full { background: var(--navy-dark); border-top: 3px solid var(--gold); }
+.footer-main {
+  display: grid; grid-template-columns: 1.2fr repeat(3, 1fr);
+  gap: 2rem; padding: 3rem 1.75rem 2rem; max-width: 1200px; margin: 0 auto;
+}
+.footer-brand-logo {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: .75rem;
+}
+.footer-brand-logo span { color: var(--gold); }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; max-width: 280px; margin-bottom: 1rem; }
+.footer-brand-phone { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 500; }
+.footer-brand-addr { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.6; margin-top: 4px; }
+.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .85rem; font-weight: 500; }
+.footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 0 1.75rem; }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.75rem; flex-wrap: wrap; gap: 1rem;
+}
+.footer-legal { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.footer-eho-icon {
+  width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 2px; display: flex; align-items: center; justify-content: center;
+  font-size: 8px; color: rgba(255,255,255,.7); text-align: center;
+  line-height: 1.1; padding: 2px; font-weight: 700; letter-spacing: .02em;
+}
+.footer-copyright { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.6; }
+.footer-legal-links { display: flex; gap: 16px; }
+.footer-legal-links a { font-size: 11px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+.footer-legal-links a:hover { color: var(--gold); }
+
+@media (max-width: 860px) {
+  .pd-hero { flex-direction: column; }
+  .pd-hero-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(201,147,58,.3); }
+  .pd-body { grid-template-columns: 1fr; }
+  .pd-stat-bar { flex-wrap: wrap; }
+  .pd-stat { min-width: 90px; }
+  .fp-browse-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html">
+    <img src="logo.png" alt="Brightview Homes">
+  </a>
+  <div class="nav-links">
+    <a href="communities.html">Where We Build</a>
+    <a onclick="showPage('browse')" class="active" id="nav-fp">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<!-- ═══════════════════════════
+     PAGE 1 — BROWSE GRID
+═══════════════════════════ -->
+<div class="page active" id="page-browse">
+  <div class="fp-page-hero">
+    <p class="fp-page-eyebrow">★ Brightview Homes</p>
+    <h1>Our Floor Plans</h1>
+    <p>Ten thoughtfully designed floor plans — from Ranch-style ranches to two-story estates — all available on scatter lots across 16 Central Florida counties. Every plan is built to order with the quality and craftsmanship of a national builder at an attainable price.</p>
+    <div class="fp-page-hero-stats">
+      <div class="fp-stat-item"><div class="fp-stat-val">10</div><div class="fp-stat-label">Floor plans</div></div>
+      <div class="fp-stat-item"><div class="fp-stat-val">16</div><div class="fp-stat-label">Counties</div></div>
+      <div class="fp-stat-item"><div class="fp-stat-val">$270K</div><div class="fp-stat-label">Starting from</div></div>
+      <div class="fp-stat-item"><div class="fp-stat-val">3,479</div><div class="fp-stat-label">Largest sq ft</div></div>
+    </div>
+  </div>
+
+  <div class="fp-controls-bar">
+    <span style="font-size:11px;color:var(--gray-text);letter-spacing:.04em">Filter:</span>
+    <select class="fp-fsel" id="f-style" onchange="filterBrowse()">
+      <option value="">Style: All</option>
+      <option value="Ranch">Ranch</option>
+      <option value="Two Story">Two Story</option>
+    </select>
+    <select class="fp-fsel" id="f-price" onchange="filterBrowse()">
+      <option value="">Price: All</option>
+      <option value="269990">Up to $270K</option>
+      <option value="299990">Up to $300K</option>
+      <option value="339990">Up to $340K</option>
+      <option value="409990">Up to $410K</option>
+    </select>
+    <select class="fp-fsel" id="f-beds" onchange="filterBrowse()">
+      <option value="">Beds: All</option>
+      <option value="3">3+ bedrooms</option>
+      <option value="4">4+ bedrooms</option>
+    </select>
+    <select class="fp-fsel" id="f-sort" onchange="filterBrowse()">
+      <option value="price">Sort: Price low–high</option>
+      <option value="price-d">Sort: Price high–low</option>
+      <option value="sqft">Sort: Sq ft small–large</option>
+      <option value="name">Sort: Name A–Z</option>
+    </select>
+    <span class="fp-result-count">Showing <strong id="browse-count">10</strong> plans</span>
+  </div>
+
+  <div class="fp-grid-wrap">
+    <div class="fp-browse-grid" id="browse-grid"></div>
+  </div>
+
+  <footer class="bv-footer-full">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+        <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+        <div class="footer-brand-phone">(321) 310-2849</div>
+        <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Our Homes</div>
+        <a href="communities.html">Where We Build</a>
+        <a href="floor-plans.html">Floor Plans</a>
+        <a href="quick-move-ins.html">Quick Move-Ins</a>
+        <a href="available-lots.html">Available Lots</a>
+        <a href="build-on-your-lot.html">Build on Your Lot</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Contact</div>
+        <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+        <a href="warranty.html">Customer Care</a>
+        <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Investors</div>
+        <a href="investor-marketplace.html">Investor Marketplace</a>
+        <a href="investor-marketplace.html">Build to Rent</a>
+        <a href="#">Build to Sell</a>
+        <a href="property-management.html">Property Management</a>
+        <a href="#">Investor Portal</a>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <div class="footer-eho">
+          <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2026 Brightview Homes. All rights reserved.<br>
+          Brightview Homes, a Brightview Construction Group LLC company.
+        </div>
+      </div>
+      <div class="footer-legal-links">
+        <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════
+     PAGE 2 — PLAN DETAIL
+═══════════════════════════ -->
+<div class="page" id="page-detail">
+
+  <div class="pd-breadcrumb">
+    <button class="bc-btn" onclick="showPage('browse')">Floor plans</button>
+    <span class="bc-sep">›</span>
+    <span id="pd-bc-name">Plan name</span>
+  </div>
+
+  <div class="pd-hero">
+    <div class="pd-hero-bg-letter" id="pd-hero-letter"></div>
+    <div class="pd-hero-overlay"></div>
+    <div class="pd-hero-content">
+      <p class="pd-hero-eyebrow" id="pd-eyebrow">★ Brightview Homes · Home Design</p>
+      <div class="pd-hero-name" id="pd-hero-name">Plan Name</div>
+      <div class="pd-hero-price" id="pd-hero-price">Starting at $000,000</div>
+      <div class="pd-hero-type" id="pd-hero-type">Single-Family Home · Central Florida</div>
+    </div>
+    <div class="pd-hero-sidebar">
+      <div>
+        <div class="pd-contact-title">Sales &amp; Inquiries</div>
+        <div class="pd-contact-phone">(321) 310-2849</div>
+        <div class="pd-contact-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+      </div>
+      <div>
+        <button class="pd-btn-primary" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Schedule a tour</button>
+        <button class="pd-btn-outline" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Request info</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-stat-bar" id="pd-stat-bar"></div>
+
+  <div class="pd-tabs">
+    <div class="pd-tab active" onclick="switchTab(this,'pd-overview')">Overview</div>
+    <div class="pd-tab" onclick="switchTab(this,'pd-gallery-sec')">Photos</div>
+    <div class="pd-tab" onclick="switchTab(this,'pd-tour-sec')">Virtual Tour</div>
+    <div class="pd-tab" id="pd-tab-video" onclick="switchTab(this,'pd-video-sec')" style="display:none">Video Walkthrough</div>
+    <div class="pd-tab" onclick="switchTab(this,'pd-floorplan-sec')">Floor Plan</div>
+    <div class="pd-tab" onclick="switchTab(this,'pd-exterior-sec')">Exterior Styles</div>
+  </div>
+
+  <div class="pd-body">
+    <div class="pd-main">
+
+      <div id="pd-overview">
+        <p class="pd-section-eyebrow">★ About this design</p>
+        <h2 class="pd-section-title" id="pd-desc-title">Plan Description</h2>
+        <p class="pd-desc" id="pd-desc-text"></p>
+        <h3 style="font-family:var(--serif);font-size:20px;font-weight:500;color:var(--navy);margin-bottom:.75rem">Home Design Highlights</h3>
+        <ul class="pd-highlights" id="pd-highlights"></ul>
+      </div>
+
+      <!-- PHOTO GALLERY -->
+      <div id="pd-gallery-sec" style="margin-top:2rem">
+        <p class="pd-section-eyebrow">★ Photo Gallery</p>
+        <h2 class="pd-section-title">See This Home</h2>
+        <p style="font-size:13px;color:var(--gray-text);margin-bottom:1rem;line-height:1.6">Browse photos of completed homes built with this floor plan. Images shown may include optional upgrades and design selections.</p>
+        <div id="pd-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+          <!-- Photos populated by JS -->
+        </div>
+      </div>
+
+      <!-- VIRTUAL TOUR / MATTERPORT -->
+      <div id="pd-tour-sec" style="margin-top:2rem">
+        <p class="pd-section-eyebrow">★ Virtual Tour</p>
+        <h2 class="pd-section-title">Walk Through This Home</h2>
+        <p style="font-size:13px;color:var(--gray-text);margin-bottom:1rem;line-height:1.6">Explore every room with our interactive 3D walkthrough powered by Matterport.</p>
+        <div id="pd-tour-embed" style="border:1px solid var(--navy-bd);border-radius:8px;overflow:hidden;background:var(--gray-bg);min-height:400px">
+          <!-- Matterport iframe populated by JS -->
+        </div>
+      </div>
+
+      <!-- VIDEO WALKTHROUGH -->
+      <div id="pd-video-sec" style="margin-top:2rem;display:none">
+        <p class="pd-section-eyebrow">★ Video Walkthrough</p>
+        <h2 class="pd-section-title">Watch the Full Walkthrough</h2>
+        <p style="font-size:13px;color:var(--gray-text);margin-bottom:1rem;line-height:1.6">Take a guided video tour through a completed home built with this floor plan.</p>
+        <div id="pd-video-embed" style="border:1px solid var(--navy-bd);border-radius:8px;overflow:hidden;background:#000;aspect-ratio:16/9">
+          <!-- Video populated by JS -->
+        </div>
+      </div>
+
+      <div id="pd-floorplan-sec" style="margin-top:2rem">
+        <p class="pd-section-eyebrow">★ Floor plan</p>
+        <h2 class="pd-section-title">Designed for Your Lifestyle</h2>
+        <div class="pd-floor-tabs" id="pd-floor-tabs"></div>
+        <div class="pd-floorplan-canvas" id="pd-floorplan-canvas"></div>
+      </div>
+
+      <div id="pd-exterior-sec" style="margin-top:2rem">
+        <p class="pd-section-eyebrow">★ Exterior styles</p>
+        <h2 class="pd-section-title">Unique Exteriors That Set Your Home Apart</h2>
+        <p style="font-size:13px;color:var(--gray-text);margin-bottom:1rem;line-height:1.6">Each Brightview floor plan is available in multiple exterior styles. Select the look that fits your taste — our team will guide you through the full options during your consultation.</p>
+        <div class="pd-ext-grid" id="pd-ext-grid"></div>
+      </div>
+
+    </div>
+
+    <div class="pd-sidebar">
+      <div class="pd-sb-box">
+        <div class="pd-sb-title">Pricing</div>
+        <div class="pd-sb-price-main" id="sb-price"></div>
+        <div class="pd-sb-price-label">Base starting price</div>
+        <div id="sb-specs"></div>
+        <button class="pd-sb-btn pd-sb-btn-navy" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Schedule a tour</button>
+        <button class="pd-sb-btn pd-sb-btn-gold" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Build this plan</button>
+        <button class="pd-sb-btn pd-sb-btn-outline" onclick="window.location.href='available-lots.html'">View available lots</button>
+      </div>
+
+      <div class="pd-sb-box">
+        <div class="pd-sb-title">Available in 16 counties</div>
+        <p style="font-size:12px;color:var(--gray-text);line-height:1.6;margin-bottom:8px">This floor plan can be built on scatter lots throughout Central Florida, from Seminole to Charlotte County.</p>
+        <button class="pd-sb-btn pd-sb-btn-outline" onclick="window.open('brightviewhomes.us','_self')">Explore where we build →</button>
+      </div>
+
+      <div class="pd-sb-box">
+        <div class="pd-sb-title">Also explore</div>
+        <div class="also-row">
+          <a href="https://brightviewhomes.us/floor-plan/" target="_blank">All floor plans →</a>
+          <a href="available-lots.html">Available lots →</a>
+          <a href="https://brightviewhomes.us/build-on-your-lot/" target="_blank">Build on your lot →</a>
+          <a href="https://brightviewhomes.us/btr-build-to-rent/" target="_blank">BTR / Build to rent →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-related" id="pd-related-section">
+    <h2 class="pd-related-title">You might also like</h2>
+    <div class="pd-related-grid" id="pd-related-grid"></div>
+  </div>
+
+  <footer class="bv-footer-full">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+        <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+        <div class="footer-brand-phone">(321) 310-2849</div>
+        <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Our Homes</div>
+        <a href="communities.html">Where We Build</a>
+        <a href="floor-plans.html">Floor Plans</a>
+        <a href="quick-move-ins.html">Quick Move-Ins</a>
+        <a href="available-lots.html">Available Lots</a>
+        <a href="build-on-your-lot.html">Build on Your Lot</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Contact</div>
+        <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+        <a href="warranty.html">Customer Care</a>
+        <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Investors</div>
+        <a href="investor-marketplace.html">Investor Marketplace</a>
+        <a href="investor-marketplace.html">Build to Rent</a>
+        <a href="#">Build to Sell</a>
+        <a href="property-management.html">Property Management</a>
+        <a href="#">Investor Portal</a>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <div class="footer-eho">
+          <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2026 Brightview Homes. All rights reserved.<br>
+          Brightview Homes, a Brightview Construction Group LLC company.
+        </div>
+      </div>
+      <div class="footer-legal-links">
+        <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  FLOOR PLAN DATA
+// ═══════════════════════════════════════
+var PLANS = [
+  {
+    id:'cambria', name:'Cambria', style:'Ranch', sqft:1665, beds:4, baths:2, garage:2, stories:1, price:269990,
+    desc:'The Cambria is a beautifully efficient single-story Ranch plan designed for comfortable everyday living. The open-concept layout connects the great room, dining area, and kitchen into one seamless living space — perfect for entertaining and family gatherings. The split-bedroom layout places the primary suite privately at the rear of the home, while three secondary bedrooms share a well-appointed full bath at the front.',
+    highlights:['Open-concept great room, dining, and kitchen with seamless flow','Split-bedroom layout for maximum privacy in the primary suite','Spacious primary bath with dual vanity and walk-in closet','Two-car garage with direct entry to everyday foyer','Available on scatter lots across all 16 Central Florida counties'],
+    exteriors:['Craftsman','Florida Traditional','Modern Farmhouse'],
+    floors:['First Floor'],
+    matterportUrl:'https://www.zillow.com/view-imx/4fb80bd6-0394-4d4f-a1c2-36d2fa97bda0?setAttribution=mls&wl=true&initialViewType=pano',
+    videoUrl:'https://media.zillowmediaexperts.com/videos/019d2eaa-181d-73bd-b1b7-b855b0215170',
+    photos:[]
+  },
+  {
+    id:'tribeca', name:'Tribeca', style:'Ranch', sqft:1665, beds:3, baths:2, garage:2, stories:1, price:269990,
+    desc:'The Tribeca delivers a refined single-story living experience with an open, airy layout that maximizes every square foot. Three generous bedrooms, two full baths, and a thoughtfully designed kitchen with a large island make this Ranch plan ideal for first-time buyers, downsizers, and investors alike.',
+    highlights:['Open-concept living, dining, and kitchen with center island','Bright, airy layout with large windows throughout','Primary suite with walk-in closet and private bath','Covered rear lanai perfect for outdoor Florida living','Available as a build-to-rent investment property'],
+    exteriors:['Coastal','Craftsman','Mediterranean'],
+    floors:['First Floor'],
+    matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
+    photos:[]         // Add photo URLs here, e.g. ['img/cambria-1.jpg','img/cambria-2.jpg']
+  },
+  {
+    id:'legacy', name:'Legacy', style:'Ranch', sqft:1805, beds:4, baths:2, garage:2, stories:1, price:299990,
+    desc:'The Legacy is a spacious Ranch floor plan offering four bedrooms, two baths, and an open-concept living area that brings the family together. The upgraded kitchen features a center island, walk-in pantry, and casual dining space. A generous primary suite with a spa-inspired bath anchors the private wing of the home.',
+    highlights:['Four-bedroom layout with split-wing privacy design','Upgraded kitchen with center island and walk-in pantry','Primary suite with soaking tub, separate shower, and dual sinks','Covered lanai for seamless indoor-outdoor Florida living','Open great room with soaring ceilings and natural light'],
+    exteriors:['Craftsman','Florida Traditional','Modern Farmhouse','Coastal'],
+    floors:['First Floor'],
+    matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
+    photos:[]         // Add photo URLs here, e.g. ['img/cambria-1.jpg','img/cambria-2.jpg']
+  },
+  {
+    id:'hudson', name:'Hudson', style:'Two Story', sqft:1821, beds:3, baths:2.5, garage:2, stories:2, price:299990,
+    desc:'The Hudson is a stylish two-story home that makes the most of its 1,821 square feet. The main floor features an open living, dining, and kitchen area with a convenient powder room, while all three bedrooms are privately tucked upstairs. The primary suite boasts a walk-in closet and en suite bath — a peaceful retreat above the daily activity of the home.',
+    highlights:['All bedrooms privately located on the second floor','Open main-floor living area perfect for entertaining','Primary suite with walk-in closet and en suite bath','Powder room on the main floor for guests','Two-car garage and covered entry'],
+    exteriors:['Modern Farmhouse','Craftsman','Coastal'],
+    floors:['First Floor','Second Floor'],
+    matterportUrl:'',
+    photos:[]
+  },
+  {
+    id:'valencia', name:'Valencia', style:'Ranch', sqft:1920, beds:4, baths:2.5, garage:2, stories:1, price:309990,
+    desc:'The Valencia combines the ease of single-story living with the space of a larger home. Four bedrooms, two and a half baths, and a wide-open living area give this Ranch plan exceptional versatility. The kitchen features a large island, quartz countertops, and a walk-in pantry — while the primary suite offers a luxurious escape at the rear of the home.',
+    highlights:['Spacious Ranch layout with four bedrooms and 2.5 baths','Wide-open kitchen and living area with quartz countertops','Primary suite with dual walk-in closets and spa bath','Covered rear lanai overlooking the private backyard','Flex room adaptable as home office, playroom, or gym'],
+    exteriors:['Coastal','Mediterranean','Florida Traditional','Craftsman'],
+    floors:['First Floor'],
+    matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
+    photos:[]         // Add photo URLs here, e.g. ['img/cambria-1.jpg','img/cambria-2.jpg']
+  },
+  {
+    id:'brighton', name:'Brighton', style:'Two Story', sqft:2000, beds:4, baths:2.5, garage:2, stories:2, price:329990,
+    desc:'The Brighton is a beautifully proportioned two-story home with an impressive main-floor living area and four bedrooms upstairs. The open kitchen and great room create an expansive, light-filled gathering space, while the second floor is devoted entirely to rest and privacy — featuring a generous primary suite and three secondary bedrooms.',
+    highlights:['Impressive open kitchen and great room on the main floor','All four bedrooms privately located on the second floor','Primary suite with large walk-in closet, soaking tub, and shower','Loft area on second floor perfect for a reading nook or study','Two-car garage with direct interior access'],
+    exteriors:['Modern Farmhouse','Coastal','Craftsman','Florida Traditional'],
+    floors:['First Floor','Second Floor'],
+    matterportUrl:'',
+    photos:[]
+  },
+  {
+    id:'kensington', name:'Kensington', style:'Ranch', sqft:2112, beds:4, baths:3, garage:2, stories:1, price:339990,
+    desc:'The Kensington is a premium single-story Ranch plan offering four bedrooms, three full baths, and one of the most open and dramatic great room designs in the Brightview lineup. The chef-inspired kitchen anchors the heart of the home with an oversized island, gas range option, and butler\'s pantry. A three-way split bedroom layout ensures maximum privacy for every member of the household.',
+    highlights:['Three-way split bedroom layout for ultimate privacy','Chef-inspired kitchen with oversized island and butler\'s pantry','Dramatic great room with tray ceiling and luxury finishes','Primary suite with dual walk-in closets, soaking tub, and frameless shower','Covered outdoor lanai with optional summer kitchen rough-in'],
+    exteriors:['Modern Farmhouse','Craftsman','Mediterranean','Coastal','Florida Traditional'],
+    floors:['First Floor'],
+    matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
+    photos:[]         // Add photo URLs here, e.g. ['img/cambria-1.jpg','img/cambria-2.jpg']
+  },
+  {
+    id:'belmont', name:'Belmont', style:'Ranch', sqft:2307, beds:4, baths:3, garage:3, stories:1, price:369990,
+    desc:'The Belmont is a distinguished Ranch home offering four bedrooms, three full baths, a three-car garage, and over 2,300 square feet of thoughtfully designed living space. The formal entry foyer leads into a sweeping open-concept living area with a coffered ceiling great room, gourmet kitchen, and casual dining nook with access to the covered lanai.',
+    highlights:['Rare three-car garage — perfect for Florida lifestyle storage','Coffered ceiling great room with luxury flooring package','Gourmet kitchen with double wall ovens and quartz island','Formal entry foyer with soaring ceilings and natural light','Primary suite with his-and-hers walk-in closets and spa bath'],
+    exteriors:['Modern Farmhouse','Craftsman','Coastal','Florida Traditional'],
+    floors:['First Floor'],
+    matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
+    photos:[]         // Add photo URLs here, e.g. ['img/cambria-1.jpg','img/cambria-2.jpg']
+  },
+  {
+    id:'astoria', name:'Astoria', style:'Ranch', sqft:2551, beds:4, baths:3.5, garage:2, stories:1, price:409990,
+    desc:'The Astoria is one of Brightview\'s most impressive Ranch designs — a sprawling single-story home with four bedrooms, three and a half baths, and 2,551 square feet of premium living space. The open living area flows effortlessly into a gourmet kitchen with a large prep island, walk-in pantry, and adjacent casual dining. A private guest suite with its own en suite bath is a standout feature ideal for multigenerational living.',
+    highlights:['Private guest suite with en suite bath — ideal for multigenerational living','Gourmet kitchen with large prep island and walk-in pantry','Primary suite with dual vanity, soaking tub, frameless shower, and two walk-in closets','Expansive covered lanai with optional outdoor kitchen rough-in','Flex room off the foyer for home office or formal dining'],
+    exteriors:['Modern Farmhouse','Mediterranean','Coastal','Craftsman','Florida Traditional'],
+    floors:['First Floor'],
+    matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
+    photos:[]         // Add photo URLs here, e.g. ['img/cambria-1.jpg','img/cambria-2.jpg']
+  },
+  {
+    id:'stephanie', name:'Stephanie Estate', style:'Two Story', sqft:3479, beds:4, baths:3.5, garage:2, stories:2, price:559990,
+    desc:'The Stephanie Estate is Brightview\'s flagship floor plan — a stunning two-story home with 3,479 square feet, four bedrooms, three and a half baths, and design features that rival luxury production builders. The main floor features a grand foyer, formal dining room, open great room with coffered ceilings, and a gourmet kitchen worthy of a professional chef. The second floor is home to a spacious loft, three secondary bedrooms, and an opulent primary suite.',
+    highlights:['Grand foyer and formal dining room for elegant entertaining','Gourmet kitchen with quartz island, double ovens, and walk-in pantry','Primary suite with sitting area, dual walk-in closets, soaking tub, and frameless shower','Second-floor loft perfect as a media room, game room, or home office','Covered balcony off the primary suite overlooking the rear yard'],
+    exteriors:['Modern Farmhouse','Mediterranean','Coastal','Craftsman'],
+    floors:['First Floor','Second Floor'],
+    matterportUrl:'',
+    photos:[]
+  }
+];
+
+// ═══════════════════════════════════════
+//  SVG FLOOR PLAN DIAGRAMS
+// ═══════════════════════════════════════
+function buildFloorDiagram(planId, floor) {
+  var w = 460, h = 300;
+  var rooms = {
+    cambria: { 'First Floor': [
+      {x:10,y:10,w:200,h:140,label:'Great Room',dim:"22'x18'"},{x:215,y:10,w:130,h:80,label:'Kitchen',dim:"13'x16'"},{x:350,y:10,w:100,h:80,label:"Dining",dim:"10'x14'"},
+      {x:10,y:155,w:140,h:135,label:'Primary Suite',dim:"14'x16'"},{x:155,y:155,w:100,h:135,label:'Bed 2',dim:"11'x12'"},{x:260,y:155,w:100,h:135,label:'Bed 3',dim:"11'x12'"},
+      {x:365,y:155,w:85,h:135,label:'Bed 4',dim:"10'x11'"},{x:215,y:95,w:80,h:55,label:'Bath',dim:''},{x:300,y:95,w:50,h:55,label:'Lanai',dim:''}
+    ]},
+    tribeca: { 'First Floor': [
+      {x:10,y:10,w:220,h:145,label:'Great Room',dim:"23'x18'"},{x:235,y:10,w:130,h:80,label:'Kitchen',dim:"13'x16'"},{x:370,y:10,w:80,h:80,label:'Dining',dim:"8'x14'"},
+      {x:10,y:160,w:155,h:130,label:'Primary Suite',dim:"16'x15'"},{x:170,y:160,w:110,h:130,label:'Bed 2',dim:"11'x13'"},{x:285,y:160,w:165,h:130,label:'Bed 3',dim:"12'x13'"},
+      {x:235,y:95,w:80,h:60,label:'Bath',dim:''},{x:320,y:95,w:60,h:60,label:'Garage',dim:''}
+    ]},
+    legacy: { 'First Floor': [
+      {x:10,y:10,w:210,h:145,label:'Great Room',dim:"22'x19'"},{x:225,y:10,w:135,h:85,label:'Kitchen',dim:"14'x17'"},{x:365,y:10,w:85,h:85,label:'Dining',dim:"9'x14'"},
+      {x:10,y:160,w:155,h:130,label:'Primary Suite',dim:"16'x16'"},{x:170,y:160,w:110,h:130,label:'Bed 2',dim:"11'x13'"},{x:285,y:160,w:85,h:130,label:'Bed 3',dim:"10'x12'"},
+      {x:375,y:160,w:75,h:130,label:'Bed 4',dim:"10'x11'"},{x:225,y:100,w:80,h:55,label:'Bath',dim:''},{x:310,y:100,w:50,h:55,label:'Pantry',dim:''}
+    ]},
+    hudson: {
+      'First Floor': [
+        {x:10,y:10,w:220,h:150,label:'Great Room',dim:"23'x19'"},{x:235,y:10,w:135,h:90,label:'Kitchen',dim:"14'x17'"},{x:375,y:10,w:75,h:90,label:'Dining',dim:"8'x15'"},
+        {x:10,y:165,w:140,h:125,label:'Garage',dim:"20'x20'"},{x:155,y:165,w:100,h:55,label:'Entry',dim:''},{x:260,y:165,w:75,h:55,label:'Powder',dim:''},
+        {x:155,y:225,w:295,h:65,label:'Covered Lanai',dim:"30'x10'"}
+      ],
+      'Second Floor': [
+        {x:10,y:10,w:200,h:150,label:'Primary Suite',dim:"20'x17'"},{x:215,y:10,w:120,h:80,label:'Bed 2',dim:"12'x13'"},{x:340,y:10,w:110,h:80,label:'Bed 3',dim:"11'x13'"},
+        {x:10,y:165,w:110,h:125,label:'Bath',dim:''},{x:125,y:165,w:110,h:125,label:'Loft',dim:"12'x13'"},{x:240,y:165,w:100,h:125,label:'Walk-in',dim:''},
+        {x:345,y:165,w:105,h:125,label:'Bath 2',dim:''}
+      ]
+    },
+    valencia: { 'First Floor': [
+      {x:10,y:10,w:230,h:145,label:'Great Room',dim:"24'x18'"},{x:245,y:10,w:130,h:80,label:'Kitchen',dim:"13'x17'"},{x:380,y:10,w:70,h:80,label:'Dining',dim:"7'x14'"},
+      {x:10,y:160,w:160,h:130,label:'Primary Suite',dim:"17'x16'"},{x:175,y:160,w:105,h:130,label:'Bed 2',dim:"11'x13'"},{x:285,y:160,w:85,h:130,label:'Bed 3',dim:"10'x12'"},
+      {x:375,y:160,w:75,h:130,label:'Bed 4',dim:"10'x11'"},{x:245,y:95,w:85,h:60,label:'Flex Rm',dim:"10'x12'"},{x:335,y:95,w:45,h:60,label:'Pantry',dim:''}
+    ]},
+    brighton: {
+      'First Floor': [
+        {x:10,y:10,w:240,h:150,label:'Great Room',dim:"25'x18'"},{x:255,y:10,w:130,h:90,label:'Kitchen',dim:"13'x18'"},{x:390,y:10,w:60,h:90,label:'Dining',dim:"8'x15'"},
+        {x:10,y:165,w:150,h:125,label:'Garage',dim:"22'x20'"},{x:165,y:165,w:110,h:55,label:'Entry Foyer',dim:''},{x:280,y:165,w:80,h:55,label:'Powder',dim:''},
+        {x:165,y:225,w:285,h:65,label:'Covered Lanai',dim:"30'x10'"}
+      ],
+      'Second Floor': [
+        {x:10,y:10,w:210,h:155,label:'Primary Suite',dim:"21'x18'"},{x:225,y:10,w:120,h:80,label:'Bed 2',dim:"12'x14'"},{x:350,y:10,w:100,h:80,label:'Bed 3',dim:"11'x13'"},
+        {x:10,y:170,w:120,h:120,label:'Bed 4',dim:"13'x14'"},{x:135,y:170,w:95,h:120,label:'Loft',dim:"12'x14'"},{x:235,y:170,w:90,h:120,label:'Bath 2',dim:''},
+        {x:330,y:170,w:120,h:120,label:'Primary Bath',dim:''}
+      ]
+    },
+    kensington: { 'First Floor': [
+      {x:10,y:10,w:240,h:150,label:'Great Room',dim:"25'x18'"},{x:255,y:10,w:135,h:90,label:'Kitchen',dim:"14'x18'"},{x:395,y:10,w:55,h:90,label:'Dining',dim:"7'x15'"},
+      {x:10,y:165,w:165,h:125,label:'Primary Suite',dim:"17'x17'"},{x:180,y:165,w:110,h:125,label:'Bed 2',dim:"11'x14'"},{x:295,y:165,w:90,h:125,label:'Bed 3',dim:"10'x13'"},
+      {x:390,y:165,w:60,h:125,label:'Bed 4',dim:"10'x12'"},{x:255,y:105,w:85,h:55,label:'Pantry',dim:''},{x:345,y:105,w:50,h:55,label:'Laundry',dim:''}
+    ]},
+    belmont: { 'First Floor': [
+      {x:10,y:10,w:250,h:150,label:'Great Room',dim:"26'x18'"},{x:265,y:10,w:130,h:90,label:'Kitchen',dim:"13'x18'"},{x:400,y:10,w:50,h:90,label:'Dining',dim:"7'x15'"},
+      {x:10,y:165,w:170,h:125,label:'Primary Suite',dim:"18'x17'"},{x:185,y:165,w:110,h:125,label:'Bed 2',dim:"11'x14'"},{x:300,y:165,w:90,h:125,label:'Bed 3',dim:"10'x13'"},
+      {x:395,y:165,w:55,h:125,label:'Bed 4',dim:"10'x12'"},{x:265,y:105,w:75,h:55,label:'Study',dim:"10'x11'"},{x:345,y:105,w:50,h:55,label:'3-car Gar',dim:''}
+    ]},
+    astoria: { 'First Floor': [
+      {x:10,y:10,w:255,h:150,label:'Great Room',dim:"27'x18'"},{x:270,y:10,w:130,h:85,label:'Kitchen',dim:"13'x17'"},{x:405,y:10,w:45,h:85,label:'Dining',dim:"6'x14'"},
+      {x:10,y:165,w:175,h:125,label:'Primary Suite',dim:"18'x18'"},{x:190,y:165,w:115,h:125,label:'Guest Suite',dim:"12'x14'"},{x:310,y:165,w:90,h:125,label:'Bed 3',dim:"10'x13'"},
+      {x:405,y:165,w:45,h:125,label:'Bed 4',dim:"10'x12'"},{x:270,y:100,w:80,h:60,label:'Flex Rm',dim:"11'x12'"},{x:355,y:100,w:50,h:60,label:'Pantry',dim:''}
+    ]},
+    stephanie: {
+      'First Floor': [
+        {x:10,y:10,w:255,h:155,label:'Great Room',dim:"26'x20'"},{x:270,y:10,w:135,h:95,label:'Kitchen',dim:"14'x20'"},{x:410,y:10,w:40,h:95,label:'Pantry',dim:''},
+        {x:10,y:170,w:155,h:120,label:'Dining Room',dim:"16'x18'"},{x:170,y:170,w:120,h:120,label:'Study/Office',dim:"13'x15'"},{x:295,y:170,w:80,h:120,label:'Powder',dim:''},
+        {x:380,y:170,w:70,h:120,label:'Garage',dim:"20'x24'"},{x:270,y:110,w:80,h:55,label:'Foyer',dim:''},{x:355,y:110,w:50,h:55,label:'Laundry',dim:''}
+      ],
+      'Second Floor': [
+        {x:10,y:10,w:220,h:160,label:'Primary Suite',dim:"22'x20'"},{x:235,y:10,w:120,h:90,label:'Bed 2',dim:"12'x15'"},{x:360,y:10,w:90,h:90,label:'Bed 3',dim:"11'x14'"},
+        {x:10,y:175,w:130,h:115,label:'Loft',dim:"14'x16'"},{x:145,y:175,w:85,h:115,label:'Bed 4',dim:"12'x14'"},{x:235,y:175,w:85,h:115,label:'Bath 2',dim:''},
+        {x:325,y:175,w:125,h:115,label:'Primary Bath',dim:''}
+      ]
+    }
+  };
+
+  var planRooms = (rooms[planId] && rooms[planId][floor]) ? rooms[planId][floor] : rooms['cambria']['First Floor'];
+  var svg = '<svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:320px">';
+  svg += '<rect width="460" height="300" fill="#F5F7F9" rx="4"/>';
+  planRooms.forEach(function(r) {
+    svg += '<rect x="' + (r.x+2) + '" y="' + (r.y+2) + '" width="' + (r.w-4) + '" height="' + (r.h-4) + '" fill="#EEF2F6" rx="2"/>';
+    svg += '<rect x="' + r.x + '" y="' + r.y + '" width="' + r.w + '" height="' + r.h + '" fill="none" stroke="#1E3A52" stroke-width="1.5" rx="2"/>';
+    var cx = r.x + r.w/2, cy = r.y + r.h/2;
+    svg += '<text x="' + cx + '" y="' + (cy - (r.dim?6:0)) + '" text-anchor="middle" class="fp-diagram-room">' + r.label + '</text>';
+    if (r.dim) svg += '<text x="' + cx + '" y="' + (cy+10) + '" text-anchor="middle" class="fp-diagram-dim">' + r.dim + '</text>';
+  });
+  svg += '<text x="230" y="292" text-anchor="middle" class="fp-diagram-label">' + floor + ' · Not to scale · For illustrative purposes only</text>';
+  svg += '</svg>';
+  return svg;
+}
+
+// ═══════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function switchTab(el, sectionId) {
+  document.querySelectorAll('.pd-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var target = document.getElementById(sectionId);
+  if (target) { setTimeout(function(){ target.scrollIntoView({ behavior:'smooth', block:'start' }); }, 50); }
+}
+
+// ═══════════════════════════════════════
+//  BROWSE PAGE
+// ═══════════════════════════════════════
+function filterBrowse() {
+  var style = document.getElementById('f-style').value;
+  var maxP  = document.getElementById('f-price').value;
+  var minB  = document.getElementById('f-beds').value;
+  var sort  = document.getElementById('f-sort').value;
+
+  var list = PLANS.filter(function(p) {
+    if (style && p.style !== style) return false;
+    if (maxP  && p.price > parseInt(maxP))  return false;
+    if (minB  && p.beds  < parseInt(minB))  return false;
+    return true;
+  }).sort(function(a,b) {
+    if (sort === 'price')   return a.price - b.price;
+    if (sort === 'price-d') return b.price - a.price;
+    if (sort === 'sqft')    return a.sqft  - b.sqft;
+    return a.name.localeCompare(b.name);
+  });
+
+  document.getElementById('browse-count').textContent = list.length;
+  document.getElementById('browse-grid').innerHTML = list.map(function(p) {
+    return '<div class="fpb-card" onclick="openPlan(\'' + p.id + '\')">' +
+      '<div class="fpb-card-hero">' +
+        '<div class="fpb-card-bg-letter">' + p.name.charAt(0) + '</div>' +
+        '<div class="fpb-card-hero-content">' +
+          '<div class="fpb-card-badge">' + p.style + '</div>' +
+          '<div class="fpb-card-name">' + p.name + '</div>' +
+        '</div>' +
+        '<div style="position:relative;z-index:1;text-align:right">' +
+          '<div class="fpb-card-price">From <strong>' + fmt(p.price) + '</strong></div>' +
+          '<div class="fpb-card-sqft">' + p.sqft.toLocaleString() + ' sq ft</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fpb-card-body">' +
+        '<div class="fpb-specs-row"><span class="fpb-spec-label">Bedrooms</span><span class="fpb-spec-val">' + p.beds + '</span></div>' +
+        '<div class="fpb-specs-row"><span class="fpb-spec-label">Bathrooms</span><span class="fpb-spec-val">' + p.baths + '</span></div>' +
+        '<div class="fpb-specs-row"><span class="fpb-spec-label">Garage</span><span class="fpb-spec-val">' + p.garage + '-car</span></div>' +
+        '<div class="fpb-specs-row"><span class="fpb-spec-label">Stories</span><span class="fpb-spec-val">' + p.stories + '</span></div>' +
+      '</div>' +
+      '<div class="fpb-card-footer">' +
+        '<button class="fpb-btn-primary" onclick="event.stopPropagation();openPlan(\'' + p.id + '\')">View floor plan</button>' +
+        '<button class="fpb-btn-tour" onclick="event.stopPropagation();window.open(\'https://brightviewhomes.us/contact/\',\'_blank\')">Schedule a tour</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+//  DETAIL PAGE
+// ═══════════════════════════════════════
+var activePlan = null;
+
+function openPlan(id) {
+  var p = PLANS.find(function(x) { return x.id === id; });
+  if (!p) return;
+  activePlan = p;
+
+  document.getElementById('pd-bc-name').textContent = p.name;
+  document.getElementById('pd-hero-letter').textContent = p.name.charAt(0);
+  document.getElementById('pd-eyebrow').textContent = '★ Brightview Homes · ' + p.style + ' · Home Design';
+  document.getElementById('pd-hero-name').textContent = p.name;
+  document.getElementById('pd-hero-price').textContent = 'Starting at ' + fmt(p.price);
+  document.getElementById('pd-hero-type').textContent = 'Single-Family Home · ' + p.style + ' · Available in 16 Central Florida Counties';
+
+  // stat bar
+  var stats = [
+    { icon:'<path d="M3 12h18M3 6h18M3 18h7"/>', label:'Bedrooms', val: p.beds, sub: p.beds + ' bd' },
+    { icon:'<circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>', label:'Bathrooms', val: p.baths, sub: p.baths + ' ba' },
+    { icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>', label:'Square Feet', val: p.sqft.toLocaleString(), sub: 'sq ft' },
+    { icon:'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>', label:'Garage', val: p.garage, sub: p.garage + '-car' },
+    { icon:'<path d="M3 21V9l9-7 9 7v12M9 21V12h6v9"/>', label:'Stories', val: p.stories, sub: p.stories === 1 ? 'Single story' : 'Two story' }
+  ];
+  document.getElementById('pd-stat-bar').innerHTML = stats.map(function(s) {
+    return '<div class="pd-stat">' +
+      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' + s.icon + '</svg>' +
+      '<div class="pd-stat-label">' + s.label + '</div>' +
+      '<div class="pd-stat-val">' + s.val + '</div>' +
+      '<div class="pd-stat-sub">' + s.sub + '</div>' +
+    '</div>';
+  }).join('');
+
+  // overview
+  document.getElementById('pd-desc-title').textContent = 'The ' + p.name;
+  document.getElementById('pd-desc-text').textContent = p.desc;
+  document.getElementById('pd-highlights').innerHTML = p.highlights.map(function(h) {
+    return '<li>' + h + '</li>';
+  }).join('');
+
+  // floor plan tabs
+  document.getElementById('pd-floor-tabs').innerHTML = p.floors.map(function(f, i) {
+    return '<button class="floor-tab ' + (i===0?'active':'') + '" onclick="switchFloor(this,\'' + p.id + '\',\'' + f + '\')">' + f + '</button>';
+  }).join('');
+  document.getElementById('pd-floorplan-canvas').innerHTML = buildFloorDiagram(p.id, p.floors[0]);
+
+  // exterior styles
+  document.getElementById('pd-ext-grid').innerHTML = p.exteriors.map(function(e, i) {
+    return '<div class="pd-ext-card ' + (i===0?'selected':'') + '" onclick="selectExt(this)">' +
+      '<div class="pd-ext-img"><div class="pd-ext-img-bg">' + e.charAt(0) + '</div></div>' +
+      '<div class="pd-ext-label">' + e + '<div class="pd-ext-check">' + (i===0?'✓':'') + '</div></div>' +
+    '</div>';
+  }).join('');
+
+  // sidebar
+  document.getElementById('sb-price').textContent = fmt(p.price);
+  document.getElementById('sb-specs').innerHTML = [
+    ['Sq ft', p.sqft.toLocaleString()], ['Beds', p.beds],
+    ['Baths', p.baths], ['Garage', p.garage + '-car'],
+    ['Style', p.style], ['Stories', p.stories]
+  ].map(function(r) {
+    return '<div class="pd-sb-row"><span class="pd-sb-row-label">' + r[0] + '</span><span class="pd-sb-row-val">' + r[1] + '</span></div>';
+  }).join('');
+
+  // related plans (same style or adjacent price)
+  var related = PLANS.filter(function(x) {
+    return x.id !== p.id && (x.style === p.style || Math.abs(x.price - p.price) <= 60000);
+  }).slice(0,4);
+  document.getElementById('pd-related-grid').innerHTML = related.map(function(r) {
+    return '<div class="pd-rel-card" onclick="openPlan(\'' + r.id + '\')">' +
+      '<div class="pd-rel-top">' +
+        '<div class="pd-rel-name">' + r.name + '</div>' +
+        '<div class="pd-rel-price">From ' + fmt(r.price) + '</div>' +
+      '</div>' +
+      '<div class="pd-rel-body">' +
+        '<span class="pd-rel-spec">' + r.beds + ' bd · ' + r.baths + ' ba</span>' +
+        '<span class="pd-rel-spec">' + r.sqft.toLocaleString() + ' sq ft</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // photo gallery
+  var galleryEl = document.getElementById('pd-gallery');
+  if (p.photos && p.photos.length > 0) {
+    galleryEl.innerHTML = p.photos.map(function(photo, i) {
+      return '<div class="pd-photo"><img src="' + photo + '" alt="' + p.name + ' photo ' + (i+1) + '"><div class="pd-photo-label">' + p.name + ' — Photo ' + (i+1) + '</div></div>';
+    }).join('');
+  } else {
+    var placeholders = '';
+    for (var i = 0; i < 6; i++) {
+      placeholders += '<div class="pd-photo"><div class="pd-photo-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Photo coming soon</span></div></div>';
+    }
+    galleryEl.innerHTML = placeholders;
+  }
+
+  // matterport / virtual tour
+  var tourEl = document.getElementById('pd-tour-embed');
+  if (p.matterportUrl) {
+    tourEl.innerHTML = '<iframe src="' + p.matterportUrl + '" style="width:100%;height:480px;border:none" allowfullscreen></iframe>';
+  } else {
+    tourEl.innerHTML = '<div class="pd-tour-placeholder">' +
+      '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--navy-bd)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>' +
+      '<p>Virtual tour coming soon for the ' + p.name + '.<br>Check back for an interactive 3D Matterport walkthrough.</p>' +
+      '<p><a href="https://brightviewhomes.us/contact/" target="_blank">Schedule an in-person tour →</a></p>' +
+    '</div>';
+  }
+
+  // video walkthrough
+  var videoTab = document.getElementById('pd-tab-video');
+  var videoSec = document.getElementById('pd-video-sec');
+  var videoEl = document.getElementById('pd-video-embed');
+  if (p.videoUrl) {
+    videoTab.style.display = '';
+    videoSec.style.display = '';
+    videoEl.innerHTML = '<video src="' + p.videoUrl + '" controls style="width:100%;height:100%;display:block" poster=""></video>';
+  } else {
+    videoTab.style.display = 'none';
+    videoSec.style.display = 'none';
+    videoEl.innerHTML = '';
+  }
+
+  // reset tabs
+  document.querySelectorAll('.pd-tab').forEach(function(t,i) { t.classList.toggle('active', i===0); });
+
+  // update URL hash
+  if (history.replaceState) history.replaceState(null, null, '#' + p.id);
+
+  showPage('detail');
+}
+
+function switchFloor(el, planId, floor) {
+  document.querySelectorAll('.floor-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('pd-floorplan-canvas').innerHTML = buildFloorDiagram(planId, floor);
+}
+
+function selectExt(el) {
+  document.querySelectorAll('.pd-ext-card').forEach(function(c) {
+    c.classList.remove('selected');
+    c.querySelector('.pd-ext-check').textContent = '';
+  });
+  el.classList.add('selected');
+  el.querySelector('.pd-ext-check').textContent = '✓';
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+filterBrowse();
+
+// Hash routing — open plan from URL (e.g. floor-plans.html#cambria)
+(function() {
+  var hash = window.location.hash.replace('#','');
+  if (hash && PLANS.find(function(p) { return p.id === hash; })) {
+    openPlan(hash);
+  }
+  window.addEventListener('hashchange', function() {
+    var h = window.location.hash.replace('#','');
+    if (h && PLANS.find(function(p) { return p.id === h; })) {
+      openPlan(h);
+    }
+  });
+})();
+</script>
+</body>
+</html>

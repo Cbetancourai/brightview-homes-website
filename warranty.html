@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warranty Claims — Brightview Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:       #1E3A52;
+  --navy-dark:  #152B3E;
+  --navy-mid:   #2A4E6E;
+  --navy-light: #EEF2F6;
+  --navy-bd:    #C5D3DF;
+  --gold:       #C9933A;
+  --gold-light: #FBF4E8;
+  --gold-bd:    #E8C98A;
+  --gray-bg:    #F5F7F9;
+  --gray-bd:    rgba(30,58,82,.12);
+  --gray-text:  #5A7080;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', sans-serif;
+  --nav-h:      60px;
+}
+
+/* ── NAV ── */
+.bv-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--nav-h); background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; border-bottom: 2px solid var(--gold); }
+.nav-logo { text-decoration: none; display: flex; align-items: center; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 1.75rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; letter-spacing: .02em; }
+.nav-links a:hover { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ── SHARED ── */
+.section-eyebrow { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
+.section-title { font-family: var(--serif); font-size: 36px; font-weight: 500; color: var(--navy); margin-bottom: .5rem; line-height: 1.15; }
+
+/* ══════════════════════
+   HERO
+══════════════════════ */
+.war-hero {
+  background: var(--navy); padding: 3.5rem 1.75rem 2.5rem; margin-top: var(--nav-h);
+  border-bottom: 3px solid var(--gold); position: relative; overflow: hidden;
+}
+.war-hero-letter {
+  position: absolute; right: 2rem; top: 50%; transform: translateY(-50%);
+  font-family: var(--serif); font-size: 280px; font-weight: 600;
+  color: rgba(255,255,255,.03); line-height: 1; pointer-events: none;
+}
+.war-hero-content { position: relative; z-index: 1; max-width: 700px; }
+.war-hero h1 {
+  font-family: var(--serif); font-size: 44px; font-weight: 500;
+  color: #fff; line-height: 1.08; margin-bottom: .75rem;
+}
+.war-hero p {
+  font-size: 15px; color: rgba(255,255,255,.7); line-height: 1.75; max-width: 580px;
+}
+
+/* ══════════════════════
+   BODY LAYOUT
+══════════════════════ */
+.war-body {
+  display: grid; grid-template-columns: 1fr 400px; gap: 3rem;
+  padding: 3rem 1.75rem; max-width: 1100px; margin: 0 auto; align-items: start;
+}
+
+/* ── LEFT: INFO ── */
+.war-info {}
+.war-info p { font-size: 14px; color: var(--gray-text); line-height: 1.8; margin-bottom: 1.25rem; }
+.war-info p strong { color: var(--navy); }
+
+.war-coverage { margin-bottom: 2rem; }
+.war-coverage h3 {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: var(--navy); margin-bottom: .75rem;
+}
+.war-coverage-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.war-cov-item {
+  padding: .85rem 1rem; border: 1px solid var(--navy-bd); border-radius: 6px;
+  background: var(--gray-bg);
+}
+.war-cov-item h4 {
+  font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 3px;
+}
+.war-cov-item p { font-size: 12px; color: var(--gray-text); line-height: 1.5; margin: 0; }
+
+.war-process { margin-bottom: 2rem; }
+.war-process h3 {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: var(--navy); margin-bottom: .75rem;
+}
+.war-steps { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.war-step {
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.war-step-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: var(--navy); color: var(--gold);
+  font-family: var(--serif); font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.war-step-text h4 { font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 2px; }
+.war-step-text p { font-size: 12px; color: var(--gray-text); line-height: 1.6; margin: 0; }
+
+.war-contact-box {
+  padding: 1.25rem; border: 1px solid var(--navy-bd); border-radius: 8px;
+  background: var(--navy-light); border-left: 3px solid var(--gold);
+}
+.war-contact-box h4 { font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+.war-contact-box p { font-size: 13px; color: var(--gray-text); line-height: 1.6; margin: 0; }
+.war-contact-box a { color: var(--gold); text-decoration: none; font-weight: 500; }
+.war-contact-box a:hover { text-decoration: underline; }
+
+/* ── RIGHT: FORM ── */
+.war-form-box {
+  border: 1px solid var(--navy-bd); border-radius: 8px; background: #fff;
+  border-top: 3px solid var(--gold); overflow: hidden; position: sticky; top: calc(var(--nav-h) + 1.5rem);
+}
+.war-form-header {
+  padding: 1.25rem 1.5rem; background: var(--navy);
+}
+.war-form-header h3 {
+  font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; margin-bottom: 4px;
+}
+.war-form-header p { font-size: 13px; color: rgba(255,255,255,.6); }
+.war-form-body { padding: 1.5rem; min-height: 400px; display: flex; align-items: center; justify-content: center; }
+.war-ghl-placeholder { text-align: center; color: var(--gray-text); }
+.war-ghl-placeholder p { font-size: 13px; line-height: 1.7; margin-bottom: .75rem; }
+.war-ghl-placeholder code { font-size: 12px; background: rgba(30,58,82,.06); padding: 3px 10px; border-radius: 4px; color: var(--navy); }
+
+/* ══════════════════════
+   FAQ
+══════════════════════ */
+.war-faq { padding: 3rem 1.75rem; background: var(--gray-bg); }
+.war-faq-list { max-width: 740px; margin: 0 auto; }
+.faq-item { border: 1px solid var(--navy-bd); border-radius: 6px; margin-bottom: 10px; background: #fff; overflow: hidden; }
+.faq-q { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--navy); transition: background .1s; user-select: none; }
+.faq-q:hover { background: var(--navy-light); }
+.faq-arrow { font-size: 18px; color: var(--gold); transition: transform .2s; flex-shrink: 0; margin-left: 12px; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.faq-a-inner { padding: 0 1.25rem 1rem; font-size: 13px; color: var(--gray-text); line-height: 1.75; }
+.faq-item.open .faq-a { max-height: 300px; }
+
+/* ══════════════════════
+   FOOTER
+══════════════════════ */
+.bv-footer-full { background: var(--navy-dark); border-top: 3px solid var(--gold); }
+.footer-main { display: grid; grid-template-columns: 1.2fr repeat(3, 1fr); gap: 2rem; padding: 3rem 1.75rem 2rem; max-width: 1200px; margin: 0 auto; }
+.footer-brand-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: .75rem; }
+.footer-brand-logo img { height: 30px; filter: brightness(0) invert(1); }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; max-width: 280px; margin-bottom: 1rem; }
+.footer-brand-phone { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 500; }
+.footer-brand-addr { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.6; margin-top: 4px; }
+.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .85rem; font-weight: 500; }
+.footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 0 1.75rem; }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.75rem; flex-wrap: wrap; gap: 1rem; }
+.footer-legal { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.footer-eho-icon { width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,.3); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 8px; color: rgba(255,255,255,.7); text-align: center; line-height: 1.1; padding: 2px; font-weight: 700; }
+.footer-copyright { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.6; }
+.footer-legal-links { display: flex; gap: 16px; }
+.footer-legal-links a { font-size: 11px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+.footer-legal-links a:hover { color: var(--gold); }
+
+@media (max-width: 900px) {
+  .war-body { grid-template-columns: 1fr; }
+  .war-form-box { position: static; }
+  .war-coverage-grid { grid-template-columns: 1fr; }
+  .war-hero h1 { font-size: 32px; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  .footer-main { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html"><img src="logo.png" alt="Brightview Homes"></a>
+  <div class="nav-links">
+    <a href="communities.html">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<!-- ══════════════════════
+     HERO
+══════════════════════ -->
+<section class="war-hero">
+  <div class="war-hero-letter">W</div>
+  <div class="war-hero-content">
+    <p class="section-eyebrow">&#9733; Homeowner Support</p>
+    <h1>Warranty &amp; Service Requests</h1>
+    <p>Every Brightview home is backed by a comprehensive builder warranty. If something needs attention, we're here to make it right. Submit your warranty claim below and our team will respond within 1–2 business days.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     BODY
+══════════════════════ -->
+<div class="war-body">
+
+  <!-- LEFT: INFO -->
+  <div class="war-info">
+
+    <div class="war-coverage">
+      <p class="section-eyebrow">&#9733; What's Covered</p>
+      <h3>Your Brightview Warranty</h3>
+      <p>Your Brightview home comes with a comprehensive builder warranty covering workmanship, materials, and major structural components. Here's a general overview of coverage — your specific warranty terms are detailed in the documentation provided at closing.</p>
+
+      <div class="war-coverage-grid">
+        <div class="war-cov-item">
+          <h4>Workmanship &amp; Materials</h4>
+          <p>Covers defects in workmanship and materials for the first year after closing. Includes drywall, paint, trim, cabinetry, doors, and more.</p>
+        </div>
+        <div class="war-cov-item">
+          <h4>Mechanical Systems</h4>
+          <p>Plumbing, electrical, HVAC, and other mechanical systems are covered for defects in installation and materials for two years.</p>
+        </div>
+        <div class="war-cov-item">
+          <h4>Structural Components</h4>
+          <p>Major structural elements — foundation, load-bearing walls, roof framing — are warranted against defects for up to ten years.</p>
+        </div>
+        <div class="war-cov-item">
+          <h4>Appliances &amp; Fixtures</h4>
+          <p>Appliances and fixtures are covered by their respective manufacturer warranties. We'll help coordinate claims during the first year.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="war-process">
+      <p class="section-eyebrow">&#9733; How It Works</p>
+      <h3>Warranty Claim Process</h3>
+
+      <ul class="war-steps">
+        <li class="war-step">
+          <div class="war-step-num">1</div>
+          <div class="war-step-text">
+            <h4>Submit Your Claim</h4>
+            <p>Fill out the warranty claim form on this page with details about the issue, including photos if possible. You can also email us directly at <a href="mailto:warranty@brightviewhomes.us" style="color:var(--gold);text-decoration:none;font-weight:500">warranty@brightviewhomes.us</a>.</p>
+          </div>
+        </li>
+        <li class="war-step">
+          <div class="war-step-num">2</div>
+          <div class="war-step-text">
+            <h4>We Review &amp; Respond</h4>
+            <p>Our warranty team will review your claim and respond within 1–2 business days. We may schedule a site visit to assess the issue in person.</p>
+          </div>
+        </li>
+        <li class="war-step">
+          <div class="war-step-num">3</div>
+          <div class="war-step-text">
+            <h4>Schedule the Repair</h4>
+            <p>Once approved, we'll coordinate the repair with our trade partners and schedule a time that works for you. Most non-emergency repairs are completed within 7–14 business days.</p>
+          </div>
+        </li>
+        <li class="war-step">
+          <div class="war-step-num">4</div>
+          <div class="war-step-text">
+            <h4>Follow-Up</h4>
+            <p>After the repair is completed, we'll follow up to make sure everything was resolved to your satisfaction.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="war-contact-box">
+      <h4>Emergency Issues</h4>
+      <p>For urgent issues like water leaks, gas leaks, electrical hazards, or no heat/AC, call us immediately at <strong>(321) 310-2849</strong> or email <a href="mailto:warranty@brightviewhomes.us">warranty@brightviewhomes.us</a>. Emergency requests are addressed as quickly as possible, typically same-day or next-day.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="war-form-box">
+    <div class="war-form-header">
+      <h3>Submit a Warranty Claim</h3>
+      <p>Describe the issue and we'll get back to you within 1–2 business days.</p>
+    </div>
+    <div class="war-form-body">
+      <!--
+        ═══════════════════════════════════════
+        GO HIGH LEVEL FORM EMBED
+        ═══════════════════════════════════════
+        Replace this placeholder with your GHL warranty claim form.
+        Notifications should go to: warranty@brightviewhomes.us
+
+        Recommended form fields:
+          - Full Name (homeowner)
+          - Email
+          - Phone
+          - Property Address
+          - County (dropdown: 16 counties)
+          - Closing Date (date picker)
+          - Category (dropdown: Workmanship, Plumbing, Electrical, HVAC, Structural, Appliance, Other)
+          - Priority (dropdown: Normal, Urgent/Emergency)
+          - Description of Issue (textarea)
+          - Upload Photos (file upload, optional)
+        ═══════════════════════════════════════
+      -->
+      <div class="war-ghl-placeholder">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(30,58,82,.25)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <p>Go High Level warranty claim form goes here.<br>Notifications route to <strong>warranty@brightviewhomes.us</strong></p>
+        <code>&lt;iframe src="your-ghl-form-url" ...&gt;</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     FAQ
+══════════════════════ -->
+<section class="war-faq">
+  <div style="text-align:center;margin-bottom:2rem">
+    <p class="section-eyebrow">&#9733; Common Questions</p>
+    <h2 class="section-title">Warranty FAQ</h2>
+  </div>
+  <div class="war-faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How long is my warranty? <span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Workmanship and materials are covered for 1 year from closing. Mechanical systems (plumbing, electrical, HVAC) are covered for 2 years. Structural components are covered for up to 10 years. Specific terms are outlined in your warranty documentation provided at closing.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What's not covered by the warranty? <span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Normal wear and tear, homeowner negligence, damage caused by third parties, landscaping, cosmetic issues reported after the initial walk-through period, and items covered by separate manufacturer warranties (which we can help you navigate).</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How quickly will you respond to my claim? <span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><div class="faq-a-inner">We respond to all warranty claims within 1–2 business days. Emergency issues (water leaks, gas leaks, no heat/AC, electrical hazards) are addressed as quickly as possible, typically same-day or next-day. Call (321) 310-2849 for emergencies.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I email my warranty claim instead? <span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Yes. You can email warranty claims directly to <a href="mailto:warranty@brightviewhomes.us" style="color:var(--gold)">warranty@brightviewhomes.us</a>. Include your name, property address, a description of the issue, and photos if possible. We recommend using the form above for faster processing.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What if I have an appliance issue? <span class="faq-arrow">&#9662;</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Appliances are covered by their manufacturer warranties. During the first year, we'll help you coordinate the claim and connect you with the right service provider. After year one, contact the manufacturer directly using the warranty cards provided at closing.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     FOOTER
+══════════════════════ -->
+<footer class="bv-footer-full">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+      <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship.</p>
+      <div class="footer-brand-phone">(321) 310-2849</div>
+      <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Our Homes</div>
+      <a href="communities.html">Where We Build</a>
+      <a href="floor-plans.html">Floor Plans</a>
+      <a href="quick-move-ins.html">Quick Move-Ins</a>
+      <a href="available-lots.html">Available Lots</a>
+      <a href="build-on-your-lot.html">Build on Your Lot</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+      <a href="warranty.html">Customer Care</a>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Investors</div>
+      <a href="investor-marketplace.html">Investor Marketplace</a>
+      <a href="investor-marketplace.html">Build to Rent</a>
+      <a href="#">Build to Sell</a>
+      <a href="property-management.html">Property Management</a>
+      <a href="#">Investor Portal</a>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      <div class="footer-eho"><div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div></div>
+      <div class="footer-copyright">&copy; 2026 Brightview Homes. All rights reserved.<br>Brightview Homes, a Brightview Construction Group LLC company.</div>
+    </div>
+    <div class="footer-legal-links">
+      <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  var item = el.parentElement;
+  var wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(f) { f.classList.remove('open'); });
+  if (!wasOpen) item.classList.add('open');
+}
+</script>
+
+</body>
+</html>

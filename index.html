@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brightview Homes — New Construction in Central Florida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:       #1E3A52;
+  --navy-dark:  #152B3E;
+  --navy-mid:   #2A4E6E;
+  --navy-light: #EEF2F6;
+  --navy-bd:    #C5D3DF;
+  --gold:       #C9933A;
+  --gold-light: #FBF4E8;
+  --gold-bd:    #E8C98A;
+  --gray-bg:    #F5F7F9;
+  --gray-bd:    rgba(30,58,82,.12);
+  --gray-text:  #5A7080;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', sans-serif;
+  --nav-h:      60px;
+}
+
+/* ── NAV ── */
+.bv-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h); background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.75rem; border-bottom: 2px solid var(--gold);
+}
+.nav-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.nav-logo-star { color: var(--gold); font-size: 18px; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.footer-brand-logo img { height: 30px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 1.75rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; letter-spacing: .02em; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ══════════════════════
+   HERO SECTION
+══════════════════════ */
+.hero {
+  position: relative; min-height: 100vh; display: flex; align-items: center;
+  justify-content: center; overflow: hidden; padding-top: var(--nav-h);
+}
+.hero-video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0;
+}
+.hero-fallback {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(135deg, #0F2030 0%, #1E3A52 40%, #2A4E6E 70%, #1A3348 100%);
+}
+.hero-fallback::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 70%, rgba(201,147,58,.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, rgba(201,147,58,.05) 0%, transparent 50%);
+}
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to bottom, rgba(15,32,48,.7) 0%, rgba(30,58,82,.55) 50%, rgba(15,32,48,.8) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2; text-align: center;
+  max-width: 780px; padding: 2rem 1.75rem;
+}
+.hero-eyebrow {
+  font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem; font-weight: 500;
+}
+.hero-title {
+  font-family: var(--serif); font-size: 56px; font-weight: 500;
+  color: #fff; line-height: 1.08; margin-bottom: .75rem; letter-spacing: -.01em;
+}
+.hero-sub {
+  font-size: 16px; color: rgba(255,255,255,.7); line-height: 1.7;
+  max-width: 560px; margin: 0 auto 2rem;
+}
+
+/* Search Bar */
+.hero-search-wrap {
+  position: relative; max-width: 520px; margin: 0 auto 1.5rem;
+}
+.hero-search {
+  width: 100%; padding: 14px 18px 14px 48px;
+  font-family: var(--sans); font-size: 15px; color: var(--navy);
+  border: 2px solid rgba(255,255,255,.25); border-radius: 8px;
+  background: #fff; outline: none; cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+}
+.hero-search::placeholder { color: var(--gray-text); }
+.hero-search:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201,147,58,.2); }
+.hero-search-icon {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-text); pointer-events: none;
+}
+.hero-search-dropdown {
+  display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: #fff; border: 1px solid var(--navy-bd); border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(30,58,82,.2); max-height: 420px; overflow-y: auto;
+  z-index: 100;
+}
+.hero-search-dropdown.open { display: block; }
+.dropdown-region-label {
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold); padding: 12px 18px 4px; font-weight: 500;
+}
+.dropdown-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 18px; cursor: pointer; transition: background .1s;
+  text-decoration: none; color: inherit; border-bottom: 1px solid var(--gray-bd);
+}
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:hover { background: var(--navy-light); }
+.dropdown-item-left {}
+.dropdown-county { font-size: 14px; font-weight: 500; color: var(--navy); }
+.dropdown-cities { font-size: 12px; color: var(--gray-text); margin-top: 1px; }
+.dropdown-price { font-size: 13px; font-weight: 500; color: var(--gold); white-space: nowrap; }
+.dropdown-empty { padding: 20px 18px; text-align: center; font-size: 13px; color: var(--gray-text); }
+
+/* Hero Buttons */
+.hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.btn-qmi {
+  padding: 14px 32px; font-family: var(--sans); font-size: 14px; font-weight: 500;
+  background: var(--gold); color: #fff; border: none; border-radius: 6px;
+  cursor: pointer; transition: background .15s; letter-spacing: .03em;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-qmi:hover { background: #b07e2a; }
+.btn-hero-outline {
+  padding: 14px 32px; font-family: var(--sans); font-size: 14px; font-weight: 500;
+  background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.4);
+  border-radius: 6px; cursor: pointer; transition: border-color .15s, color .15s;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-hero-outline:hover { border-color: #fff; color: #fff; }
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: rgba(255,255,255,.5); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  animation: pulse-down 2s ease-in-out infinite;
+}
+@keyframes pulse-down {
+  0%, 100% { opacity: .5; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(6px); }
+}
+
+/* ══════════════════════
+   STATS BAR
+══════════════════════ */
+.stats-bar {
+  display: flex; background: var(--navy); border-top: 3px solid var(--gold);
+}
+.stat-item {
+  flex: 1; padding: 1.75rem 1.5rem; text-align: center;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.stat-item:last-child { border-right: none; }
+.stat-val { font-family: var(--serif); font-size: 36px; font-weight: 500; color: var(--gold); line-height: 1; }
+.stat-label { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 4px; letter-spacing: .05em; }
+
+/* ══════════════════════
+   WHY BRIGHTVIEW
+══════════════════════ */
+.why-section { padding: 4.5rem 1.75rem; background: var(--gray-bg); }
+.section-eyebrow {
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold); text-align: center; margin-bottom: 8px; font-weight: 500;
+}
+.section-title {
+  font-family: var(--serif); font-size: 38px; font-weight: 500;
+  color: var(--navy); text-align: center; margin-bottom: .5rem; line-height: 1.15;
+}
+.section-sub {
+  font-size: 15px; color: var(--gray-text); text-align: center;
+  max-width: 560px; margin: 0 auto 2.5rem; line-height: 1.7;
+}
+.why-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  max-width: 1100px; margin: 0 auto;
+}
+.why-card {
+  background: #fff; border: 1px solid var(--navy-bd); border-radius: 8px;
+  padding: 2rem 1.5rem; text-align: center;
+  transition: transform .2s, box-shadow .2s;
+}
+.why-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(30,58,82,.1); }
+.why-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--gold-light); border: 2px solid var(--gold-bd);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+}
+.why-icon svg { color: var(--gold); }
+.why-card h3 {
+  font-family: var(--serif); font-size: 20px; font-weight: 500;
+  color: var(--navy); margin-bottom: .5rem;
+}
+.why-card p { font-size: 13px; color: var(--gray-text); line-height: 1.7; }
+
+/* ══════════════════════
+   FEATURED PLANS
+══════════════════════ */
+.plans-section { padding: 4.5rem 1.75rem; }
+.plans-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;
+  max-width: 1100px; margin: 0 auto;
+}
+.plan-card {
+  border: 1px solid var(--navy-bd); border-radius: 8px; overflow: hidden;
+  cursor: pointer; transition: border-color .2s, transform .2s, box-shadow .2s;
+  background: #fff; text-decoration: none; color: inherit;
+}
+.plan-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(30,58,82,.12); }
+.plan-card-hero {
+  background: var(--navy); height: 160px;
+  display: flex; align-items: flex-end; padding: 1rem 1.1rem;
+  position: relative; overflow: hidden;
+}
+.plan-card-letter {
+  position: absolute; right: -.5rem; top: 50%; transform: translateY(-50%);
+  font-family: var(--serif); font-size: 120px; font-weight: 600;
+  color: rgba(255,255,255,.06); line-height: 1; pointer-events: none;
+}
+.plan-card-content { position: relative; z-index: 1; }
+.plan-card-badge {
+  font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 3px;
+  background: var(--gold); color: #fff; display: inline-block;
+  margin-bottom: 6px; letter-spacing: .05em; text-transform: uppercase;
+}
+.plan-card-name { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; line-height: 1.1; }
+.plan-card-price { font-size: 14px; color: rgba(255,255,255,.75); }
+.plan-card-price strong { color: var(--gold); font-size: 16px; }
+
+.plan-card-body { padding: 1rem 1.1rem; }
+.plan-specs-row { display: flex; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid var(--gray-bd); }
+.plan-specs-row:last-child { border-bottom: none; }
+.plan-spec-label { font-size: 11px; color: var(--gray-text); text-transform: uppercase; letter-spacing: .06em; }
+.plan-spec-val { font-size: 13px; font-weight: 500; color: var(--navy); }
+
+.plan-card-footer { padding: .85rem 1.1rem; border-top: 1px solid var(--gray-bd); }
+.plan-btn {
+  width: 100%; padding: .6rem; background: var(--navy); border: none; border-radius: 4px;
+  color: #fff; font-family: var(--sans); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: background .15s; text-align: center;
+}
+.plan-btn:hover { background: var(--navy-dark); }
+
+.plans-cta { text-align: center; margin-top: 2rem; }
+.plans-cta a {
+  font-size: 14px; font-weight: 500; color: var(--gold);
+  text-decoration: none; letter-spacing: .03em;
+  transition: color .15s;
+}
+.plans-cta a:hover { color: #b07e2a; text-decoration: underline; }
+
+/* ══════════════════════
+   COUNTIES PREVIEW
+══════════════════════ */
+.counties-section { padding: 4.5rem 1.75rem; background: var(--gray-bg); }
+.counties-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px;
+  max-width: 1100px; margin: 0 auto;
+}
+.county-chip {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem; background: #fff; border: 1px solid var(--navy-bd);
+  border-radius: 6px; cursor: pointer; transition: border-color .15s, transform .15s;
+  text-decoration: none; color: inherit;
+}
+.county-chip:hover { border-color: var(--gold); transform: translateY(-2px); }
+.county-chip-name { font-size: 14px; font-weight: 500; color: var(--navy); }
+.county-chip-from { font-size: 12px; color: var(--gold); font-weight: 500; }
+
+/* ══════════════════════
+   CTA BANNER
+══════════════════════ */
+.cta-banner {
+  background: var(--navy); padding: 4rem 1.75rem; text-align: center;
+  border-top: 3px solid var(--gold);
+}
+.cta-banner h2 {
+  font-family: var(--serif); font-size: 36px; font-weight: 500;
+  color: #fff; margin-bottom: .5rem;
+}
+.cta-banner p { font-size: 15px; color: rgba(255,255,255,.65); margin-bottom: 1.5rem; }
+.cta-banner-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-btn-gold {
+  padding: 14px 36px; background: var(--gold); color: #fff; border: none;
+  border-radius: 6px; font-family: var(--sans); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: background .15s; text-decoration: none;
+}
+.cta-btn-gold:hover { background: #b07e2a; }
+.cta-btn-outline {
+  padding: 14px 36px; background: transparent; color: #fff;
+  border: 1.5px solid rgba(255,255,255,.35); border-radius: 6px;
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: border-color .15s; text-decoration: none;
+}
+.cta-btn-outline:hover { border-color: #fff; }
+
+/* ══════════════════════
+   FOOTER
+══════════════════════ */
+.bv-footer-full { background: var(--navy-dark); border-top: 3px solid var(--gold); }
+.footer-main {
+  display: grid; grid-template-columns: 1.2fr repeat(3, 1fr);
+  gap: 2rem; padding: 3rem 1.75rem 2rem; max-width: 1200px; margin: 0 auto;
+}
+.footer-brand {}
+.footer-brand-logo {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: .75rem;
+}
+.footer-brand-logo span { color: var(--gold); }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; max-width: 280px; margin-bottom: 1rem; }
+.footer-brand-phone { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 500; }
+.footer-brand-addr { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.6; margin-top: 4px; }
+.footer-col {}
+.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .85rem; font-weight: 500; }
+.footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 0 1.75rem; }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.75rem; flex-wrap: wrap; gap: 1rem;
+}
+.footer-legal { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.footer-eho { display: flex; align-items: center; gap: 8px; }
+.footer-eho-icon {
+  width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 2px; display: flex; align-items: center; justify-content: center;
+  font-size: 8px; color: rgba(255,255,255,.7); text-align: center;
+  line-height: 1.1; padding: 2px; font-weight: 700; letter-spacing: .02em;
+}
+.footer-copyright { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.6; }
+.footer-legal-links { display: flex; gap: 16px; }
+.footer-legal-links a { font-size: 11px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+.footer-legal-links a:hover { color: var(--gold); }
+
+/* ══════════════════════
+   RESPONSIVE
+══════════════════════ */
+@media (max-width: 900px) {
+  .hero-title { font-size: 38px; }
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { flex-wrap: wrap; }
+  .stat-item { min-width: 50%; }
+  .nav-links { display: none; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .hero-title { font-size: 30px; }
+  .why-grid { grid-template-columns: 1fr; }
+  .stat-item { min-width: 50%; }
+  .footer-main { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html">
+    <img src="logo.png" alt="Brightview Homes">
+  </a>
+  <div class="nav-links">
+    <a href="communities.html">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="https://brightviewhomes.us/build-on-your-lot/" target="_blank">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<!-- ══════════════════════
+     HERO
+══════════════════════ -->
+<section class="hero">
+  <!-- Video background: replace src with your drone/aerial footage -->
+  <!-- <video class="hero-video" autoplay muted loop playsinline poster="hero-poster.jpg">
+    <source src="hero-video.mp4" type="video/mp4">
+  </video> -->
+  <!-- Fallback gradient shown when no video -->
+  <div class="hero-fallback"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">&#9733; Brightview Construction Group</p>
+    <h1 class="hero-title">Build Your Dream Home in Central Florida</h1>
+    <p class="hero-sub">New construction on scatter lots across 16 counties. Quality craftsmanship, thoughtful design, and pricing that makes homeownership attainable.</p>
+
+    <!-- Search Bar -->
+    <div class="hero-search-wrap">
+      <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="hero-search" type="text" placeholder="Search by county..." id="county-search" autocomplete="off">
+      <div class="hero-search-dropdown" id="county-dropdown"></div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="hero-buttons">
+      <a class="btn-qmi" href="quick-move-ins.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        View Quick Move-Ins
+      </a>
+      <a class="btn-hero-outline" href="floor-plans.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        Explore Floor Plans
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-val">16</div><div class="stat-label">Counties</div></div>
+  <div class="stat-item"><div class="stat-val">10</div><div class="stat-label">Floor Plans</div></div>
+  <div class="stat-item"><div class="stat-val">$270K</div><div class="stat-label">Starting From</div></div>
+  <div class="stat-item"><div class="stat-val">3,479</div><div class="stat-label">Largest Sq Ft</div></div>
+</div>
+
+<!-- WHY BRIGHTVIEW -->
+<section class="why-section">
+  <p class="section-eyebrow">&#9733; The Brightview Difference</p>
+  <h2 class="section-title">Why Build With Brightview</h2>
+  <p class="section-sub">We combine the quality and process of a national builder with the flexibility and pricing of a local one.</p>
+
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>Value Engineering</h3>
+      <p>Quality homes at costs competitors can't match. We keep margins lean and pass the savings directly to you.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h3>Scatter Lot Building</h3>
+      <p>Build anywhere across 16 Central Florida counties. Choose your lot, choose your plan, and we handle the rest.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      </div>
+      <h3>10 Floor Plans</h3>
+      <p>From efficient ranch layouts to two-story estates. Every plan is thoughtfully designed for Florida living.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>Quality Craftsmanship</h3>
+      <p>National-builder quality with local-builder care. Every home is built to the highest standards, guaranteed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED FLOOR PLANS -->
+<section class="plans-section">
+  <p class="section-eyebrow">&#9733; Home Designs</p>
+  <h2 class="section-title">Featured Floor Plans</h2>
+  <p class="section-sub">Ten thoughtfully designed floor plans available on scatter lots across 16 Central Florida counties.</p>
+
+  <div class="plans-grid" id="plans-grid"></div>
+
+  <div class="plans-cta">
+    <a href="floor-plans.html">View all 10 floor plans &rarr;</a>
+  </div>
+</section>
+
+<!-- WHERE WE BUILD PREVIEW -->
+<section class="counties-section">
+  <p class="section-eyebrow">&#9733; Where We Build</p>
+  <h2 class="section-title">16 Counties Across Central Florida</h2>
+  <p class="section-sub">From Jacksonville to Fort Myers, we build new homes on scatter lots throughout Florida's fastest-growing counties.</p>
+
+  <div class="counties-grid" id="counties-grid"></div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <h2>Ready to Build Your Home?</h2>
+  <p>Talk to our team about available lots, floor plans, and pricing in your preferred county.</p>
+  <div class="cta-banner-btns">
+    <a class="cta-btn-gold" href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Consultation</a>
+    <a class="cta-btn-outline" href="communities.html">Explore Where We Build</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bv-footer-full">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+      <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+      <div class="footer-brand-phone">(321) 310-2849</div>
+      <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Our Homes</div>
+      <a href="communities.html">Where We Build</a>
+      <a href="floor-plans.html">Floor Plans</a>
+      <a href="quick-move-ins.html">Quick Move-Ins</a>
+      <a href="available-lots.html">Available Lots</a>
+      <a href="build-on-your-lot.html">Build on Your Lot</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+      <a href="warranty.html">Customer Care</a>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Investors</div>
+      <a href="investor-marketplace.html">Investor Marketplace</a>
+      <a href="investor-marketplace.html">Build to Rent</a>
+      <a href="#">Build to Sell</a>
+      <a href="property-management.html">Property Management</a>
+      <a href="#">Investor Portal</a>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      <div class="footer-eho">
+        <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+      </div>
+      <div class="footer-copyright">
+        &copy; 2026 Brightview Homes. All rights reserved.<br>
+        Brightview Homes, a Brightview Construction Group LLC company.
+      </div>
+    </div>
+    <div class="footer-legal-links">
+      <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════
+//  DATA
+// ═══════════════════════════
+var COUNTIES = [
+  { id:'brevard',     name:'Brevard County',     region:'Atlantic', cities:'Melbourne, Titusville, Palm Bay',      price:269990 },
+  { id:'charlotte',   name:'Charlotte County',   region:'South',    cities:'Port Charlotte, Punta Gorda',         price:269990 },
+  { id:'duval',       name:'Duval County',       region:'Atlantic', cities:'Jacksonville, Jax Beach',             price:269990 },
+  { id:'flagler',     name:'Flagler County',     region:'Atlantic', cities:'Palm Coast, Flagler Beach',           price:269990 },
+  { id:'hillsborough',name:'Hillsborough County',region:'Gulf',     cities:'Tampa, Brandon, Riverview',           price:269990 },
+  { id:'lake',        name:'Lake County',        region:'Central',  cities:'Clermont, Leesburg, Mount Dora',      price:269990 },
+  { id:'lee',         name:'Lee County',         region:'South',    cities:'Fort Myers, Cape Coral',              price:269990 },
+  { id:'manatee',     name:'Manatee County',     region:'Gulf',     cities:'Bradenton, Palmetto',                 price:269990 },
+  { id:'marion',      name:'Marion County',      region:'Central',  cities:'Ocala, Belleview',                    price:269990 },
+  { id:'orange',      name:'Orange County',      region:'Central',  cities:'Orlando, Winter Park, Ocoee',         price:269990 },
+  { id:'osceola',     name:'Osceola County',     region:'Central',  cities:'Kissimmee, St. Cloud',                price:269990 },
+  { id:'pasco',       name:'Pasco County',       region:'Gulf',     cities:'Wesley Chapel, Zephyrhills',          price:269990 },
+  { id:'polk',        name:'Polk County',        region:'Central',  cities:'Lakeland, Winter Haven',              price:269990 },
+  { id:'sarasota',    name:'Sarasota County',    region:'Gulf',     cities:'Sarasota, Venice, North Port',        price:269990 },
+  { id:'seminole',    name:'Seminole County',    region:'Central',  cities:'Sanford, Lake Mary, Longwood',        price:269990 },
+  { id:'volusia',     name:'Volusia County',     region:'Atlantic', cities:'DeLand, Daytona Beach, New Smyrna',   price:269990 }
+];
+
+var PLANS = [
+  { id:'cambria',   name:'Cambria',          sqft:1665, beds:4, baths:2,   garage:2, price:269990, style:'Ranch' },
+  { id:'tribeca',   name:'Tribeca',          sqft:1665, beds:3, baths:2,   garage:2, price:269990, style:'Ranch' },
+  { id:'legacy',    name:'Legacy',           sqft:1805, beds:4, baths:2,   garage:2, price:299990, style:'Ranch' },
+  { id:'hudson',    name:'Hudson',           sqft:1821, beds:3, baths:2.5, garage:2, price:299990, style:'Two Story' },
+  { id:'valencia',  name:'Valencia',         sqft:1920, beds:4, baths:2.5, garage:2, price:309990, style:'Ranch' },
+  { id:'brighton',  name:'Brighton',         sqft:2000, beds:4, baths:2.5, garage:2, price:329990, style:'Two Story' },
+  { id:'kensington',name:'Kensington',       sqft:2112, beds:4, baths:3,   garage:2, price:339990, style:'Ranch' },
+  { id:'belmont',   name:'Belmont',          sqft:2307, beds:4, baths:3,   garage:3, price:369990, style:'Ranch' },
+  { id:'astoria',   name:'Astoria',          sqft:2551, beds:4, baths:3.5, garage:2, price:409990, style:'Ranch' },
+  { id:'stephanie', name:'Stephanie Estate', sqft:3479, beds:4, baths:3.5, garage:2, price:559990, style:'Two Story' }
+];
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+// ═══════════════════════════
+//  SEARCH DROPDOWN
+// ═══════════════════════════
+var searchInput = document.getElementById('county-search');
+var dropdown = document.getElementById('county-dropdown');
+
+function renderDropdown(filter) {
+  var q = (filter || '').toLowerCase();
+  var regions = ['Central', 'Gulf', 'Atlantic', 'South'];
+  var html = '';
+  var total = 0;
+
+  regions.forEach(function(region) {
+    var counties = COUNTIES.filter(function(c) {
+      if (c.region !== region) return false;
+      if (!q) return true;
+      return c.name.toLowerCase().indexOf(q) !== -1 || c.cities.toLowerCase().indexOf(q) !== -1;
+    });
+    if (counties.length === 0) return;
+    html += '<div class="dropdown-region-label">' + region + ' Florida</div>';
+    counties.forEach(function(c) {
+      html += '<a class="dropdown-item" href="communities.html#' + c.id + '">' +
+        '<div class="dropdown-item-left">' +
+          '<div class="dropdown-county">' + c.name + '</div>' +
+          '<div class="dropdown-cities">' + c.cities + '</div>' +
+        '</div>' +
+        '<div class="dropdown-price">From ' + fmt(c.price) + '</div>' +
+      '</a>';
+      total++;
+    });
+  });
+
+  if (total === 0) {
+    html = '<div class="dropdown-empty">No counties match your search</div>';
+  }
+
+  dropdown.innerHTML = html;
+}
+
+searchInput.addEventListener('focus', function() {
+  renderDropdown(searchInput.value);
+  dropdown.classList.add('open');
+});
+
+searchInput.addEventListener('input', function() {
+  renderDropdown(searchInput.value);
+  if (!dropdown.classList.contains('open')) dropdown.classList.add('open');
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.hero-search-wrap')) {
+    dropdown.classList.remove('open');
+  }
+});
+
+// ═══════════════════════════
+//  FEATURED PLANS (show 4)
+// ═══════════════════════════
+var featured = [PLANS[0], PLANS[4], PLANS[6], PLANS[9]]; // Cambria, Valencia, Kensington, Stephanie
+
+var plansGrid = document.getElementById('plans-grid');
+featured.forEach(function(p) {
+  var card = document.createElement('a');
+  card.className = 'plan-card';
+  card.href = 'floor-plans.html#' + p.id;
+  card.innerHTML =
+    '<div class="plan-card-hero">' +
+      '<div class="plan-card-letter">' + p.name.charAt(0) + '</div>' +
+      '<div class="plan-card-content">' +
+        '<div class="plan-card-badge">' + p.style + '</div>' +
+        '<div class="plan-card-name">' + p.name + '</div>' +
+        '<div class="plan-card-price">From <strong>' + fmt(p.price) + '</strong></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="plan-card-body">' +
+      '<div class="plan-specs-row"><span class="plan-spec-label">Sq Ft</span><span class="plan-spec-val">' + p.sqft.toLocaleString() + '</span></div>' +
+      '<div class="plan-specs-row"><span class="plan-spec-label">Bedrooms</span><span class="plan-spec-val">' + p.beds + '</span></div>' +
+      '<div class="plan-specs-row"><span class="plan-spec-label">Bathrooms</span><span class="plan-spec-val">' + p.baths + '</span></div>' +
+      '<div class="plan-specs-row"><span class="plan-spec-label">Garage</span><span class="plan-spec-val">' + p.garage + '-car</span></div>' +
+    '</div>' +
+    '<div class="plan-card-footer"><div class="plan-btn">View Floor Plan</div></div>';
+  plansGrid.appendChild(card);
+});
+
+// ═══════════════════════════
+//  COUNTIES GRID
+// ═══════════════════════════
+var countiesGrid = document.getElementById('counties-grid');
+COUNTIES.forEach(function(c) {
+  var chip = document.createElement('a');
+  chip.className = 'county-chip';
+  chip.href = 'communities.html#' + c.id;
+  chip.innerHTML =
+    '<span class="county-chip-name">' + c.name + '</span>' +
+    '<span class="county-chip-from">From ' + fmt(c.price) + '</span>';
+  countiesGrid.appendChild(chip);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Available Lots — Brightview Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap" async defer></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:       #1E3A52;
+  --navy-dark:  #152B3E;
+  --navy-mid:   #2A4E6E;
+  --navy-light: #EEF2F6;
+  --navy-bd:    #C5D3DF;
+  --gold:       #C9933A;
+  --gold-light: #FBF4E8;
+  --gold-bd:    #E8C98A;
+  --gray-bg:    #F5F7F9;
+  --gray-bd:    rgba(30,58,82,.12);
+  --gray-text:  #5A7080;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', sans-serif;
+  --nav-h:      60px;
+}
+
+/* ── NAV ── */
+.bv-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h); background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.75rem; border-bottom: 2px solid var(--gold);
+}
+.nav-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.nav-logo-star { color: var(--gold); font-size: 18px; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.footer-brand-logo img { height: 30px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 1.75rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; letter-spacing: .02em; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ══════════════════════
+   HERO
+══════════════════════ */
+.lots-hero {
+  background: var(--navy); padding: 3.5rem 1.75rem 2.5rem; margin-top: var(--nav-h);
+  border-bottom: 3px solid var(--gold); position: relative; overflow: hidden;
+}
+.lots-hero-letter {
+  position: absolute; right: 2rem; top: 50%; transform: translateY(-50%);
+  font-family: var(--serif); font-size: 280px; font-weight: 600;
+  color: rgba(255,255,255,.03); line-height: 1; pointer-events: none;
+}
+.lots-hero-content { position: relative; z-index: 1; max-width: 700px; }
+.lots-eyebrow {
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px; font-weight: 500;
+}
+.lots-hero h1 {
+  font-family: var(--serif); font-size: 44px; font-weight: 500;
+  color: #fff; line-height: 1.08; margin-bottom: .75rem;
+}
+.lots-hero p {
+  font-size: 15px; color: rgba(255,255,255,.7); line-height: 1.75; max-width: 580px;
+}
+.lots-hero-stats { display: flex; gap: 2.5rem; margin-top: 1.25rem; }
+.lots-stat-val { font-family: var(--serif); font-size: 28px; font-weight: 500; color: var(--gold); line-height: 1; }
+.lots-stat-label { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 3px; letter-spacing: .05em; }
+
+/* ══════════════════════
+   SPLIT LAYOUT
+══════════════════════ */
+.lots-layout {
+  display: grid; grid-template-columns: 520px 1fr;
+  min-height: 600px;
+}
+
+.lots-list {
+  overflow-y: auto; border-right: 1px solid var(--gray-bd);
+  background: #fff; max-height: calc(100vh - var(--nav-h) - 200px);
+}
+
+.lots-filters {
+  display: flex; gap: 8px; padding: .75rem 1.5rem;
+  border-bottom: 1px solid var(--gray-bd);
+  background: var(--gray-bg); flex-wrap: wrap; align-items: center;
+  position: sticky; top: 0; z-index: 10;
+}
+.lots-filter-label { font-size: 11px; color: var(--gray-text); letter-spacing: .04em; }
+.lots-fsel {
+  font-family: var(--sans); font-size: 12px;
+  padding: 5px 26px 5px 10px;
+  border: 1px solid var(--navy-bd); border-radius: 4px;
+  background: #fff; color: var(--navy); cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%231E3A52'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.lots-fsel:focus { outline: none; border-color: var(--gold); }
+.lots-count { font-size: 12px; color: var(--gray-text); margin-left: auto; }
+
+/* ── LOT CARD ── */
+.lot-card {
+  display: grid; grid-template-columns: 100px 1fr;
+  border-bottom: 1px solid var(--gray-bd);
+  cursor: pointer; transition: background .15s;
+  text-decoration: none; color: inherit;
+}
+.lot-card:hover { background: var(--navy-light); }
+.lot-card.highlighted { background: var(--gold-light); border-left: 3px solid var(--gold); }
+
+.lot-card-thumb {
+  width: 100px; min-height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; position: relative;
+}
+.lot-card-thumb::after {
+  content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.1);
+}
+
+.lot-card-body { padding: .85rem 1.1rem; }
+.lot-card-status {
+  font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 3px;
+  display: inline-block; margin-bottom: 4px; letter-spacing: .05em; text-transform: uppercase;
+}
+.status-available { background: #D4EDDA; color: #155724; }
+.status-pending { background: var(--gold-light); color: #8B6914; }
+.status-new { background: #D1ECF1; color: #0C5460; }
+
+.lot-card-addr {
+  font-family: var(--serif); font-size: 17px; font-weight: 500;
+  color: var(--navy); margin-bottom: 2px; line-height: 1.2;
+}
+.lot-card-county { font-size: 12px; color: var(--gray-text); margin-bottom: 6px; }
+.lot-card-price { font-size: 15px; font-weight: 500; color: var(--gold); margin-bottom: 6px; }
+
+.lot-card-details { display: flex; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.lot-detail { font-size: 12px; color: var(--gray-text); }
+.lot-detail strong { color: var(--navy); font-weight: 500; }
+
+.lot-card-actions { display: flex; gap: 7px; }
+.btn-lot-view {
+  font-size: 12px; font-weight: 500; padding: 5px 14px;
+  border: 1.5px solid var(--navy); border-radius: 4px;
+  color: var(--navy); background: transparent; cursor: pointer;
+  font-family: var(--sans); transition: background .15s, color .15s;
+}
+.btn-lot-view:hover { background: var(--navy); color: #fff; }
+.btn-lot-inquire {
+  font-size: 12px; font-weight: 500; padding: 5px 14px;
+  border: 1.5px solid var(--gold); border-radius: 4px;
+  color: var(--gold); background: transparent; cursor: pointer;
+  font-family: var(--sans); transition: background .15s, color .15s;
+}
+.btn-lot-inquire:hover { background: var(--gold); color: #fff; }
+
+.lots-empty {
+  padding: 3rem 1.5rem; text-align: center;
+  color: var(--gray-text); font-size: 14px; line-height: 1.7;
+}
+
+/* ── MAP ── */
+.lots-map { position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h) - 200px); }
+#lots-map { width: 100%; height: 100%; }
+.map-placeholder {
+  width: 100%; height: 100%; background: var(--navy-light);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px; color: var(--gray-text);
+}
+.map-placeholder p { font-size: 13px; line-height: 1.7; text-align: center; max-width: 300px; color: var(--navy); }
+.map-placeholder code { font-size: 12px; background: rgba(30,58,82,.08); padding: 2px 7px; border-radius: 3px; color: var(--navy); }
+.map-key-icon {
+  width: 48px; height: 48px; background: var(--gold-light);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--gold-bd);
+}
+
+/* ══════════════════════
+   CTA SECTION
+══════════════════════ */
+.lots-cta-section {
+  padding: 4rem 1.75rem; background: var(--gray-bg);
+  border-top: 1px solid var(--gray-bd);
+}
+.lots-cta-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  max-width: 1100px; margin: 0 auto; align-items: start;
+}
+.lots-cta-text {}
+.section-eyebrow {
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px; font-weight: 500;
+}
+.section-title {
+  font-family: var(--serif); font-size: 34px; font-weight: 500;
+  color: var(--navy); margin-bottom: .75rem; line-height: 1.15;
+}
+.lots-cta-text p {
+  font-size: 14px; color: var(--gray-text); line-height: 1.8; margin-bottom: 1.25rem;
+}
+.cta-highlights { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+.cta-highlights li {
+  font-size: 13px; color: #4A6070; padding-left: 22px;
+  position: relative; line-height: 1.6;
+}
+.cta-highlights li::before {
+  content: '\2713'; position: absolute; left: 0; top: 0;
+  font-size: 14px; color: var(--gold); font-weight: 700;
+}
+.cta-phone {
+  font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--navy);
+  margin-bottom: 4px;
+}
+.cta-addr { font-size: 12px; color: var(--gray-text); line-height: 1.6; }
+
+/* GHL form container */
+.ghl-form-box {
+  border: 1px solid var(--navy-bd); border-radius: 8px;
+  background: #fff; border-top: 3px solid var(--gold);
+  overflow: hidden;
+}
+.ghl-form-header {
+  padding: 1.25rem 1.5rem; background: var(--navy);
+  border-bottom: 1px solid rgba(201,147,58,.3);
+}
+.ghl-form-header h3 {
+  font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff;
+  margin-bottom: 4px;
+}
+.ghl-form-header p { font-size: 13px; color: rgba(255,255,255,.6); }
+.ghl-form-body {
+  padding: 1.5rem; min-height: 350px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ghl-placeholder {
+  text-align: center; color: var(--gray-text);
+}
+.ghl-placeholder p { font-size: 13px; line-height: 1.7; margin-bottom: .75rem; }
+.ghl-placeholder code {
+  font-size: 12px; background: rgba(30,58,82,.06);
+  padding: 3px 10px; border-radius: 4px; color: var(--navy);
+}
+
+/* ══════════════════════
+   INFO SECTION
+══════════════════════ */
+.lots-info-section { padding: 4rem 1.75rem; }
+.info-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  max-width: 1000px; margin: 0 auto;
+}
+.info-card {
+  background: #fff; border: 1px solid var(--navy-bd); border-radius: 8px;
+  padding: 1.75rem; border-top: 3px solid var(--gold);
+  text-align: center;
+}
+.info-icon {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: var(--gold-light); border: 2px solid var(--gold-bd);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto .85rem;
+}
+.info-card h3 {
+  font-family: var(--serif); font-size: 19px; font-weight: 500;
+  color: var(--navy); margin-bottom: .5rem;
+}
+.info-card p { font-size: 13px; color: var(--gray-text); line-height: 1.7; }
+
+/* ══════════════════════
+   FOOTER
+══════════════════════ */
+.bv-footer-full { background: var(--navy-dark); border-top: 3px solid var(--gold); }
+.footer-main {
+  display: grid; grid-template-columns: 1.2fr repeat(3, 1fr);
+  gap: 2rem; padding: 3rem 1.75rem 2rem; max-width: 1200px; margin: 0 auto;
+}
+.footer-brand-logo {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: .75rem;
+}
+.footer-brand-logo span { color: var(--gold); }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; max-width: 280px; margin-bottom: 1rem; }
+.footer-brand-phone { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 500; }
+.footer-brand-addr { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.6; margin-top: 4px; }
+.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .85rem; font-weight: 500; }
+.footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 0 1.75rem; }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.75rem; flex-wrap: wrap; gap: 1rem;
+}
+.footer-legal { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.footer-eho-icon {
+  width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 2px; display: flex; align-items: center; justify-content: center;
+  font-size: 8px; color: rgba(255,255,255,.7); text-align: center;
+  line-height: 1.1; padding: 2px; font-weight: 700; letter-spacing: .02em;
+}
+.footer-copyright { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.6; }
+.footer-legal-links { display: flex; gap: 16px; }
+.footer-legal-links a { font-size: 11px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+.footer-legal-links a:hover { color: var(--gold); }
+
+/* ══════════════════════
+   RESPONSIVE
+══════════════════════ */
+@media (max-width: 900px) {
+  .lots-layout { grid-template-columns: 1fr; }
+  .lots-map { display: none; }
+  .lots-list { max-height: none; }
+  .lots-cta-grid { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+  .lots-hero h1 { font-size: 32px; }
+  .nav-links { display: none; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .footer-main { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html">
+    <img src="logo.png" alt="Brightview Homes">
+  </a>
+  <div class="nav-links">
+    <a href="communities.html">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html" class="active">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<!-- ══════════════════════
+     HERO
+══════════════════════ -->
+<section class="lots-hero">
+  <div class="lots-hero-letter">L</div>
+  <div class="lots-hero-content">
+    <p class="lots-eyebrow">&#9733; Available Home Sites</p>
+    <h1>Find Your Perfect Lot</h1>
+    <p>Browse available home sites across 16 Central Florida counties. Every lot listed here has been reviewed by our team for buildability — ready for any of our 10 floor plans. Pick your lot, pick your plan, and we'll build your home.</p>
+    <div class="lots-hero-stats">
+      <div><div class="lots-stat-val">16</div><div class="lots-stat-label">Counties</div></div>
+      <div><div class="lots-stat-val">10</div><div class="lots-stat-label">Floor Plans</div></div>
+      <div><div class="lots-stat-val">$40K+</div><div class="lots-stat-label">Lot Prices</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     LOT LISTINGS + MAP
+══════════════════════ -->
+<div class="lots-layout">
+
+  <!-- LEFT: LIST -->
+  <div class="lots-list">
+    <div class="lots-filters">
+      <span class="lots-filter-label">Filter:</span>
+      <select class="lots-fsel" id="f-county" onchange="filterLots()">
+        <option value="">All counties</option>
+      </select>
+      <select class="lots-fsel" id="f-price" onchange="filterLots()">
+        <option value="">Price: Any</option>
+        <option value="50000">Up to $50K</option>
+        <option value="75000">Up to $75K</option>
+        <option value="100000">Up to $100K</option>
+        <option value="150000">Up to $150K</option>
+      </select>
+      <select class="lots-fsel" id="f-acreage" onchange="filterLots()">
+        <option value="">Size: Any</option>
+        <option value="0.15">0.15+ acres</option>
+        <option value="0.25">0.25+ acres</option>
+        <option value="0.5">0.50+ acres</option>
+      </select>
+      <select class="lots-fsel" id="f-sort" onchange="filterLots()">
+        <option value="price">Price: Low to High</option>
+        <option value="price-d">Price: High to Low</option>
+        <option value="acreage-d">Acreage: Large to Small</option>
+        <option value="county">County: A-Z</option>
+      </select>
+      <span class="lots-count" id="lots-count">Showing 0</span>
+    </div>
+
+    <div id="lot-cards"></div>
+  </div>
+
+  <!-- RIGHT: MAP -->
+  <div class="lots-map">
+    <div id="lots-map">
+      <div class="map-placeholder">
+        <div class="map-key-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        </div>
+        <p>Interactive Google Map loads here.<br><br>Replace <code>YOUR_API_KEY_HERE</code> with your Google Maps API key.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CTA — LAND TEAM
+══════════════════════ -->
+<section class="lots-cta-section">
+  <div class="lots-cta-grid">
+    <div class="lots-cta-text">
+      <p class="section-eyebrow">&#9733; Land Specialty Team</p>
+      <h2 class="section-title">Don't See the Lot You're Looking For?</h2>
+      <p>Don't see the area you want to be in? Our dedicated land specialty team covers all 29 Florida counties in our brokerage territory. Whether you need help finding the perfect home site, evaluating a lot you've found, or understanding zoning and buildability — we're here to help.</p>
+      <p>We work with buyers, investors, and landowners every day to match the right lot with the right plan. Reach out and let us do the searching for you.</p>
+
+      <ul class="cta-highlights">
+        <li>Free lot evaluation — we'll review any lot for buildability at no cost</li>
+        <li>Access to off-market lots and pocket listings across 29 counties</li>
+        <li>Zoning, setback, and utility research handled by our team</li>
+        <li>Financing guidance through Springwell Capital</li>
+        <li>Licensed real estate brokerage through LPT Realty</li>
+      </ul>
+
+      <div class="cta-phone">(321) 310-2849</div>
+      <div class="cta-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+    </div>
+
+    <div class="ghl-form-box">
+      <div class="ghl-form-header">
+        <h3>Find Your Perfect Home Site</h3>
+        <p>Tell us what you're looking for and a land specialist will reach out.</p>
+      </div>
+      <div class="ghl-form-body">
+        <!--
+          ═══════════════════════════════════════
+          GO HIGH LEVEL FORM EMBED
+          ═══════════════════════════════════════
+          Replace this placeholder with your GHL form embed code.
+
+          Option 1 — Inline embed:
+            <iframe src="https://link.yourdomain.com/widget/form/YOUR_FORM_ID"
+                    style="width:100%;height:500px;border:none;border-radius:4px"
+                    scrolling="no"></iframe>
+
+          Option 2 — GHL script embed:
+            <div id="ghl-form-YOUR_FORM_ID"></div>
+            <script src="https://link.yourdomain.com/js/form_embed.js"></script>
+
+          Recommended form fields:
+            - Full Name
+            - Email
+            - Phone
+            - Preferred County (dropdown)
+            - Budget Range (dropdown)
+            - "I already have a lot" (checkbox)
+            - Lot Address (conditional, if checkbox checked)
+            - Message / What are you looking for?
+          ═══════════════════════════════════════
+        -->
+        <div class="ghl-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(30,58,82,.25)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <p>Go High Level lead capture form goes here.<br>Replace with your GHL iframe or script embed.</p>
+          <code>&lt;iframe src="your-ghl-form-url" ...&gt;</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     INFO CARDS
+══════════════════════ -->
+<section class="lots-info-section">
+  <p class="section-eyebrow" style="text-align:center">&#9733; How It Works</p>
+  <h2 class="section-title" style="text-align:center;margin-bottom:2rem">From Lot to Home</h2>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </div>
+      <h3>Browse or Request</h3>
+      <p>Browse available lots above, or reach out to our land team to find off-market sites in your preferred county and price range.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      </div>
+      <h3>Pick Your Plan</h3>
+      <p>Choose from 10 floor plans — all available on any buildable lot across our 16 counties. We'll confirm fit and provide a complete quote.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <h3>We Build It</h3>
+      <p>Brightview handles permitting, site work, and construction. You get regular updates and a quality home backed by our builder warranty.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     FOOTER
+══════════════════════ -->
+<footer class="bv-footer-full">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+      <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+      <div class="footer-brand-phone">(321) 310-2849</div>
+      <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Our Homes</div>
+      <a href="communities.html">Where We Build</a>
+      <a href="floor-plans.html">Floor Plans</a>
+      <a href="quick-move-ins.html">Quick Move-Ins</a>
+      <a href="available-lots.html">Available Lots</a>
+      <a href="build-on-your-lot.html">Build on Your Lot</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+      <a href="warranty.html">Customer Care</a>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Investors</div>
+      <a href="investor-marketplace.html">Investor Marketplace</a>
+      <a href="investor-marketplace.html">Build to Rent</a>
+      <a href="#">Build to Sell</a>
+      <a href="property-management.html">Property Management</a>
+      <a href="#">Investor Portal</a>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      <div class="footer-eho">
+        <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+      </div>
+      <div class="footer-copyright">
+        &copy; 2026 Brightview Homes. All rights reserved.<br>
+        Brightview Homes, a Brightview Construction Group LLC company.
+      </div>
+    </div>
+    <div class="footer-legal-links">
+      <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════
+//  AVAILABLE LOTS DATA
+//  This array will eventually be populated automatically
+//  from MLS + lot qualification pipeline. For now, sample data.
+// ═══════════════════════════════════════
+var LOTS = [
+  {
+    id: 'lot-1', address: '1420 S Palmetto Ave', city: 'Sanford',
+    county: 'Seminole County', countyId: 'seminole',
+    lat: 28.7920, lng: -81.2780, price: 52000,
+    acreage: 0.23, zoning: 'SR-1', dimensions: '75 x 135',
+    utilities: 'City water & sewer', status: 'Available',
+    mlsId: 'O6212345'
+  },
+  {
+    id: 'lot-2', address: '2805 Beacon Dr', city: 'Orlando',
+    county: 'Orange County', countyId: 'orange',
+    lat: 28.5150, lng: -81.4050, price: 89000,
+    acreage: 0.28, zoning: 'R-1A', dimensions: '80 x 150',
+    utilities: 'City water & sewer', status: 'Available',
+    mlsId: 'O6298765'
+  },
+  {
+    id: 'lot-3', address: '510 Lakeview Rd', city: 'DeLand',
+    county: 'Volusia County', countyId: 'volusia',
+    lat: 29.0350, lng: -81.3030, price: 42000,
+    acreage: 0.31, zoning: 'R-3', dimensions: '85 x 160',
+    utilities: 'City water / septic', status: 'New',
+    mlsId: 'V4972345'
+  },
+  {
+    id: 'lot-4', address: '7720 Palm Coast Pkwy NE', city: 'Palm Coast',
+    county: 'Flagler County', countyId: 'flagler',
+    lat: 29.5450, lng: -81.2100, price: 38000,
+    acreage: 0.25, zoning: 'SFR-2', dimensions: '70 x 155',
+    utilities: 'City water & sewer', status: 'Available',
+    mlsId: 'FC312456'
+  },
+  {
+    id: 'lot-5', address: '3100 S Orange Blossom Trl', city: 'Kissimmee',
+    county: 'Osceola County', countyId: 'osceola',
+    lat: 28.2900, lng: -81.4100, price: 65000,
+    acreage: 0.20, zoning: 'R-1', dimensions: '72 x 120',
+    utilities: 'City water & sewer', status: 'Available',
+    mlsId: 'OS614567'
+  },
+  {
+    id: 'lot-6', address: '1845 Lake Parker Dr', city: 'Lakeland',
+    county: 'Polk County', countyId: 'polk',
+    lat: 28.0450, lng: -81.9350, price: 45000,
+    acreage: 0.35, zoning: 'RL-2', dimensions: '100 x 150',
+    utilities: 'City water & sewer', status: 'New',
+    mlsId: 'PK815678'
+  },
+  {
+    id: 'lot-7', address: '4550 SE 36th Ave', city: 'Ocala',
+    county: 'Marion County', countyId: 'marion',
+    lat: 29.1650, lng: -82.1100, price: 32000,
+    acreage: 0.50, zoning: 'R-1', dimensions: '110 x 200',
+    utilities: 'Well & septic', status: 'Available',
+    mlsId: 'MR216789'
+  },
+  {
+    id: 'lot-8', address: '820 Gulf Breeze Blvd', city: 'Venice',
+    county: 'Sarasota County', countyId: 'sarasota',
+    lat: 27.1000, lng: -82.4400, price: 110000,
+    acreage: 0.22, zoning: 'RSF-3', dimensions: '75 x 130',
+    utilities: 'City water & sewer', status: 'Available',
+    mlsId: 'SA917890'
+  },
+  {
+    id: 'lot-9', address: '3220 Cortez Rd W', city: 'Bradenton',
+    county: 'Manatee County', countyId: 'manatee',
+    lat: 27.4700, lng: -82.5800, price: 78000,
+    acreage: 0.19, zoning: 'R-1', dimensions: '65 x 125',
+    utilities: 'City water & sewer', status: 'Pending',
+    mlsId: 'MA318901'
+  },
+  {
+    id: 'lot-10', address: '5510 Del Prado Blvd S', city: 'Cape Coral',
+    county: 'Lee County', countyId: 'lee',
+    lat: 26.5700, lng: -81.9450, price: 55000,
+    acreage: 0.25, zoning: 'RS-6', dimensions: '80 x 135',
+    utilities: 'City water & sewer', status: 'Available',
+    mlsId: 'LC719012'
+  },
+  {
+    id: 'lot-11', address: '1920 W Hillsborough Ave', city: 'Tampa',
+    county: 'Hillsborough County', countyId: 'hillsborough',
+    lat: 27.9950, lng: -82.4800, price: 95000,
+    acreage: 0.18, zoning: 'RS-50', dimensions: '50 x 155',
+    utilities: 'City water & sewer', status: 'New',
+    mlsId: 'HB120123'
+  },
+  {
+    id: 'lot-12', address: '6400 Land O\' Lakes Blvd', city: 'Wesley Chapel',
+    county: 'Pasco County', countyId: 'pasco',
+    lat: 28.3400, lng: -82.4550, price: 58000,
+    acreage: 0.30, zoning: 'R-2', dimensions: '90 x 145',
+    utilities: 'City water & sewer', status: 'Available',
+    mlsId: 'PA521234'
+  }
+];
+
+var COUNTY_COLORS = {
+  seminole:'#1E3A52', orange:'#2A4E6E', volusia:'#1A3348', flagler:'#24475F',
+  osceola:'#20405A', polk:'#2C5270', marion:'#183044', sarasota:'#264A65',
+  manatee:'#1C3750', lee:'#284B68', hillsborough:'#163040', pasco:'#22455D',
+  brevard:'#1E3F57', charlotte:'#26496A', duval:'#1A3448', lake:'#2E5474'
+};
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+// ═══════════════════════════════════════
+//  POPULATE COUNTY FILTER
+// ═══════════════════════════════════════
+(function() {
+  var counties = [];
+  LOTS.forEach(function(l) { if (counties.indexOf(l.county) === -1) counties.push(l.county); });
+  counties.sort();
+  var sel = document.getElementById('f-county');
+  counties.forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+})();
+
+// ═══════════════════════════════════════
+//  RENDER LOT CARDS
+// ═══════════════════════════════════════
+var activeLot = null;
+
+function filterLots() {
+  var county = document.getElementById('f-county').value;
+  var maxPrice = document.getElementById('f-price').value;
+  var minAcre = document.getElementById('f-acreage').value;
+  var sort = document.getElementById('f-sort').value;
+
+  var filtered = LOTS.filter(function(l) {
+    if (county && l.county !== county) return false;
+    if (maxPrice && l.price > parseInt(maxPrice)) return false;
+    if (minAcre && l.acreage < parseFloat(minAcre)) return false;
+    return true;
+  });
+
+  filtered.sort(function(a, b) {
+    if (sort === 'price') return a.price - b.price;
+    if (sort === 'price-d') return b.price - a.price;
+    if (sort === 'acreage-d') return b.acreage - a.acreage;
+    if (sort === 'county') return a.county.localeCompare(b.county);
+    return 0;
+  });
+
+  renderCards(filtered);
+  document.getElementById('lots-count').textContent = 'Showing ' + filtered.length;
+}
+
+function renderCards(list) {
+  var container = document.getElementById('lot-cards');
+
+  if (list.length === 0) {
+    container.innerHTML = '<div class="lots-empty">No lots match your current filters.<br>Try adjusting your search or <a href="#cta-section" style="color:var(--gold)">reach out to our land team</a>.</div>';
+    return;
+  }
+
+  var html = '';
+  list.forEach(function(l) {
+    var bgColor = COUNTY_COLORS[l.countyId] || '#1E3A52';
+    var statusClass = l.status === 'Available' ? 'status-available' :
+                      l.status === 'Pending' ? 'status-pending' : 'status-new';
+
+    html += '<div class="lot-card" data-id="' + l.id + '" onclick="selectLot(\'' + l.id + '\')">' +
+      '<div class="lot-card-thumb" style="background:' + bgColor + '">' +
+        '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5" style="position:relative;z-index:1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+      '</div>' +
+      '<div class="lot-card-body">' +
+        '<span class="lot-card-status ' + statusClass + '">' + l.status + '</span>' +
+        '<div class="lot-card-addr">' + l.address + '</div>' +
+        '<div class="lot-card-county">' + l.city + ', ' + l.county + '</div>' +
+        '<div class="lot-card-price">' + fmt(l.price) + '</div>' +
+        '<div class="lot-card-details">' +
+          '<span class="lot-detail"><strong>' + l.acreage + '</strong> Acres</span>' +
+          '<span class="lot-detail"><strong>' + l.dimensions + '</strong></span>' +
+          '<span class="lot-detail">' + l.zoning + '</span>' +
+          '<span class="lot-detail">' + l.utilities + '</span>' +
+        '</div>' +
+        '<div class="lot-card-actions">' +
+          '<button class="btn-lot-view" onclick="event.stopPropagation()">View Details</button>' +
+          '<button class="btn-lot-inquire" onclick="event.stopPropagation(); document.getElementById(\'cta-section\').scrollIntoView({behavior:\'smooth\'})">Inquire</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function selectLot(id) {
+  activeLot = id;
+  document.querySelectorAll('.lot-card').forEach(function(c) {
+    c.classList.toggle('highlighted', c.getAttribute('data-id') === id);
+  });
+  if (typeof panToLot === 'function') panToLot(id);
+}
+
+// Initial render
+filterLots();
+
+// ═══════════════════════════════════════
+//  GOOGLE MAPS
+// ═══════════════════════════════════════
+var map = null, markers = [];
+
+var MAP_STYLES = [
+  { featureType:'water', stylers:[{color:'#C5D8E8'}] },
+  { featureType:'landscape', elementType:'geometry', stylers:[{color:'#F0EDE6'}] },
+  { featureType:'road', elementType:'geometry', stylers:[{color:'#FFFFFF'}] },
+  { featureType:'road.arterial', elementType:'geometry', stylers:[{color:'#EAE6DC'}] },
+  { featureType:'poi', elementType:'labels', stylers:[{visibility:'off'}] },
+  { featureType:'transit', stylers:[{visibility:'off'}] },
+  { featureType:'administrative.locality', elementType:'labels.text.fill', stylers:[{color:'#1E3A52'}] },
+  { featureType:'administrative.locality', elementType:'labels.text.stroke', stylers:[{color:'#fff'},{weight:2}] }
+];
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('lots-map'), {
+    center: { lat: 28.3, lng: -81.8 }, zoom: 7,
+    mapTypeControl: false, streetViewControl: false, fullscreenControl: false,
+    styles: MAP_STYLES
+  });
+
+  LOTS.forEach(function(l) {
+    var marker = new google.maps.Marker({
+      position: { lat: l.lat, lng: l.lng },
+      map: map, title: l.address,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10, fillColor: '#1E3A52', fillOpacity: 1,
+        strokeColor: '#C9933A', strokeWeight: 2.5
+      }
+    });
+
+    var iw = new google.maps.InfoWindow({
+      content: '<div style="font-family:DM Sans,sans-serif;padding:4px 2px;min-width:180px">' +
+        '<div style="font-size:10px;color:#C9933A;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;font-weight:500">' + l.status + '</div>' +
+        '<div style="font-family:Cormorant Garamond,serif;font-size:16px;font-weight:500;color:#1E3A52;margin-bottom:2px">' + l.address + '</div>' +
+        '<div style="font-size:12px;color:#5A7080;margin-bottom:4px">' + l.city + ', ' + l.county + '</div>' +
+        '<div style="font-size:15px;font-weight:500;color:#C9933A;margin-bottom:4px">' + fmt(l.price) + '</div>' +
+        '<div style="font-size:12px;color:#5A7080">' + l.acreage + ' Acres &middot; ' + l.dimensions + ' &middot; ' + l.zoning + '</div>' +
+        '<div style="font-size:11px;color:#5A7080;margin-top:2px">' + l.utilities + '</div>' +
+      '</div>'
+    });
+
+    marker.addListener('click', function() {
+      markers.forEach(function(m) { if (m.iw) m.iw.close(); });
+      iw.open(map, marker);
+      selectLot(l.id);
+      var card = document.querySelector('.lot-card[data-id="' + l.id + '"]');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    marker.lotId = l.id;
+    marker.iw = iw;
+    markers.push(marker);
+  });
+
+  if (markers.length > 0) {
+    var bounds = new google.maps.LatLngBounds();
+    markers.forEach(function(m) { bounds.extend(m.getPosition()); });
+    map.fitBounds(bounds, 60);
+  }
+}
+
+function panToLot(id) {
+  if (!map) return;
+  var marker = markers.find(function(m) { return m.lotId === id; });
+  if (marker) {
+    map.panTo(marker.getPosition());
+    map.setZoom(12);
+    markers.forEach(function(m) { if (m.iw) m.iw.close(); });
+    marker.iw.open(map, marker);
+  }
+}
+</script>
+
+</body>
+</html>

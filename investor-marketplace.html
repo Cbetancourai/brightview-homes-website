@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investor Marketplace — Brightview Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:       #1E3A52;
+  --navy-dark:  #152B3E;
+  --navy-mid:   #2A4E6E;
+  --navy-light: #EEF2F6;
+  --navy-bd:    #C5D3DF;
+  --gold:       #C9933A;
+  --gold-light: #FBF4E8;
+  --gold-bd:    #E8C98A;
+  --gray-bg:    #F5F7F9;
+  --gray-bd:    rgba(30,58,82,.12);
+  --gray-text:  #5A7080;
+  --green:      #1B8A3A;
+  --green-light:#E8F5EC;
+  --red-light:  #FDECEA;
+  --red:        #C0392B;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', sans-serif;
+  --nav-h:      60px;
+}
+
+/* ── NAV ── */
+.bv-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--nav-h); background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; border-bottom: 2px solid var(--gold); }
+.nav-logo { text-decoration: none; display: flex; align-items: center; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 1.75rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; letter-spacing: .02em; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ── SHARED ── */
+.section-eyebrow { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
+.section-title { font-family: var(--serif); font-size: 36px; font-weight: 500; color: var(--navy); margin-bottom: .5rem; line-height: 1.15; }
+.section-sub { font-size: 15px; color: var(--gray-text); max-width: 620px; line-height: 1.7; margin-bottom: 2rem; }
+.center { text-align: center; }
+.center .section-sub { margin-left: auto; margin-right: auto; }
+
+/* ══════════════════════
+   HERO
+══════════════════════ */
+.inv-hero {
+  background: linear-gradient(135deg, #0F2030 0%, var(--navy) 50%, var(--navy-mid) 100%);
+  padding: 4.5rem 1.75rem 3.5rem; margin-top: var(--nav-h);
+  border-bottom: 3px solid var(--gold); position: relative; overflow: hidden;
+}
+.inv-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 30%, rgba(201,147,58,.06) 0%, transparent 60%); }
+.inv-hero-letter { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-family: var(--serif); font-size: 320px; font-weight: 600; color: rgba(255,255,255,.025); line-height: 1; pointer-events: none; }
+.inv-hero-content { position: relative; z-index: 1; max-width: 740px; }
+.inv-hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 4px; background: rgba(201,147,58,.15); border: 1px solid rgba(201,147,58,.3); font-size: 11px; font-weight: 500; color: var(--gold); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1rem; }
+.inv-hero h1 { font-family: var(--serif); font-size: 50px; font-weight: 500; color: #fff; line-height: 1.08; margin-bottom: .75rem; }
+.inv-hero p { font-size: 16px; color: rgba(255,255,255,.7); line-height: 1.75; max-width: 600px; margin-bottom: 1.75rem; }
+.inv-hero-cta { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; background: var(--gold); color: #fff; border: none; border-radius: 6px; font-family: var(--sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; text-decoration: none; }
+.inv-hero-cta:hover { background: #b07e2a; }
+
+/* ══════════════════════
+   THE PITCH — BTR vs BUYING
+══════════════════════ */
+.pitch-section { padding: 4rem 1.75rem; }
+.pitch-intro { max-width: 800px; margin-bottom: 2.5rem; }
+.pitch-intro p { font-size: 14px; color: var(--gray-text); line-height: 1.85; margin-bottom: 1rem; }
+.pitch-intro p strong { color: var(--navy); }
+
+.comparison-table { max-width: 900px; border: 1px solid var(--navy-bd); border-radius: 8px; overflow: hidden; margin-bottom: 2.5rem; }
+.comp-header { display: grid; grid-template-columns: 1fr 1fr 1fr; background: var(--navy); }
+.comp-header-cell { padding: 1rem 1.25rem; font-size: 13px; font-weight: 500; color: #fff; text-align: center; }
+.comp-header-cell:first-child { text-align: left; color: rgba(255,255,255,.6); }
+.comp-header-cell.highlight { background: rgba(201,147,58,.15); color: var(--gold); border-bottom: 2px solid var(--gold); }
+.comp-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--gray-bd); }
+.comp-row:last-child { border-bottom: none; }
+.comp-cell { padding: .85rem 1.25rem; font-size: 13px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.comp-cell:first-child { text-align: left; justify-content: flex-start; color: var(--navy); font-weight: 500; }
+.comp-cell.highlight-col { background: var(--gold-light); }
+.comp-check { color: var(--green); font-weight: 700; font-size: 16px; }
+.comp-x { color: var(--red); font-weight: 700; font-size: 16px; }
+.comp-cell-text { font-size: 12px; color: var(--gray-text); }
+
+.pitch-callout {
+  max-width: 900px; padding: 1.5rem 1.75rem; border-radius: 8px;
+  background: var(--green-light); border: 1px solid rgba(27,138,58,.2);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.pitch-callout-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+.pitch-callout h4 { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--navy); margin-bottom: 4px; }
+.pitch-callout p { font-size: 13px; color: #4A6070; line-height: 1.7; }
+
+/* ══════════════════════
+   DEAL PACKAGES
+══════════════════════ */
+.deals-section { padding: 4rem 1.75rem; background: var(--gray-bg); }
+.deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; }
+
+.deal-card { border: 1px solid var(--navy-bd); border-radius: 8px; overflow: hidden; background: #fff; transition: border-color .2s, transform .2s, box-shadow .2s; }
+.deal-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(30,58,82,.12); }
+.deal-card-header { background: var(--navy); padding: 1.25rem; position: relative; overflow: hidden; }
+.deal-card-header-letter { position: absolute; right: -.5rem; top: 50%; transform: translateY(-50%); font-family: var(--serif); font-size: 100px; font-weight: 600; color: rgba(255,255,255,.05); line-height: 1; pointer-events: none; }
+.deal-region { font-size: 9px; font-weight: 500; padding: 2px 8px; border-radius: 3px; background: var(--gold); color: #fff; display: inline-block; margin-bottom: 6px; letter-spacing: .06em; text-transform: uppercase; }
+.deal-market { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; line-height: 1.15; position: relative; }
+.deal-plan { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 3px; position: relative; }
+
+.deal-card-body { padding: 1.25rem; }
+.deal-section-label { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; font-weight: 500; margin-top: .75rem; }
+.deal-section-label:first-child { margin-top: 0; }
+.deal-line { display: flex; justify-content: space-between; padding: .35rem 0; font-size: 13px; border-bottom: 1px solid var(--gray-bd); }
+.deal-line:last-child { border-bottom: none; }
+.deal-line-label { color: var(--gray-text); }
+.deal-line-val { font-weight: 500; color: var(--navy); }
+.deal-line-val.gold { color: var(--gold); }
+
+.deal-total-bar { margin-top: .75rem; padding: .85rem; border-radius: 6px; background: var(--navy); display: flex; justify-content: space-between; align-items: center; }
+.deal-total-label { font-size: 11px; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .08em; }
+.deal-total-val { font-family: var(--serif); font-size: 24px; font-weight: 500; color: var(--gold); }
+
+.deal-equity-bar { margin-top: .65rem; padding: .7rem .85rem; border-radius: 6px; background: var(--green-light); border: 1px solid rgba(27,138,58,.15); display: flex; justify-content: space-between; align-items: center; }
+.deal-equity-label { font-size: 11px; color: var(--green); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+.deal-equity-val { font-family: var(--serif); font-size: 20px; font-weight: 500; color: var(--green); }
+
+.deal-rent-row { margin-top: .5rem; display: flex; justify-content: space-between; font-size: 12px; padding: .35rem 0; }
+.deal-rent-label { color: var(--gray-text); }
+.deal-rent-val { font-weight: 500; color: var(--navy); }
+
+.deal-card-footer { padding: .85rem 1.25rem; border-top: 1px solid var(--gray-bd); display: flex; gap: 8px; }
+.deal-btn-primary { flex: 1; padding: .6rem; background: var(--navy); border: none; border-radius: 4px; color: #fff; font-family: var(--sans); font-size: 12px; font-weight: 500; cursor: pointer; transition: background .15s; text-align: center; }
+.deal-btn-primary:hover { background: var(--navy-dark); }
+.deal-btn-gold { flex: 1; padding: .6rem; background: transparent; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); font-family: var(--sans); font-size: 12px; font-weight: 500; cursor: pointer; transition: background .15s, color .15s; text-align: center; }
+.deal-btn-gold:hover { background: var(--gold); color: #fff; }
+
+/* ══════════════════════
+   FLOOR PLANS
+══════════════════════ */
+.plans-section { padding: 4rem 1.75rem; }
+.plan-table-wrap { max-width: 1100px; margin: 0 auto; overflow-x: auto; }
+.plan-table { width: 100%; border-collapse: collapse; }
+.plan-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-text); padding: .75rem .85rem; text-align: left; border-bottom: 2px solid var(--navy-bd); font-weight: 500; }
+.plan-table td { font-size: 13px; padding: .75rem .85rem; border-bottom: 1px solid var(--gray-bd); color: var(--navy); }
+.plan-table tr:hover { background: var(--navy-light); }
+.plan-table .gold { color: var(--gold); font-weight: 500; }
+.plan-table .green { color: var(--green); font-weight: 500; }
+.plan-table .plan-name { font-family: var(--serif); font-size: 15px; font-weight: 500; }
+.plan-table .plan-badge { font-size: 10px; padding: 2px 7px; border-radius: 3px; background: var(--navy-light); color: var(--navy); margin-left: 6px; }
+.plan-cta-cell button { padding: 5px 14px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; font-family: var(--sans); font-size: 11px; font-weight: 500; cursor: pointer; transition: background .15s, color .15s; }
+.plan-cta-cell button:hover { background: var(--gold); color: #fff; }
+
+/* ══════════════════════
+   WHY INVEST
+══════════════════════ */
+.why-section { padding: 4rem 1.75rem; background: var(--gray-bg); }
+.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
+.why-card { background: #fff; border: 1px solid var(--navy-bd); border-radius: 8px; padding: 1.75rem 1.25rem; text-align: center; border-top: 3px solid var(--gold); transition: transform .2s, box-shadow .2s; }
+.why-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(30,58,82,.1); }
+.why-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--gold-light); border: 2px solid var(--gold-bd); display: flex; align-items: center; justify-content: center; margin: 0 auto .85rem; }
+.why-card h3 { font-family: var(--serif); font-size: 19px; font-weight: 500; color: var(--navy); margin-bottom: .5rem; }
+.why-card p { font-size: 13px; color: var(--gray-text); line-height: 1.7; }
+
+/* ══════════════════════
+   HOW IT WORKS
+══════════════════════ */
+.steps-section { padding: 4rem 1.75rem; background: var(--navy); border-top: 3px solid var(--gold); }
+.steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+.step-card { text-align: center; padding: 1.75rem 1.25rem; border: 1px solid rgba(255,255,255,.1); border-radius: 8px; background: rgba(255,255,255,.04); }
+.step-number { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); color: #fff; font-family: var(--serif); font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; margin: 0 auto .85rem; }
+.step-card h3 { font-family: var(--serif); font-size: 19px; font-weight: 500; color: #fff; margin-bottom: .5rem; }
+.step-card p { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.7; }
+
+/* ══════════════════════
+   CTA / FORM
+══════════════════════ */
+.form-section { padding: 4rem 1.75rem; background: var(--gray-bg); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1100px; margin: 0 auto; align-items: start; }
+.form-text p { font-size: 14px; color: var(--gray-text); line-height: 1.8; margin-bottom: 1.25rem; }
+.form-highlights { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+.form-highlights li { font-size: 13px; color: #4A6070; padding-left: 22px; position: relative; line-height: 1.6; }
+.form-highlights li::before { content: '\2713'; position: absolute; left: 0; font-size: 14px; color: var(--gold); font-weight: 700; }
+.form-phone { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 4px; }
+.form-addr { font-size: 12px; color: var(--gray-text); line-height: 1.6; }
+
+.ghl-box { border: 1px solid var(--navy-bd); border-radius: 8px; background: #fff; border-top: 3px solid var(--gold); overflow: hidden; }
+.ghl-box-header { padding: 1.25rem 1.5rem; background: var(--navy); }
+.ghl-box-header h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+.ghl-box-header p { font-size: 13px; color: rgba(255,255,255,.6); }
+.ghl-box-body { padding: 1.5rem; min-height: 350px; display: flex; align-items: center; justify-content: center; }
+.ghl-placeholder { text-align: center; color: var(--gray-text); }
+.ghl-placeholder p { font-size: 13px; line-height: 1.7; margin-bottom: .75rem; }
+.ghl-placeholder code { font-size: 12px; background: rgba(30,58,82,.06); padding: 3px 10px; border-radius: 4px; color: var(--navy); }
+
+/* ══════════════════════
+   FOOTER
+══════════════════════ */
+.bv-footer-full { background: var(--navy-dark); border-top: 3px solid var(--gold); }
+.footer-main { display: grid; grid-template-columns: 1.2fr repeat(3, 1fr); gap: 2rem; padding: 3rem 1.75rem 2rem; max-width: 1200px; margin: 0 auto; }
+.footer-brand-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: .75rem; }
+.footer-brand-logo img { height: 30px; filter: brightness(0) invert(1); }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; max-width: 280px; margin-bottom: 1rem; }
+.footer-brand-phone { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 500; }
+.footer-brand-addr { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.6; margin-top: 4px; }
+.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .85rem; font-weight: 500; }
+.footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 0 1.75rem; }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.75rem; flex-wrap: wrap; gap: 1rem; }
+.footer-legal { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.footer-eho-icon { width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,.3); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 8px; color: rgba(255,255,255,.7); text-align: center; line-height: 1.1; padding: 2px; font-weight: 700; }
+.footer-copyright { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.6; }
+.footer-legal-links { display: flex; gap: 16px; }
+.footer-legal-links a { font-size: 11px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+.footer-legal-links a:hover { color: var(--gold); }
+
+@media (max-width: 900px) {
+  .inv-hero h1 { font-size: 34px; }
+  .deals-grid { grid-template-columns: 1fr; }
+  .why-grid, .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-grid { grid-template-columns: 1fr; }
+  .comparison-table { overflow-x: auto; }
+  .comp-header, .comp-row { min-width: 600px; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  .why-grid, .steps-grid { grid-template-columns: 1fr; }
+  .footer-main { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html"><img src="logo.png" alt="Brightview Homes"></a>
+  <div class="nav-links">
+    <a href="communities.html">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<!-- ══════════════════════
+     HERO
+══════════════════════ -->
+<section class="inv-hero">
+  <div class="inv-hero-letter">$</div>
+  <div class="inv-hero-content">
+    <div class="inv-hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+      Investor Marketplace
+    </div>
+    <h1>Build to Rent. Own the Deal From Day One.</h1>
+    <p>Stop overpaying for finished inventory. With Brightview, you secure the land, we build the home as your general contractor, and you own the entire deal from dirt to keys. No builder markup. No inventory risk. No double closing. Just a brand-new rental property at true cost.</p>
+    <a class="inv-hero-cta" href="#invest-form">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      Get Your Custom Pro Forma
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     BTR vs BUYING COMPARISON
+══════════════════════ -->
+<section class="pitch-section">
+  <p class="section-eyebrow">&#9733; The Smarter Way to Invest</p>
+  <h2 class="section-title">Build to Rent vs. Buying a Rental Property</h2>
+
+  <div class="pitch-intro">
+    <p>When you buy a rental property from a national builder's investor marketplace — or any finished home off the MLS — you're paying for their <strong>profit margin, their sales and marketing costs, their carrying costs, and the risk they took building it on spec.</strong> All of that gets baked into the price you pay.</p>
+    <p>With Brightview's build-to-rent model, <strong>you own the land from the start.</strong> We're your general contractor — not the seller. There's no double closing, no title transfer markup, and no speculative builder margin stacked on top. You get the deal at true construction cost, and you walk away with <strong>tens of thousands of dollars in equity from day one.</strong></p>
+  </div>
+
+  <div class="comparison-table">
+    <div class="comp-header">
+      <div class="comp-header-cell">Cost Factor</div>
+      <div class="comp-header-cell highlight">Brightview BTR</div>
+      <div class="comp-header-cell">Buying from a Builder</div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Builder profit margin (15-25%)</div>
+      <div class="comp-cell highlight-col"><span class="comp-check">&#10003;</span> <span class="comp-cell-text">Eliminated</span></div>
+      <div class="comp-cell"><span class="comp-x">&#10007;</span> <span class="comp-cell-text">You pay it</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Sales &amp; marketing costs</div>
+      <div class="comp-cell highlight-col"><span class="comp-check">&#10003;</span> <span class="comp-cell-text">Eliminated</span></div>
+      <div class="comp-cell"><span class="comp-x">&#10007;</span> <span class="comp-cell-text">Baked into price</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Inventory carrying costs</div>
+      <div class="comp-cell highlight-col"><span class="comp-check">&#10003;</span> <span class="comp-cell-text">Eliminated</span></div>
+      <div class="comp-cell"><span class="comp-x">&#10007;</span> <span class="comp-cell-text">Baked into price</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Double closing / title transfer</div>
+      <div class="comp-cell highlight-col"><span class="comp-check">&#10003;</span> <span class="comp-cell-text">None — you own land</span></div>
+      <div class="comp-cell"><span class="comp-x">&#10007;</span> <span class="comp-cell-text">Builder buys → sells to you</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">You own the property from day 1</div>
+      <div class="comp-cell highlight-col"><span class="comp-check">&#10003;</span> <span class="comp-cell-text">You hold title to land</span></div>
+      <div class="comp-cell"><span class="comp-x">&#10007;</span> <span class="comp-cell-text">Builder holds title until closing</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Unsold inventory risk premium</div>
+      <div class="comp-cell highlight-col"><span class="comp-check">&#10003;</span> <span class="comp-cell-text">Zero — built for you</span></div>
+      <div class="comp-cell"><span class="comp-x">&#10007;</span> <span class="comp-cell-text">Priced in to cover unsold homes</span></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-cell">Typical savings</div>
+      <div class="comp-cell highlight-col" style="font-weight:600;color:var(--green)">$40K–$100K+ in equity</div>
+      <div class="comp-cell" style="font-size:12px;color:var(--red)">Buying at or near appraised value</div>
+    </div>
+  </div>
+
+  <div class="pitch-callout">
+    <div class="pitch-callout-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></div>
+    <div>
+      <h4>The Bottom Line</h4>
+      <p>When a national builder sells you a house, they're selling you their profit, their risk, and their overhead. When Brightview builds on your lot, we're your contractor — and you keep everything they would have taken. That's the difference between buying someone else's deal and owning yours from the start.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     DEAL PACKAGES
+══════════════════════ -->
+<section class="deals-section">
+  <p class="section-eyebrow">&#9733; Example Deal Packages</p>
+  <h2 class="section-title">Sample Pro Formas by Market</h2>
+  <p class="section-sub">These are illustrative examples based on current market conditions. Your dedicated investment advisor will build a custom pro forma for your specific deal.</p>
+
+  <div class="deals-grid" id="deals-grid"></div>
+</section>
+
+<!-- ══════════════════════
+     ALL FLOOR PLANS TABLE
+══════════════════════ -->
+<section class="plans-section">
+  <div class="center">
+    <p class="section-eyebrow">&#9733; Available Floor Plans</p>
+    <h2 class="section-title">10 Investor-Ready Designs</h2>
+    <p class="section-sub">Every plan is available across all 16 counties. Estimated rents reflect Central Florida new-construction rental comps.</p>
+  </div>
+  <div class="plan-table-wrap">
+    <table class="plan-table" id="plan-table">
+      <thead>
+        <tr>
+          <th>Floor Plan</th>
+          <th>Sq Ft</th>
+          <th>Bed / Bath</th>
+          <th>Base Build</th>
+          <th>Est. Total*</th>
+          <th>Est. Rent</th>
+          <th>Est. Yield</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="plan-tbody"></tbody>
+    </table>
+    <p style="font-size:11px;color:var(--gray-text);margin-top:.75rem">* Estimated total includes base build + $50K average lot cost. Actual lot prices vary by county.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     WHY INVEST
+══════════════════════ -->
+<section class="why-section">
+  <div class="center">
+    <p class="section-eyebrow">&#9733; The Brightview Advantage</p>
+    <h2 class="section-title">Why New Construction Wins</h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <h3>Zero Deferred Maintenance</h3>
+      <p>Brand-new roof, HVAC, plumbing, electrical. No surprise CapEx for years. Full builder warranty included.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <h3>DSCR Financing</h3>
+      <p>Springwell Capital offers DSCR loans — qualify on the property's rental income, not your W-2. Construction and bridge lending available.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <h3>Day-1 Equity</h3>
+      <p>Build at true cost and own a property worth significantly more than you paid. No builder markup means instant equity.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <h3>16 High-Growth Markets</h3>
+      <p>Central Florida — one of the fastest-growing regions in the U.S. Strong population growth, job creation, and rental demand.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     HOW IT WORKS
+══════════════════════ -->
+<section class="steps-section">
+  <div class="center">
+    <p class="section-eyebrow" style="color:var(--gold)">&#9733; How It Works</p>
+    <h2 class="section-title" style="color:#fff">From Investor to Owner in 4 Steps</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,.6);margin-left:auto;margin-right:auto">We handle the build. You own the deal.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card"><div class="step-number">1</div><h3>Choose Your Market</h3><p>We identify counties where land is cheap, rent is strong, and the numbers work. Pick your target area.</p></div>
+    <div class="step-card"><div class="step-number">2</div><h3>Secure Land + Financing</h3><p>We find the lot, you acquire it. Springwell Capital handles the construction loan. You hold title from day one.</p></div>
+    <div class="step-card"><div class="step-number">3</div><h3>We Build It</h3><p>Brightview is your GC. Permitting, construction, inspections — all handled. 5-7 month build time with updates.</p></div>
+    <div class="step-card"><div class="step-number">4</div><h3>Refi &amp; Rent</h3><p>Refinance into a long-term DSCR loan through Springwell. Place a tenant and cash-flow from day one.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     CTA / GHL FORM
+══════════════════════ -->
+<section class="form-section" id="invest-form">
+  <div class="form-grid">
+    <div class="form-text">
+      <p class="section-eyebrow">&#9733; Get Started</p>
+      <h2 class="section-title">Get Your Custom Pro Forma</h2>
+      <p>Tell us your target market and budget. We'll send you a detailed investment package with real lot options, build costs, projected rents, estimated returns, and financing terms through Springwell Capital.</p>
+      <ul class="form-highlights">
+        <li>Custom pro forma for your target county and floor plan</li>
+        <li>Real lot options with pricing and buildability confirmed</li>
+        <li>Projected rental income based on local new-construction comps</li>
+        <li>DSCR construction loan + refi pre-qualification</li>
+        <li>Full cost breakdown — land, build, financing, GC fee</li>
+        <li>No obligation — just real numbers on real deals</li>
+      </ul>
+      <div class="form-phone">(321) 310-2849</div>
+      <div class="form-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+    </div>
+    <div class="ghl-box">
+      <div class="ghl-box-header">
+        <h3>Request Your Investment Package</h3>
+        <p>A Brightview investment advisor will reach out within 24 hours.</p>
+      </div>
+      <div class="ghl-box-body">
+        <!--
+          ═══════════════════════════════════════
+          GO HIGH LEVEL FORM EMBED
+          ═══════════════════════════════════════
+          Recommended fields:
+            - Full Name
+            - Email
+            - Phone
+            - Investment Budget (dropdown: Under $250K, $250K-$350K, $350K-$500K, $500K+)
+            - Preferred County/Market (dropdown: 16 counties)
+            - Number of Properties (1, 2-5, 5-10, 10+)
+            - "I need DSCR financing" (checkbox)
+            - Timeline (Ready now, 3 months, 6 months, Just exploring)
+            - Message
+          ═══════════════════════════════════════
+        -->
+        <div class="ghl-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(30,58,82,.25)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <p>Go High Level form goes here.<br>Replace with your GHL iframe or script embed.</p>
+          <code>&lt;iframe src="your-ghl-form-url" ...&gt;</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bv-footer-full">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+      <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship.</p>
+      <div class="footer-brand-phone">(321) 310-2849</div>
+      <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Our Homes</div>
+      <a href="communities.html">Where We Build</a>
+      <a href="floor-plans.html">Floor Plans</a>
+      <a href="quick-move-ins.html">Quick Move-Ins</a>
+      <a href="available-lots.html">Available Lots</a>
+      <a href="build-on-your-lot.html">Build on Your Lot</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+      <a href="warranty.html">Customer Care</a>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Investors</div>
+      <a href="investor-marketplace.html">Investor Marketplace</a>
+      <a href="investor-marketplace.html">Build to Rent</a>
+      <a href="#">Build to Sell</a>
+      <a href="property-management.html">Property Management</a>
+      <a href="#">Investor Portal</a>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      <div class="footer-eho"><div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div></div>
+      <div class="footer-copyright">&copy; 2026 Brightview Homes. All rights reserved.<br>Brightview Homes, a Brightview Construction Group LLC company.</div>
+    </div>
+    <div class="footer-legal-links">
+      <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+// ═══════════════════════════════════════
+//  EXAMPLE DEAL PACKAGES
+//  These are sample pro formas — replace with real numbers
+// ═══════════════════════════════════════
+var DEALS = [
+  {
+    market: 'Marion County', region: 'Central', cities: 'Ocala, Belleview',
+    plan: 'Legacy', sqft: 1805, beds: 4, baths: 2,
+    landPrice: 40000, buildCost: 180000, finishes: 0, financing: 12000, gcFee: 20000,
+    appraised: 350000, estRent: 1900,
+    highlight: 'Lowest entry point in our 16-county footprint'
+  },
+  {
+    market: 'Duval County', region: 'Atlantic', cities: 'Jacksonville',
+    plan: 'Cambria', sqft: 1665, beds: 4, baths: 2,
+    landPrice: 55000, buildCost: 170000, finishes: 0, financing: 13000, gcFee: 20000,
+    appraised: 360000, estRent: 2000,
+    highlight: 'Florida\'s largest city — strong job growth & rental demand'
+  },
+  {
+    market: 'Polk County', region: 'Central', cities: 'Lakeland, Winter Haven',
+    plan: 'Valencia', sqft: 1920, beds: 4, baths: 2.5,
+    landPrice: 42000, buildCost: 195000, finishes: 0, financing: 13000, gcFee: 20000,
+    appraised: 380000, estRent: 2100,
+    highlight: 'I-4 corridor midpoint — logistics & distribution hub'
+  },
+  {
+    market: 'Flagler County', region: 'Atlantic', cities: 'Palm Coast',
+    plan: 'Tribeca', sqft: 1665, beds: 3, baths: 2,
+    landPrice: 35000, buildCost: 165000, finishes: 0, financing: 11000, gcFee: 20000,
+    appraised: 330000, estRent: 1850,
+    highlight: 'Fastest-growing county in Florida — strong appreciation'
+  },
+  {
+    market: 'Brevard County', region: 'Atlantic', cities: 'Melbourne, Palm Bay',
+    plan: 'Brighton', sqft: 2000, beds: 4, baths: 2.5,
+    landPrice: 50000, buildCost: 210000, finishes: 0, financing: 14000, gcFee: 20000,
+    appraised: 420000, estRent: 2300,
+    highlight: 'Space Coast — aerospace & defense employment boom'
+  },
+  {
+    market: 'Pasco County', region: 'Gulf', cities: 'Wesley Chapel, Zephyrhills',
+    plan: 'Legacy', sqft: 1805, beds: 4, baths: 2,
+    landPrice: 45000, buildCost: 185000, finishes: 0, financing: 12000, gcFee: 20000,
+    appraised: 365000, estRent: 2000,
+    highlight: 'Top-5 fastest-growing county — Tampa northward expansion'
+  }
+];
+
+var dealsGrid = document.getElementById('deals-grid');
+DEALS.forEach(function(d) {
+  var allIn = d.landPrice + d.buildCost + d.finishes + d.financing + d.gcFee;
+  var equity = d.appraised - allIn;
+  var annualRent = d.estRent * 12;
+  var grossYield = ((annualRent / allIn) * 100).toFixed(1);
+
+  var html = '<div class="deal-card">' +
+    '<div class="deal-card-header">' +
+      '<div class="deal-card-header-letter">' + d.market.charAt(0) + '</div>' +
+      '<div class="deal-region">' + d.region + '</div>' +
+      '<div class="deal-market">' + d.market + '</div>' +
+      '<div class="deal-plan">' + d.plan + ' &middot; ' + d.sqft.toLocaleString() + ' Sq Ft &middot; ' + d.beds + ' Bed / ' + d.baths + ' Bath</div>' +
+    '</div>' +
+    '<div class="deal-card-body">' +
+      '<div class="deal-section-label">Cost Breakdown</div>' +
+      '<div class="deal-line"><span class="deal-line-label">Land acquisition</span><span class="deal-line-val">' + fmt(d.landPrice) + '</span></div>' +
+      '<div class="deal-line"><span class="deal-line-label">Construction cost</span><span class="deal-line-val">' + fmt(d.buildCost) + '</span></div>' +
+      '<div class="deal-line"><span class="deal-line-label">Financing costs</span><span class="deal-line-val">' + fmt(d.financing) + '</span></div>' +
+      '<div class="deal-line"><span class="deal-line-label">GC fee</span><span class="deal-line-val">' + fmt(d.gcFee) + '</span></div>' +
+      '<div class="deal-total-bar"><span class="deal-total-label">All-In Cost</span><span class="deal-total-val">' + fmt(allIn) + '</span></div>' +
+      '<div class="deal-equity-bar"><span class="deal-equity-label">Day-1 Equity</span><span class="deal-equity-val">+' + fmt(equity) + '</span></div>' +
+      '<div class="deal-section-label">Rental Projections</div>' +
+      '<div class="deal-rent-row"><span class="deal-rent-label">Appraised value</span><span class="deal-rent-val">' + fmt(d.appraised) + '</span></div>' +
+      '<div class="deal-rent-row"><span class="deal-rent-label">Est. monthly rent</span><span class="deal-rent-val" style="color:var(--gold)">' + fmt(d.estRent) + '/mo</span></div>' +
+      '<div class="deal-rent-row"><span class="deal-rent-label">Gross yield</span><span class="deal-rent-val" style="color:var(--green)">' + grossYield + '%</span></div>' +
+    '</div>' +
+    '<div class="deal-card-footer">' +
+      '<button class="deal-btn-primary" onclick="document.getElementById(\'invest-form\').scrollIntoView({behavior:\'smooth\'})">Get Full Pro Forma</button>' +
+      '<a class="deal-btn-gold" href="communities.html#' + d.market.toLowerCase().replace(/ county/,'').replace(/ /g,'') + '">View Market</a>' +
+    '</div>' +
+  '</div>';
+  dealsGrid.insertAdjacentHTML('beforeend', html);
+});
+
+// ═══════════════════════════════════════
+//  FLOOR PLAN TABLE
+// ═══════════════════════════════════════
+var PLANS = [
+  { name:'Cambria',          sqft:1665, beds:4, baths:2,   price:269990, style:'Ranch',     estRent:[1800,2200] },
+  { name:'Tribeca',          sqft:1665, beds:3, baths:2,   price:269990, style:'Ranch',     estRent:[1750,2100] },
+  { name:'Legacy',           sqft:1805, beds:4, baths:2,   price:299990, style:'Ranch',     estRent:[1900,2300] },
+  { name:'Hudson',           sqft:1821, beds:3, baths:2.5, price:299990, style:'Two Story', estRent:[1900,2300] },
+  { name:'Valencia',         sqft:1920, beds:4, baths:2.5, price:309990, style:'Ranch',     estRent:[2000,2500] },
+  { name:'Brighton',         sqft:2000, beds:4, baths:2.5, price:329990, style:'Two Story', estRent:[2100,2600] },
+  { name:'Kensington',       sqft:2112, beds:4, baths:3,   price:339990, style:'Ranch',     estRent:[2200,2700] },
+  { name:'Belmont',          sqft:2307, beds:4, baths:3,   price:369990, style:'Ranch',     estRent:[2300,2800] },
+  { name:'Astoria',          sqft:2551, beds:4, baths:3.5, price:409990, style:'Ranch',     estRent:[2500,3100] },
+  { name:'Stephanie Estate', sqft:3479, beds:4, baths:3.5, price:559990, style:'Two Story', estRent:[3000,3800] }
+];
+
+var tbody = document.getElementById('plan-tbody');
+PLANS.forEach(function(p) {
+  var estTotal = p.price + 50000;
+  var avgRent = Math.round((p.estRent[0] + p.estRent[1]) / 2);
+  var grossYield = ((avgRent * 12 / estTotal) * 100).toFixed(1);
+  var row = document.createElement('tr');
+  row.innerHTML =
+    '<td><span class="plan-name">' + p.name + '</span><span class="plan-badge">' + p.style + '</span></td>' +
+    '<td>' + p.sqft.toLocaleString() + '</td>' +
+    '<td>' + p.beds + ' / ' + p.baths + '</td>' +
+    '<td>' + fmt(p.price) + '</td>' +
+    '<td class="gold">' + fmt(estTotal) + '+</td>' +
+    '<td>' + fmt(p.estRent[0]) + '–' + fmt(p.estRent[1]) + '</td>' +
+    '<td class="green">' + grossYield + '%</td>' +
+    '<td class="plan-cta-cell"><button onclick="document.getElementById(\'invest-form\').scrollIntoView({behavior:\'smooth\'})">Get Pro Forma</button></td>';
+  tbody.appendChild(row);
+});
+</script>
+
+</body>
+</html>

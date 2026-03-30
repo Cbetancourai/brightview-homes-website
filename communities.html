@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where We Build — Brightview Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<!--
+  GOOGLE MAPS API
+  Replace YOUR_API_KEY_HERE with your actual Google Maps API key.
+  Get one at: https://console.cloud.google.com
+  Enable: Maps JavaScript API + Geocoding API
+-->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap" async defer></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:        #1E3A52;
+  --navy-dark:   #152B3E;
+  --navy-mid:    #2A4E6E;
+  --navy-light:  #EEF2F6;
+  --navy-border: #C5D3DF;
+  --gold:        #C9933A;
+  --gold-light:  #FBF4E8;
+  --gold-border: #E8C98A;
+  --white:       #FFFFFF;
+  --gray-bg:     #F5F7F9;
+  --gray-border: rgba(30,58,82,0.12);
+  --gray-text:   #5A7080;
+  --serif:       'Cormorant Garamond', Georgia, serif;
+  --sans:        'DM Sans', sans-serif;
+  --nav-h:       60px;
+}
+
+/* ── NAV ── */
+.bv-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h);
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.75rem;
+  border-bottom: 2px solid var(--gold);
+}
+.nav-logo {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: #fff; text-decoration: none; letter-spacing: .01em;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-logo-star { color: var(--gold); font-size: 18px; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.footer-brand-logo img { height: 30px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a {
+  font-size: 13px; color: rgba(255,255,255,.75);
+  text-decoration: none; cursor: pointer; transition: color .15s;
+  letter-spacing: .02em;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-cta {
+  font-size: 12px; font-weight: 500; padding: 8px 20px;
+  border: 1.5px solid var(--gold); border-radius: 4px;
+  color: var(--gold); background: transparent; cursor: pointer;
+  font-family: var(--sans); letter-spacing: .04em;
+  transition: background .15s, color .15s;
+}
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ── PAGE VISIBILITY ── */
+.page { display: none; padding-top: var(--nav-h); }
+.page.active { display: block; }
+
+/* ════════════════════════════════════
+   PAGE 1 — COMMUNITY LIST + MAP
+════════════════════════════════════ */
+.p1-layout {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  height: calc(100vh - var(--nav-h));
+}
+
+.p1-list { overflow-y: auto; border-right: 1px solid var(--gray-border); background: #fff; }
+
+.p1-list-header {
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--gray-border);
+  position: sticky; top: 0; background: #fff; z-index: 10;
+  border-top: 3px solid var(--gold);
+}
+.p1-eyebrow {
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 5px; font-weight: 500;
+}
+.p1-list-header h1 {
+  font-family: var(--serif); font-size: 26px; font-weight: 500;
+  color: var(--navy); margin-bottom: 4px; line-height: 1.2;
+}
+.p1-list-meta { font-size: 13px; color: var(--gray-text); }
+.p1-list-meta strong { color: var(--navy); font-weight: 500; }
+
+.p1-filters {
+  display: flex; gap: 8px; padding: .75rem 1.5rem;
+  border-bottom: 1px solid var(--gray-border);
+  background: var(--gray-bg); flex-wrap: wrap; align-items: center;
+}
+.p1-filter-label { font-size: 11px; color: var(--gray-text); letter-spacing: .04em; }
+.p1-fsel {
+  font-family: var(--sans); font-size: 12px;
+  padding: 5px 26px 5px 10px;
+  border: 1px solid var(--navy-border);
+  border-radius: 4px; background: #fff; color: var(--navy); cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%231E3A52'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.p1-fsel:focus { outline: none; border-color: var(--gold); }
+.p1-count { font-size: 12px; color: var(--gray-text); margin-left: auto; }
+
+/* community card */
+.comm-card {
+  display: grid; grid-template-columns: 110px 1fr;
+  border-bottom: 1px solid var(--gray-border);
+  cursor: pointer; transition: background .15s;
+  text-decoration: none; color: inherit;
+}
+.comm-card:hover { background: var(--navy-light); }
+.comm-card.highlighted { background: var(--gold-light); border-left: 3px solid var(--gold); }
+
+.comm-card-img {
+  width: 110px; min-height: 115px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 36px; font-weight: 500;
+  color: rgba(255,255,255,.9); flex-shrink: 0;
+  position: relative;
+}
+.comm-card-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(0,0,0,.15);
+}
+
+.comm-card-body { padding: .85rem 1.1rem; }
+.comm-card-region {
+  font-size: 10px; color: var(--gold); text-transform: uppercase;
+  letter-spacing: .1em; margin-bottom: 3px; font-weight: 500;
+}
+.comm-card-name {
+  font-family: var(--serif); font-size: 18px; font-weight: 500;
+  color: var(--navy); margin-bottom: 2px; line-height: 1.2;
+}
+.comm-card-cities { font-size: 12px; color: var(--gray-text); margin-bottom: 7px; }
+.comm-card-price { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+.comm-card-price span { color: var(--gold); }
+
+.comm-card-specs { display: flex; gap: 14px; margin-bottom: 9px; }
+.comm-spec { font-size: 12px; color: var(--gray-text); }
+
+.comm-card-actions { display: flex; gap: 7px; }
+.btn-view {
+  font-size: 12px; font-weight: 500; padding: 5px 14px;
+  border: 1.5px solid var(--navy); border-radius: 4px;
+  color: var(--navy); background: transparent; cursor: pointer;
+  font-family: var(--sans); transition: background .15s, color .15s;
+}
+.btn-view:hover { background: var(--navy); color: #fff; }
+.btn-tour {
+  font-size: 12px; font-weight: 500; padding: 5px 14px;
+  border: 1.5px solid var(--gold); border-radius: 4px;
+  color: var(--gold); background: transparent; cursor: pointer;
+  font-family: var(--sans); transition: background .15s, color .15s;
+}
+.btn-tour:hover { background: var(--gold); color: #fff; }
+
+/* map panel */
+.p1-map { position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); }
+#map { width: 100%; height: 100%; }
+.map-placeholder {
+  width: 100%; height: 100%;
+  background: var(--navy-light);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; color: var(--gray-text);
+}
+.map-placeholder p {
+  font-size: 13px; line-height: 1.7; text-align: center; max-width: 300px; color: var(--navy);
+}
+.map-placeholder code {
+  font-size: 12px; background: rgba(30,58,82,.08);
+  padding: 2px 7px; border-radius: 3px; color: var(--navy);
+}
+.map-key-icon {
+  width: 48px; height: 48px; background: var(--gold-light);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--gold-border);
+}
+
+/* ════════════════════════════════════
+   PAGE 2 — COUNTY DETAIL
+════════════════════════════════════ */
+.p2-breadcrumb {
+  padding: .65rem 1.75rem;
+  border-bottom: 1px solid var(--gray-border);
+  font-size: 12px; color: var(--gray-text);
+  display: flex; align-items: center; gap: 7px;
+  background: var(--gray-bg); letter-spacing: .02em;
+}
+.bc-btn {
+  background: none; border: none; font-size: 12px;
+  color: var(--gold); cursor: pointer; font-family: var(--sans); padding: 0;
+}
+.bc-btn:hover { text-decoration: underline; }
+.bc-sep { color: var(--navy-border); }
+
+.p2-hero-strip {
+  height: 280px; position: relative; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: var(--navy);
+}
+.p2-hero-letter {
+  position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+  font-family: var(--serif); font-size: 220px; font-weight: 600;
+  color: rgba(255,255,255,.06); line-height: 1; pointer-events: none; user-select: none;
+}
+.p2-hero-star {
+  position: absolute; top: 1.5rem; right: 1.75rem;
+  font-size: 28px; color: var(--gold); opacity: .8;
+}
+.p2-hero-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 4px; background: var(--gold);
+}
+.p2-hero-content {
+  position: relative; z-index: 1; padding: 1.75rem;
+}
+.p2-hero-eyebrow {
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px; font-weight: 500;
+}
+.p2-hero-title {
+  font-family: var(--serif); font-size: 44px; font-weight: 500;
+  color: #fff; margin-bottom: 6px; line-height: 1.1; letter-spacing: -.01em;
+}
+.p2-hero-sub { font-size: 14px; color: rgba(255,255,255,.7); letter-spacing: .02em; }
+
+/* body grid */
+.p2-body { display: grid; grid-template-columns: 1fr 290px; }
+
+.p2-content { padding: 2rem 1.75rem; border-right: 1px solid var(--gray-border); }
+
+.p2-section-label {
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px; font-weight: 500;
+}
+.p2-about-title {
+  font-family: var(--serif); font-size: 26px; font-weight: 500;
+  color: var(--navy); margin-bottom: .65rem; line-height: 1.2;
+}
+.p2-about-text {
+  font-size: 14px; color: #4A6070; line-height: 1.8;
+  margin-bottom: 1.5rem; max-width: 600px;
+}
+.p2-highlights { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 1.75rem; }
+.p2-highlights li {
+  font-size: 13px; color: #4A6070; padding-left: 20px;
+  position: relative; line-height: 1.55;
+}
+.p2-highlights li::before {
+  content: '★'; position: absolute; left: 0; top: 0;
+  font-size: 9px; color: var(--gold); line-height: 1.8;
+}
+.p2-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.p2-tag {
+  font-size: 11px; padding: 4px 12px; border-radius: 3px;
+  border: 1px solid var(--navy-border); color: var(--navy);
+  background: var(--navy-light); letter-spacing: .03em;
+}
+
+/* sidebar */
+.p2-sidebar { padding: 1.5rem; display: flex; flex-direction: column; gap: 14px; background: var(--gray-bg); }
+
+.contact-box {
+  border: 1px solid var(--navy-border); border-radius: 6px;
+  padding: 1.15rem; background: #fff;
+  border-top: 3px solid var(--gold);
+}
+.contact-box-title {
+  font-size: 10px; font-weight: 500; color: var(--navy);
+  text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px;
+}
+.contact-phone { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--navy); }
+.contact-addr { font-size: 12px; color: var(--gray-text); line-height: 1.65; margin-top: 4px; }
+
+.contact-btn-primary {
+  display: block; width: 100%; margin-top: 12px; padding: .75rem;
+  background: var(--navy); border: none; border-radius: 4px;
+  color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 500;
+  cursor: pointer; text-align: center; transition: background .15s; letter-spacing: .03em;
+}
+.contact-btn-primary:hover { background: var(--navy-dark); }
+.contact-btn-gold {
+  display: block; width: 100%; margin-top: 8px; padding: .75rem;
+  background: var(--gold); border: none; border-radius: 4px;
+  color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 500;
+  cursor: pointer; text-align: center; transition: background .15s; letter-spacing: .03em;
+}
+.contact-btn-gold:hover { background: #b07e2a; }
+.contact-btn-outline {
+  display: block; width: 100%; margin-top: 6px; padding: .7rem;
+  background: transparent; border: 1.5px solid var(--navy-border); border-radius: 4px;
+  color: var(--navy); font-family: var(--sans); font-size: 12px; font-weight: 500;
+  cursor: pointer; text-align: center; transition: border-color .15s, color .15s;
+}
+.contact-btn-outline:hover { border-color: var(--navy); }
+
+.p2-map-box { border: 1px solid var(--navy-border); border-radius: 6px; overflow: hidden; height: 210px; }
+#p2-map {
+  width: 100%; height: 100%;
+  background: var(--navy-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: var(--gray-text);
+}
+
+/* floor plans */
+.fp-section { padding: 0 1.75rem 2.5rem; }
+.fp-section-top {
+  display: flex; align-items: baseline; justify-content: space-between;
+  border-top: 1px solid var(--gray-border); padding-top: 1.75rem; margin-bottom: .4rem;
+}
+.fp-section-title {
+  font-family: var(--serif); font-size: 30px; font-weight: 500; color: var(--navy);
+}
+.fp-section-sub { font-size: 13px; color: var(--gray-text); margin-bottom: 1.1rem; line-height: 1.6; }
+
+.fp-controls {
+  display: flex; gap: 8px; margin-bottom: 1.25rem;
+  flex-wrap: wrap; align-items: center; padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-border);
+}
+.fp-fsel {
+  font-family: var(--sans); font-size: 12px; padding: 6px 28px 6px 10px;
+  border: 1px solid var(--navy-border); border-radius: 4px;
+  background: #fff; color: var(--navy); cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%231E3A52'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.fp-fsel:focus { outline: none; border-color: var(--gold); }
+.fp-count-label { font-size: 12px; color: var(--gray-text); margin-left: auto; }
+.fp-count-label span { font-weight: 500; color: var(--navy); }
+
+.fp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+
+.fp-card {
+  border: 1px solid var(--navy-border); border-radius: 6px;
+  overflow: hidden; cursor: pointer;
+  transition: border-color .15s, transform .15s, box-shadow .15s;
+  background: #fff;
+}
+.fp-card:hover {
+  border-color: var(--gold); transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(30,58,82,.1);
+}
+.fp-card-top {
+  background: var(--navy); padding: 1rem 1.1rem .85rem;
+  position: relative; overflow: hidden;
+}
+.fp-card-top-letter {
+  position: absolute; right: -.5rem; bottom: -.75rem;
+  font-family: var(--serif); font-size: 72px; font-weight: 600;
+  color: rgba(255,255,255,.07); line-height: 1; pointer-events: none;
+}
+.fp-card-badge {
+  font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 3px;
+  background: var(--gold); color: #fff; display: inline-block; margin-bottom: 7px;
+  letter-spacing: .05em;
+}
+.fp-card-name {
+  font-family: var(--serif); font-size: 20px; font-weight: 500;
+  color: #fff; margin-bottom: 2px; line-height: 1.1;
+}
+.fp-card-price { font-size: 14px; color: rgba(255,255,255,.75); }
+.fp-card-price strong { color: var(--gold); font-weight: 500; font-size: 16px; }
+
+.fp-card-specs {
+  padding: .9rem 1.1rem; display: grid;
+  grid-template-columns: 1fr 1fr; gap: 8px 10px;
+  border-bottom: 1px solid var(--gray-border);
+}
+.fpspec-label { font-size: 10px; color: var(--gray-text); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+.fpspec-val { font-size: 14px; font-weight: 500; color: var(--navy); }
+
+.fp-card-footer { padding: .75rem 1.1rem; }
+.fp-card-cta {
+  width: 100%; padding: .6rem;
+  border: 1.5px solid var(--navy); border-radius: 4px;
+  background: transparent; color: var(--navy); font-family: var(--sans);
+  font-size: 12px; font-weight: 500; cursor: pointer; letter-spacing: .03em;
+  transition: background .15s, color .15s;
+}
+.fp-card-cta:hover { background: var(--navy); color: #fff; }
+
+.fp-empty {
+  grid-column: 1/-1; padding: 3rem; text-align: center;
+  color: var(--gray-text); font-size: 14px;
+}
+
+/* list panel footer (for split-panel pages) */
+.list-footer {
+  background: var(--navy-dark); border-top: 3px solid var(--gold);
+  padding: 1.25rem 1.5rem;
+}
+.list-footer-inner {}
+
+/* full page footer */
+.bv-footer-full { background: var(--navy-dark); border-top: 3px solid var(--gold); }
+.footer-main {
+  display: grid; grid-template-columns: 1.2fr repeat(3, 1fr);
+  gap: 2rem; padding: 3rem 1.75rem 2rem; max-width: 1200px; margin: 0 auto;
+}
+.footer-brand-logo {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: .75rem;
+}
+.footer-brand-logo span { color: var(--gold); }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; max-width: 280px; margin-bottom: 1rem; }
+.footer-brand-phone { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 500; }
+.footer-brand-addr { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.6; margin-top: 4px; }
+.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .85rem; font-weight: 500; }
+.footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 0 1.75rem; }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.75rem; flex-wrap: wrap; gap: 1rem;
+}
+.footer-legal { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.footer-eho-icon {
+  width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 2px; display: flex; align-items: center; justify-content: center;
+  font-size: 8px; color: rgba(255,255,255,.7); text-align: center;
+  line-height: 1.1; padding: 2px; font-weight: 700; letter-spacing: .02em;
+}
+.footer-copyright { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.6; }
+.footer-legal-links { display: flex; gap: 16px; }
+.footer-legal-links a { font-size: 11px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+.footer-legal-links a:hover { color: var(--gold); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .p1-layout { grid-template-columns: 1fr; }
+  .p1-map { display: none; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+  .p2-body { grid-template-columns: 1fr; }
+  .p2-sidebar { order: -1; }
+  .fp-grid { grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); }
+  .p2-hero-title { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html">
+    <img src="logo.png" alt="Brightview Homes">
+  </a>
+  <div class="nav-links">
+    <a onclick="showPage('p1')" class="active">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<!-- ═══════════════════════════════════
+     PAGE 1 — ALL COMMUNITIES
+═══════════════════════════════════ -->
+<div class="page active" id="page-p1">
+  <div class="p1-layout">
+
+    <div class="p1-list">
+      <div class="p1-list-header">
+        <p class="p1-eyebrow">★ Where we build</p>
+        <h1>New Homes in Central Florida</h1>
+        <p class="p1-list-meta"><strong id="comm-count">16</strong> counties &nbsp;·&nbsp; Single-family homes &nbsp;·&nbsp; From <strong>$269,990</strong></p>
+      </div>
+
+      <div class="p1-filters">
+        <span class="p1-filter-label">Filter:</span>
+        <select class="p1-fsel" id="f-region" onchange="filterCards()">
+          <option value="">All regions</option>
+          <option value="Central">Central Florida</option>
+          <option value="Gulf">Gulf Coast</option>
+          <option value="Atlantic">Atlantic Coast</option>
+          <option value="South">South Florida</option>
+        </select>
+        <select class="p1-fsel" id="f-sort" onchange="filterCards()">
+          <option value="name">Sort: A–Z</option>
+          <option value="price">Sort: Price</option>
+        </select>
+        <span class="p1-count" id="result-count">Showing 16</span>
+      </div>
+
+      <div id="comm-list"></div>
+
+      <!-- Footer inside scrollable list panel -->
+      <div class="list-footer">
+        <div class="footer-main" style="padding:2rem 1.5rem 1.5rem">
+          <div class="footer-brand">
+            <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+            <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+            <div class="footer-brand-phone">(321) 310-2849</div>
+            <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+          </div>
+          <div class="footer-col">
+            <div class="footer-col-title">Our Homes</div>
+            <a href="communities.html">Where We Build</a>
+            <a href="floor-plans.html">Floor Plans</a>
+            <a href="quick-move-ins.html">Quick Move-Ins</a>
+            <a href="available-lots.html">Available Lots</a>
+            <a href="build-on-your-lot.html">Build on Your Lot</a>
+          </div>
+          <div class="footer-col">
+            <div class="footer-col-title">Contact</div>
+            <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+            <a href="warranty.html">Customer Care</a>
+            <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+          </div>
+          <div class="footer-col">
+            <div class="footer-col-title">Investors</div>
+            <a href="investor-marketplace.html">Investor Marketplace</a>
+            <a href="investor-marketplace.html">Build to Rent</a>
+            <a href="#">Build to Sell</a>
+            <a href="property-management.html">Property Management</a>
+            <a href="#">Investor Portal</a>
+          </div>
+        </div>
+        <hr class="footer-divider" style="margin:0">
+        <div class="footer-bottom">
+          <div class="footer-legal">
+            <div class="footer-eho">
+              <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+            </div>
+            <div class="footer-copyright">
+              &copy; 2026 Brightview Homes. All rights reserved.<br>
+              Brightview Homes, a Brightview Construction Group LLC company.
+            </div>
+          </div>
+          <div class="footer-legal-links">
+            <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+            <a href="#">Terms &amp; Conditions</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Sitemap</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p1-map">
+      <div id="map">
+        <div class="map-placeholder">
+          <div class="map-key-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <p>Interactive Google Map loads here.<br><br>Open the HTML file and replace<br><code>YOUR_API_KEY_HERE</code><br>with your Google Maps API key.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     PAGE 2 — COUNTY DETAIL
+═══════════════════════════════════ -->
+<div class="page" id="page-p2">
+
+  <div class="p2-breadcrumb">
+    <button class="bc-btn" onclick="showPage('p1')">Where we build</button>
+    <span class="bc-sep">›</span>
+    <span id="p2-bc">County</span>
+  </div>
+
+  <div class="p2-hero-strip" id="p2-hero">
+    <div class="p2-hero-letter" id="p2-hero-letter"></div>
+    <div class="p2-hero-star">★</div>
+    <div class="p2-hero-bar"></div>
+    <div class="p2-hero-content">
+      <p class="p2-hero-eyebrow" id="p2-eyebrow">Brightview Homes · Central Florida</p>
+      <h1 class="p2-hero-title" id="p2-title">County Name</h1>
+      <p class="p2-hero-sub" id="p2-subtitle">Single-Family Homes · From $269,990</p>
+    </div>
+  </div>
+
+  <div class="p2-body">
+    <div>
+      <div class="p2-content">
+        <p class="p2-section-label">★ About this area</p>
+        <h2 class="p2-about-title" id="p2-about-title">Building in County</h2>
+        <p class="p2-about-text" id="p2-about-text"></p>
+        <ul class="p2-highlights" id="p2-highlights"></ul>
+        <div class="p2-tags" id="p2-tags"></div>
+      </div>
+
+      <div class="fp-section">
+        <div class="fp-section-top">
+          <h2 class="fp-section-title">Home Designs</h2>
+        </div>
+        <p class="fp-section-sub">All floor plans are available throughout <span id="fp-county-inline">this county</span>. Prices shown are base starting prices — final pricing varies by lot and selected options.</p>
+        <div class="fp-controls">
+          <select class="fp-fsel" id="fp-f-style" onchange="renderPlans()">
+            <option value="">Style: Any</option>
+            <option value="Ranch">Ranch</option>
+            <option value="Two Story">Two Story</option>
+          </select>
+          <select class="fp-fsel" id="fp-f-price" onchange="renderPlans()">
+            <option value="">Price: Any</option>
+            <option value="269990">Up to $270K</option>
+            <option value="299990">Up to $300K</option>
+            <option value="339990">Up to $340K</option>
+            <option value="409990">Up to $410K</option>
+          </select>
+          <select class="fp-fsel" id="fp-f-beds" onchange="renderPlans()">
+            <option value="">Beds: Any</option>
+            <option value="3">3+ beds</option>
+            <option value="4">4+ beds</option>
+          </select>
+          <select class="fp-fsel" id="fp-f-sort2" onchange="renderPlans()">
+            <option value="price">Price: Low to high</option>
+            <option value="price-d">Price: High to low</option>
+            <option value="sqft">Sq ft: Small to large</option>
+            <option value="name">Name: A–Z</option>
+          </select>
+          <span class="fp-count-label">Displaying <span id="fp-count">10</span> designs</span>
+        </div>
+        <div class="fp-grid" id="fp-grid"></div>
+      </div>
+    </div>
+
+    <div class="p2-sidebar">
+      <div class="contact-box">
+        <div class="contact-box-title">Sales &amp; Inquiries</div>
+        <div class="contact-phone">(321) 310-2849</div>
+        <div class="contact-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+        <button class="contact-btn-primary" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Schedule a tour</button>
+        <button class="contact-btn-gold" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact sales</button>
+        <button class="contact-btn-outline" onclick="window.location.href='available-lots.html'">View available lots</button>
+      </div>
+
+      <div class="p2-map-box">
+        <div id="p2-map">Map loads with API key</div>
+      </div>
+
+      <div class="contact-box">
+        <div class="contact-box-title">Explore More</div>
+        <a href="https://brightviewhomes.us/floor-plan/" target="_blank" style="display:block;font-size:13px;color:var(--navy);text-decoration:none;padding:7px 0;border-bottom:1px solid var(--gray-border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--navy)'">All floor plans →</a>
+        <a href="available-lots.html" style="display:block;font-size:13px;color:var(--navy);text-decoration:none;padding:7px 0;border-bottom:1px solid var(--gray-border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--navy)'">Available lots →</a>
+        <a href="https://brightviewhomes.us/build-on-your-lot/" target="_blank" style="display:block;font-size:13px;color:var(--navy);text-decoration:none;padding:7px 0;border-bottom:1px solid var(--gray-border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--navy)'">Build on your lot →</a>
+        <a href="https://brightviewhomes.us/btr-build-to-rent/" target="_blank" style="display:block;font-size:13px;color:var(--navy);text-decoration:none;padding:7px 0;transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--navy)'">BTR / Build to rent →</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bv-footer-full">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+        <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+        <div class="footer-brand-phone">(321) 310-2849</div>
+        <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Our Homes</div>
+        <a href="communities.html">Where We Build</a>
+        <a href="floor-plans.html">Floor Plans</a>
+        <a href="quick-move-ins.html">Quick Move-Ins</a>
+        <a href="available-lots.html">Available Lots</a>
+        <a href="build-on-your-lot.html">Build on Your Lot</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Contact</div>
+        <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+        <a href="warranty.html">Customer Care</a>
+        <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Investors</div>
+        <a href="investor-marketplace.html">Investor Marketplace</a>
+        <a href="investor-marketplace.html">Build to Rent</a>
+        <a href="#">Build to Sell</a>
+        <a href="property-management.html">Property Management</a>
+        <a href="#">Investor Portal</a>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <div class="footer-eho">
+          <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2026 Brightview Homes. All rights reserved.<br>
+          Brightview Homes, a Brightview Construction Group LLC company.
+        </div>
+      </div>
+      <div class="footer-legal-links">
+        <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════
+var COUNTY_COLORS = [
+  '#1E3A52','#2A4E6E','#1A3348','#24475F','#20405A',
+  '#2C5270','#183044','#264A65','#1C3750','#284B68',
+  '#163040','#22455D','#1E3F57','#26496A','#1A3448','#2E5474'
+];
+
+var COUNTIES = [
+  { id:'brevard',     name:'Brevard County',     region:'Atlantic', cities:'Melbourne · Titusville · Palm Bay',          lat:28.2639, lng:-80.7214,
+    desc:'Brightview Homes builds on scatter lots throughout Brevard County — the Space Coast. From Melbourne to Palm Bay and Titusville, we offer new construction quality in established neighborhoods along Florida\'s Atlantic corridor.',
+    highlights:['Available lots in Melbourne, Palm Bay, and Titusville','Miles of Atlantic coastline and Indian River Lagoon access','Home to Patrick Space Force Base and growing aerospace sector','Strong rental and resale market driven by tech employment','All 10 floor plans available — Ranch and Two Story'] },
+  { id:'charlotte',   name:'Charlotte County',   region:'South',    cities:'Port Charlotte · Punta Gorda · Englewood',   lat:26.9665, lng:-82.0510,
+    desc:'Charlotte County offers some of the most affordable new construction pricing on Florida\'s Gulf Coast. Brightview Homes builds scatter-lot homes in Port Charlotte, Punta Gorda, and Englewood for buyers seeking value, waterway access, and the Southwest Florida lifestyle.',
+    highlights:['Available lots in Port Charlotte, Punta Gorda, and Englewood','Charlotte Harbor and Gulf waterway access throughout','One of Florida\'s most affordable Gulf Coast entry points','Historic Punta Gorda downtown and waterfront dining','All 10 floor plans available'] },
+  { id:'duval',       name:'Duval County',       region:'Atlantic', cities:'Jacksonville · Jax Beach · Orange Park',     lat:30.3322, lng:-81.6557,
+    desc:'Duval County is home to Jacksonville — Florida\'s largest city and one of the Southeast\'s most dynamic growth markets. Brightview Homes builds scatter-lot homes throughout the Jacksonville metro for buyers who want urban energy with suburban space.',
+    highlights:['Available lots in Jacksonville, Jacksonville Beach, and Orange Park','Florida\'s largest city by area with diverse employment base','Atlantic beach access and St. Johns River waterfront','Jacksonville International Airport nearby','All 10 floor plans available'] },
+  { id:'flagler',     name:'Flagler County',     region:'Atlantic', cities:'Palm Coast · Flagler Beach · Bunnell',       lat:29.4713, lng:-81.2080,
+    desc:'Flagler County is one of Florida\'s most scenic coastal counties, anchored by the master-planned city of Palm Coast and the quaint beach community of Flagler Beach. Brightview Homes offers new scatter-lot homes throughout the county.',
+    highlights:['Available lots in Palm Coast, Flagler Beach, and Bunnell','Atlantic beach access within 10 minutes of most communities','One of Florida\'s fastest-growing counties by population','Quiet, family-friendly communities with excellent schools','All 10 floor plans available'] },
+  { id:'hillsborough',name:'Hillsborough County',region:'Gulf',     cities:'Tampa · Brandon · Riverview',               lat:27.9905, lng:-82.3018,
+    desc:'Hillsborough County is anchored by Tampa — one of Florida\'s most vibrant and fast-growing cities. Brightview Homes builds scatter-lot homes in Brandon, Riverview, and Tampa area communities for buyers who want new construction close to everything.',
+    highlights:['Available lots in Tampa, Brandon, and Riverview','Minutes from downtown Tampa, Ybor City, and Tampa Bay','Strong employment — healthcare, finance, tech, and Port Tampa Bay','Direct access to Tampa International Airport and I-275','All 10 floor plans available'] },
+  { id:'lake',        name:'Lake County',        region:'Central',  cities:'Clermont · Leesburg · Mount Dora',          lat:28.7600, lng:-81.8329,
+    desc:'Named for its more than 1,000 inland lakes, Lake County is one of the most scenic counties in Central Florida. Brightview Homes builds in Clermont, Leesburg, and Mount Dora — communities with a small-town feel and a big Florida lifestyle.',
+    highlights:['Available lots in Clermont, Leesburg, and Mount Dora','Scenic lake views and year-round outdoor recreation','30 minutes from Walt Disney World and Orlando attractions','Charming historic downtowns and growing communities','All 10 floor plans available'] },
+  { id:'lee',         name:'Lee County',         region:'South',    cities:'Fort Myers · Cape Coral · Bonita Springs',  lat:26.5629, lng:-81.8723,
+    desc:'Lee County anchors Southwest Florida, centered on Fort Myers and Cape Coral — two of the fastest-growing cities in the United States. Brightview Homes builds scatter-lot homes for buyers drawn to the Gulf Coast lifestyle.',
+    highlights:['Available lots in Fort Myers, Cape Coral, and Bonita Springs','Gateway to Gulf Islands National Seashore and Lee County beaches','One of the fastest-growing metro areas in the nation','Southwest Florida International Airport and I-75 access','All 10 floor plans available'] },
+  { id:'manatee',     name:'Manatee County',     region:'Gulf',     cities:'Bradenton · Palmetto · Lakewood Ranch',     lat:27.4799, lng:-82.3452,
+    desc:'Manatee County sits just north of Sarasota on Florida\'s Gulf Coast and is home to Bradenton, Palmetto, and the nationally recognized Lakewood Ranch corridor. Brightview Homes builds scatter-lot homes throughout the county.',
+    highlights:['Available lots in Bradenton, Palmetto, and Lakewood Ranch area','Gulf of Mexico beach access within 30 minutes','Adjacent to Sarasota\'s world-class arts and culture scene','Strong professional services and healthcare economy','All 10 floor plans available'] },
+  { id:'marion',      name:'Marion County',      region:'Central',  cities:'Ocala · Belleview · Silver Springs Shores', lat:29.1872, lng:-82.1400,
+    desc:'Marion County is anchored by Ocala, the Horse Capital of the World, and is one of North Central Florida\'s most affordable and scenic counties. Brightview Homes builds scatter-lot homes for buyers who want space, nature, and value.',
+    highlights:['Available lots in Ocala, Belleview, and Silver Springs Shores','Lower cost of living with strong land value appreciation','Adjacent to Silver Springs State Park and Ocala National Forest','Florida\'s Turnpike and I-75 provide easy access south to Orlando','All 10 floor plans available'] },
+  { id:'orange',      name:'Orange County',      region:'Central',  cities:'Orlando · Winter Park · Ocoee',             lat:28.5383, lng:-81.3792,
+    desc:'Build a brand-new home in the heart of Central Florida. Brightview Homes builds on scatter lots across Orlando, Winter Park, and Ocoee — delivering new construction quality in the county\'s most sought-after neighborhoods.',
+    highlights:['Available lots across Orlando, Winter Park, and Ocoee','Central location near major employers, dining, and entertainment','Easy access to Orlando International Airport and I-4','Close to theme parks, medical centers, and universities','All 10 floor plans available'] },
+  { id:'osceola',     name:'Osceola County',     region:'Central',  cities:'Kissimmee · St. Cloud · Celebration',       lat:28.1549, lng:-81.0977,
+    desc:'Osceola County is one of Central Florida\'s fastest-growing areas. Brightview Homes builds on scatter lots in Kissimmee, St. Cloud, and the Celebration corridor, with direct access to Florida\'s Turnpike and US-192.',
+    highlights:['Available lots in Kissimmee, St. Cloud, and Celebration area','Rapidly growing county with strong infrastructure investment','Near Florida\'s Turnpike, US-192, and major employment centers','Strong short-term and long-term rental demand','All 10 floor plans available'] },
+  { id:'pasco',       name:'Pasco County',       region:'Gulf',     cities:'Wesley Chapel · New Port Richey · Zephyrhills', lat:28.3239, lng:-82.4358,
+    desc:'Pasco County is one of Florida\'s top-five fastest-growing counties, fueled by rapid development in Wesley Chapel and Tampa\'s northward expansion. Brightview Homes builds scatter-lot homes for buyers seeking value and long-term growth.',
+    highlights:['Available lots in Wesley Chapel, New Port Richey, and Zephyrhills','Top-5 fastest-growing county in Florida','Excellent access to I-75, I-275, and US-19','Growing retail, dining, medical, and school infrastructure','All 10 floor plans available'] },
+  { id:'polk',        name:'Polk County',        region:'Central',  cities:'Lakeland · Winter Haven · Haines City',     lat:27.9904, lng:-81.9549,
+    desc:'Polk County sits at the geographic heart of Florida, midway between Orlando and Tampa on the I-4 corridor. Brightview Homes builds scatter-lot homes in Lakeland, Winter Haven, and Haines City — some of Florida\'s most affordable and fastest-growing communities.',
+    highlights:['Available lots in Lakeland, Winter Haven, and Haines City','Midpoint between Orlando and Tampa on the I-4 corridor','Home to Florida Polytechnic University and growing tech sector','Lower cost of living with strong long-term appreciation','All 10 floor plans available'] },
+  { id:'sarasota',    name:'Sarasota County',    region:'Gulf',     cities:'Sarasota · Venice · North Port',            lat:27.3364, lng:-82.5307,
+    desc:'Sarasota County is renowned as one of Florida\'s premier Gulf Coast destinations — home to world-class beaches, arts, and dining. Brightview Homes builds scatter-lot new homes in Sarasota, Venice, and North Port.',
+    highlights:['Available lots in Sarasota, Venice, and North Port','Minutes from Siesta Key and world-ranked Gulf Coast beaches','Home to the Ringling Museum and vibrant arts and dining scene','One of Florida\'s most desirable retirement and relocation destinations','All 10 floor plans available'] },
+  { id:'seminole',    name:'Seminole County',    region:'Central',  cities:'Sanford · Lake Mary · Longwood',            lat:28.7175, lng:-81.2345,
+    desc:'Brightview Homes builds on scatter lots throughout Seminole County, from Sanford to Lake Mary and Longwood. Each home is built to order on an available lot — giving you the flexibility of new construction in an established neighborhood.',
+    highlights:['Available lots in Sanford, Lake Mary, and Longwood','Highly rated Seminole County public schools throughout','Minutes from downtown Orlando and SR-417 / I-4 corridors','Close to Wekiva Springs, the St. Johns River, and major employers','All 10 floor plans available'] },
+  { id:'volusia',     name:'Volusia County',     region:'Atlantic', cities:'DeLand · Daytona Beach · New Smyrna',       lat:29.0469, lng:-81.0756,
+    desc:'Volusia County stretches from the St. Johns River to the Atlantic Coast, encompassing DeLand, Daytona Beach, and New Smyrna Beach. Brightview Homes builds scatter-lot homes throughout the county for buyers seeking coastal proximity and a relaxed Florida lifestyle.',
+    highlights:['Available lots in DeLand, Daytona Beach, and New Smyrna Beach','Atlantic beach access and the Intracoastal Waterway throughout','Home to Stetson University and a vibrant historic downtown DeLand','Easy access to I-4 and US-1 for commuters','All 10 floor plans available'] }
+];
+
+var PLANS = [
+  { name:'Cambria',          sqft:1665, beds:4, baths:2,   garage:2, price:269990, style:'Ranch' },
+  { name:'Tribeca',          sqft:1665, beds:3, baths:2,   garage:2, price:269990, style:'Ranch' },
+  { name:'Legacy',           sqft:1805, beds:4, baths:2,   garage:2, price:299990, style:'Ranch' },
+  { name:'Hudson',           sqft:1821, beds:3, baths:2.5, garage:2, price:299990, style:'Two Story' },
+  { name:'Valencia',         sqft:1920, beds:4, baths:2.5, garage:2, price:309990, style:'Ranch' },
+  { name:'Brighton',         sqft:2000, beds:4, baths:2.5, garage:2, price:329990, style:'Two Story' },
+  { name:'Kensington',       sqft:2112, beds:4, baths:3,   garage:2, price:339990, style:'Ranch' },
+  { name:'Belmont',          sqft:2307, beds:4, baths:3,   garage:3, price:369990, style:'Ranch' },
+  { name:'Astoria',          sqft:2551, beds:4, baths:3.5, garage:2, price:409990, style:'Ranch' },
+  { name:'Stephanie Estate', sqft:3479, beds:4, baths:3.5, garage:2, price:559990, style:'Two Story' }
+];
+
+// assign colors
+COUNTIES.forEach(function(c, i) { c.color = COUNTY_COLORS[i % COUNTY_COLORS.length]; });
+
+// ═══════════════════════════════════════
+//  GOOGLE MAPS
+// ═══════════════════════════════════════
+var mapP1 = null, mapP2 = null, markers = [];
+var activeCounty = null;
+
+var MAP_STYLES = [
+  { featureType:'water',                              stylers:[{color:'#C5D8E8'}] },
+  { featureType:'landscape',  elementType:'geometry', stylers:[{color:'#F0EDE6'}] },
+  { featureType:'road',       elementType:'geometry', stylers:[{color:'#FFFFFF'}] },
+  { featureType:'road.arterial', elementType:'geometry', stylers:[{color:'#EAE6DC'}] },
+  { featureType:'poi',        elementType:'labels',   stylers:[{visibility:'off'}] },
+  { featureType:'transit',                            stylers:[{visibility:'off'}] },
+  { featureType:'administrative.locality', elementType:'labels.text.fill', stylers:[{color:'#1E3A52'}] },
+  { featureType:'administrative.locality', elementType:'labels.text.stroke', stylers:[{color:'#fff'},{weight:2}] }
+];
+
+function initMap() {
+  mapP1 = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: 28.1, lng: -81.9 }, zoom: 7,
+    mapTypeControl: false, streetViewControl: false, fullscreenControl: false,
+    styles: MAP_STYLES
+  });
+
+  COUNTIES.forEach(function(c) {
+    var marker = new google.maps.Marker({
+      position: { lat: c.lat, lng: c.lng },
+      map: mapP1, title: c.name,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10, fillColor: '#1E3A52', fillOpacity: 1,
+        strokeColor: '#C9933A', strokeWeight: 2.5
+      }
+    });
+    var iw = new google.maps.InfoWindow({
+      content: '<div style="font-family:DM Sans,sans-serif;padding:4px 2px;min-width:160px">' +
+        '<div style="font-size:13px;font-weight:500;color:#1E3A52;margin-bottom:2px">' + c.name + '</div>' +
+        '<div style="font-size:11px;color:#5A7080;margin-bottom:4px">' + c.cities + '</div>' +
+        '<div style="font-size:12px;color:#C9933A;font-weight:500">From $269,990</div></div>'
+    });
+    marker.addListener('click', function() { openCounty(c.id); });
+    marker.addListener('mouseover', function() { iw.open(mapP1, marker); highlightCard(c.id); });
+    marker.addListener('mouseout', function() { iw.close(); unhighlightCards(); });
+    markers.push({ id: c.id, marker: marker });
+  });
+}
+
+function highlightCard(id) {
+  document.querySelectorAll('.comm-card').forEach(function(el) {
+    el.classList.toggle('highlighted', el.dataset.id === id);
+    if (el.dataset.id === id) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  });
+}
+function unhighlightCards() {
+  document.querySelectorAll('.comm-card').forEach(function(el) { el.classList.remove('highlighted'); });
+}
+
+// ═══════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════
+//  PAGE 1 — CARDS
+// ═══════════════════════════════════════
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+function filterCards() {
+  var region = document.getElementById('f-region').value;
+  var sort   = document.getElementById('f-sort').value;
+  var list = COUNTIES.filter(function(c) { return !region || c.region === region; });
+  if (sort === 'name') list.sort(function(a,b) { return a.name.localeCompare(b.name); });
+  document.getElementById('result-count').textContent = 'Showing ' + list.length;
+  renderCards(list);
+}
+
+function renderCards(list) {
+  document.getElementById('comm-list').innerHTML = list.map(function(c) {
+    return '<div class="comm-card" data-id="' + c.id + '" onclick="openCounty(\'' + c.id + '\')" ' +
+      'onmouseenter="pulseMarker(\'' + c.id + '\')" onmouseleave="unpulseMarker(\'' + c.id + '\')">' +
+      '<div class="comm-card-img" style="background:' + c.color + '">' + c.name.charAt(0) + '</div>' +
+      '<div class="comm-card-body">' +
+        '<div class="comm-card-region">★ ' + c.region + ' Florida</div>' +
+        '<div class="comm-card-name">' + c.name + '</div>' +
+        '<div class="comm-card-cities">' + c.cities + '</div>' +
+        '<div class="comm-card-price">From <span>$269,990</span></div>' +
+        '<div class="comm-card-specs">' +
+          '<span class="comm-spec">1,665–3,479 sq ft</span>' +
+          '<span class="comm-spec">·</span>' +
+          '<span class="comm-spec">3–4 beds</span>' +
+          '<span class="comm-spec">·</span>' +
+          '<span class="comm-spec">10 plans</span>' +
+        '</div>' +
+        '<div class="comm-card-actions">' +
+          '<button class="btn-view" onclick="event.stopPropagation();openCounty(\'' + c.id + '\')">View community</button>' +
+          '<button class="btn-tour" onclick="event.stopPropagation();window.open(\'https://brightviewhomes.us/contact/\',\'_blank\')">Schedule a tour</button>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function pulseMarker(id) {
+  markers.forEach(function(m) {
+    if (m.id === id && mapP1) {
+      m.marker.setIcon({ path: google.maps.SymbolPath.CIRCLE, scale: 14, fillColor: '#C9933A', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2.5 });
+    }
+  });
+  highlightCard(id);
+}
+function unpulseMarker(id) {
+  markers.forEach(function(m) {
+    if (m.id === id && mapP1) {
+      m.marker.setIcon({ path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#1E3A52', fillOpacity: 1, strokeColor: '#C9933A', strokeWeight: 2.5 });
+    }
+  });
+  unhighlightCards();
+}
+
+// ═══════════════════════════════════════
+//  PAGE 2 — COUNTY DETAIL
+// ═══════════════════════════════════════
+function openCounty(id) {
+  activeCounty = COUNTIES.find(function(c) { return c.id === id; });
+  if (!activeCounty) return;
+  var c = activeCounty;
+
+  document.getElementById('p2-bc').textContent = c.name;
+  document.getElementById('p2-hero-letter').textContent = c.name.charAt(0);
+  document.getElementById('p2-eyebrow').textContent = '★ Brightview Homes · ' + c.region + ' Florida';
+  document.getElementById('p2-title').textContent = c.name;
+  document.getElementById('p2-subtitle').textContent = 'Single-Family Homes · Scatter Lots · From $269,990 · ' + c.cities;
+  document.getElementById('p2-about-title').textContent = 'Building in ' + c.name;
+  document.getElementById('p2-about-text').textContent = c.desc;
+  document.getElementById('fp-county-inline').textContent = c.name;
+
+  document.getElementById('p2-highlights').innerHTML = c.highlights.map(function(h) {
+    return '<li>' + h + '</li>';
+  }).join('');
+
+  document.getElementById('p2-tags').innerHTML = [
+    'Single-family homes', 'Scatter lots', '10 floor plans', 'From $269,990', c.region + ' Florida'
+  ].map(function(t) { return '<span class="p2-tag">' + t + '</span>'; }).join('');
+
+  ['fp-f-style','fp-f-price','fp-f-beds'].forEach(function(fid) { document.getElementById(fid).value = ''; });
+  document.getElementById('fp-f-sort2').value = 'price';
+  renderPlans();
+
+  if (mapP1 && !mapP2) {
+    mapP2 = new google.maps.Map(document.getElementById('p2-map'), {
+      center: { lat: c.lat, lng: c.lng }, zoom: 10,
+      mapTypeControl: false, streetViewControl: false, fullscreenControl: false,
+      styles: MAP_STYLES
+    });
+    new google.maps.Marker({
+      position: { lat: c.lat, lng: c.lng }, map: mapP2, title: c.name,
+      icon: { path: google.maps.SymbolPath.CIRCLE, scale: 12, fillColor: '#1E3A52', fillOpacity: 1, strokeColor: '#C9933A', strokeWeight: 2.5 }
+    });
+  } else if (mapP2) {
+    mapP2.setCenter({ lat: c.lat, lng: c.lng });
+    mapP2.setZoom(10);
+    document.getElementById('p2-map').innerHTML = '';
+    new google.maps.Marker({
+      position: { lat: c.lat, lng: c.lng }, map: mapP2, title: c.name,
+      icon: { path: google.maps.SymbolPath.CIRCLE, scale: 12, fillColor: '#1E3A52', fillOpacity: 1, strokeColor: '#C9933A', strokeWeight: 2.5 }
+    });
+  }
+
+  showPage('p2');
+}
+
+// ═══════════════════════════════════════
+//  FLOOR PLANS
+// ═══════════════════════════════════════
+function renderPlans() {
+  var style = document.getElementById('fp-f-style').value;
+  var maxP  = document.getElementById('fp-f-price').value;
+  var minB  = document.getElementById('fp-f-beds').value;
+  var sort  = document.getElementById('fp-f-sort2').value;
+
+  var plans = PLANS.filter(function(p) {
+    if (style && p.style !== style) return false;
+    if (maxP  && p.price > parseInt(maxP))  return false;
+    if (minB  && p.beds  < parseInt(minB))  return false;
+    return true;
+  }).sort(function(a,b) {
+    if (sort === 'price')   return a.price - b.price;
+    if (sort === 'price-d') return b.price - a.price;
+    if (sort === 'sqft')    return a.sqft  - b.sqft;
+    return a.name.localeCompare(b.name);
+  });
+
+  document.getElementById('fp-count').textContent = plans.length;
+
+  if (!plans.length) {
+    document.getElementById('fp-grid').innerHTML = '<div class="fp-empty">No floor plans match your filters — try adjusting the options above.</div>';
+    return;
+  }
+
+  document.getElementById('fp-grid').innerHTML = plans.map(function(p) {
+    return '<div class="fp-card">' +
+      '<div class="fp-card-top">' +
+        '<div class="fp-card-top-letter">' + p.name.charAt(0) + '</div>' +
+        '<div class="fp-card-badge">' + p.style + '</div>' +
+        '<div class="fp-card-name">' + p.name + '</div>' +
+        '<div class="fp-card-price">Starting at <strong>' + fmt(p.price) + '</strong></div>' +
+      '</div>' +
+      '<div class="fp-card-specs">' +
+        '<div><div class="fpspec-label">Sq ft</div><div class="fpspec-val">' + p.sqft.toLocaleString() + '</div></div>' +
+        '<div><div class="fpspec-label">Bedrooms</div><div class="fpspec-val">' + p.beds + '</div></div>' +
+        '<div><div class="fpspec-label">Bathrooms</div><div class="fpspec-val">' + p.baths + '</div></div>' +
+        '<div><div class="fpspec-label">Garage</div><div class="fpspec-val">' + p.garage + '-car</div></div>' +
+      '</div>' +
+      '<div class="fp-card-footer">' +
+        '<button class="fp-card-cta" onclick="window.open(\'https://brightviewhomes.us/floor-plan/\',\'_blank\')">View home design →</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+filterCards();
+</script>
+</body>
+</html>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Move-Ins — Brightview Homes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<!--
+  GOOGLE MAPS API
+  Replace YOUR_API_KEY_HERE with your actual Google Maps API key.
+  Get one at: https://console.cloud.google.com
+  Enable: Maps JavaScript API + Geocoding API
+-->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap" async defer></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:        #1E3A52;
+  --navy-dark:   #152B3E;
+  --navy-mid:    #2A4E6E;
+  --navy-light:  #EEF2F6;
+  --navy-bd:     #C5D3DF;
+  --gold:        #C9933A;
+  --gold-light:  #FBF4E8;
+  --gold-bd:     #E8C98A;
+  --gray-bg:     #F5F7F9;
+  --gray-bd:     rgba(30,58,82,.12);
+  --gray-text:   #5A7080;
+  --serif:       'Cormorant Garamond', Georgia, serif;
+  --sans:        'DM Sans', sans-serif;
+  --nav-h:       60px;
+}
+
+/* ── NAV ── */
+.bv-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h); background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.75rem; border-bottom: 2px solid var(--gold);
+}
+.nav-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.nav-logo-star { color: var(--gold); font-size: 18px; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.footer-brand-logo img { height: 30px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 1.75rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; letter-spacing: .02em; }
+.nav-links a:hover { color: var(--gold); }
+.nav-links a.active { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ══════════════════════
+   SPLIT LAYOUT
+══════════════════════ */
+.qmi-layout {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  height: calc(100vh - var(--nav-h));
+  margin-top: var(--nav-h);
+}
+
+/* ── LEFT PANEL ── */
+.qmi-list { overflow-y: auto; border-right: 1px solid var(--gray-bd); background: #fff; }
+
+.qmi-list-header {
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--gray-bd);
+  position: sticky; top: 0; background: #fff; z-index: 10;
+  border-top: 3px solid var(--gold);
+}
+.qmi-eyebrow {
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 5px; font-weight: 500;
+}
+.qmi-list-header h1 {
+  font-family: var(--serif); font-size: 26px; font-weight: 500;
+  color: var(--navy); margin-bottom: 4px; line-height: 1.2;
+}
+.qmi-list-meta { font-size: 13px; color: var(--gray-text); }
+.qmi-list-meta strong { color: var(--navy); font-weight: 500; }
+
+.qmi-filters {
+  display: flex; gap: 8px; padding: .75rem 1.5rem;
+  border-bottom: 1px solid var(--gray-bd);
+  background: var(--gray-bg); flex-wrap: wrap; align-items: center;
+}
+.qmi-filter-label { font-size: 11px; color: var(--gray-text); letter-spacing: .04em; }
+.qmi-fsel {
+  font-family: var(--sans); font-size: 12px;
+  padding: 5px 26px 5px 10px;
+  border: 1px solid var(--navy-bd);
+  border-radius: 4px; background: #fff; color: var(--navy); cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%231E3A52'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.qmi-fsel:focus { outline: none; border-color: var(--gold); }
+.qmi-count { font-size: 12px; color: var(--gray-text); margin-left: auto; }
+
+/* ── QMI CARD ── */
+.qmi-card {
+  display: grid; grid-template-columns: 110px 1fr;
+  border-bottom: 1px solid var(--gray-bd);
+  cursor: pointer; transition: background .15s;
+  text-decoration: none; color: inherit;
+}
+.qmi-card:hover { background: var(--navy-light); }
+.qmi-card.highlighted { background: var(--gold-light); border-left: 3px solid var(--gold); }
+
+.qmi-card-img {
+  width: 110px; min-height: 130px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 28px; font-weight: 500;
+  color: rgba(255,255,255,.9); flex-shrink: 0;
+  position: relative;
+}
+.qmi-card-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(0,0,0,.15);
+}
+
+.qmi-card-body { padding: .85rem 1.1rem; }
+.qmi-card-status {
+  font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 3px;
+  display: inline-block; margin-bottom: 5px; letter-spacing: .05em; text-transform: uppercase;
+}
+.status-available { background: #D4EDDA; color: #155724; }
+.status-under-construction { background: var(--gold-light); color: #8B6914; }
+.status-coming-soon { background: var(--navy-light); color: var(--navy); }
+
+.qmi-card-address {
+  font-family: var(--serif); font-size: 18px; font-weight: 500;
+  color: var(--navy); margin-bottom: 2px; line-height: 1.2;
+}
+.qmi-card-county { font-size: 12px; color: var(--gray-text); margin-bottom: 7px; }
+.qmi-card-price { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+.qmi-card-price span { color: var(--gold); }
+
+.qmi-card-specs { display: flex; gap: 14px; margin-bottom: 9px; }
+.qmi-spec { font-size: 12px; color: var(--gray-text); }
+.qmi-spec strong { color: var(--navy); font-weight: 500; }
+
+.qmi-card-plan { font-size: 11px; color: var(--gold); font-weight: 500; letter-spacing: .04em; margin-bottom: 8px; }
+
+.qmi-card-actions { display: flex; gap: 7px; }
+.btn-view {
+  font-size: 12px; font-weight: 500; padding: 5px 14px;
+  border: 1.5px solid var(--navy); border-radius: 4px;
+  color: var(--navy); background: transparent; cursor: pointer;
+  font-family: var(--sans); transition: background .15s, color .15s;
+}
+.btn-view:hover { background: var(--navy); color: #fff; }
+.btn-tour {
+  font-size: 12px; font-weight: 500; padding: 5px 14px;
+  border: 1.5px solid var(--gold); border-radius: 4px;
+  color: var(--gold); background: transparent; cursor: pointer;
+  font-family: var(--sans); transition: background .15s, color .15s;
+}
+.btn-tour:hover { background: var(--gold); color: #fff; }
+
+/* empty state */
+.qmi-empty {
+  padding: 3rem 1.5rem; text-align: center; color: var(--gray-text);
+  font-size: 14px; line-height: 1.7;
+}
+
+/* ── MAP PANEL ── */
+.qmi-map { position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); }
+#map { width: 100%; height: 100%; }
+.map-placeholder {
+  width: 100%; height: 100%;
+  background: var(--navy-light);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; color: var(--gray-text);
+}
+.map-placeholder p {
+  font-size: 13px; line-height: 1.7; text-align: center; max-width: 300px; color: var(--navy);
+}
+.map-placeholder code {
+  font-size: 12px; background: rgba(30,58,82,.08);
+  padding: 2px 7px; border-radius: 3px; color: var(--navy);
+}
+.map-key-icon {
+  width: 48px; height: 48px; background: var(--gold-light);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--gold-bd);
+}
+
+/* list panel footer */
+.list-footer {
+  background: var(--navy-dark); border-top: 3px solid var(--gold);
+  padding: 1.25rem 1.5rem;
+}
+
+/* ── FOOTER ── */
+.bv-footer-full { background: var(--navy-dark); border-top: 3px solid var(--gold); }
+.footer-main {
+  display: grid; grid-template-columns: 1.2fr repeat(3, 1fr);
+  gap: 2rem; padding: 3rem 1.75rem 2rem; max-width: 1200px; margin: 0 auto;
+}
+.footer-brand-logo {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  color: #fff; display: flex; align-items: center; gap: 6px; margin-bottom: .75rem;
+}
+.footer-brand-logo span { color: var(--gold); }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; max-width: 280px; margin-bottom: 1rem; }
+.footer-brand-phone { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 500; }
+.footer-brand-addr { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.6; margin-top: 4px; }
+.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: .85rem; font-weight: 500; }
+.footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; padding: 4px 0; transition: color .15s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 0 1.75rem; }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.75rem; flex-wrap: wrap; gap: 1rem;
+}
+.footer-legal { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.footer-eho-icon {
+  width: 32px; height: 32px; border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 2px; display: flex; align-items: center; justify-content: center;
+  font-size: 8px; color: rgba(255,255,255,.7); text-align: center;
+  line-height: 1.1; padding: 2px; font-weight: 700; letter-spacing: .02em;
+}
+.footer-copyright { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.6; }
+.footer-legal-links { display: flex; gap: 16px; }
+.footer-legal-links a { font-size: 11px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+.footer-legal-links a:hover { color: var(--gold); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .qmi-layout { grid-template-columns: 1fr; }
+  .qmi-map { display: none; }
+  .nav-links { display: none; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bv-nav">
+  <a class="nav-logo" href="index.html">
+    <img src="logo.png" alt="Brightview Homes">
+  </a>
+  <div class="nav-links">
+    <a href="communities.html">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html" class="active">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+</nav>
+
+<!-- ══════════════════════
+     SPLIT LAYOUT
+══════════════════════ -->
+<div class="qmi-layout">
+
+  <!-- LEFT: LIST -->
+  <div class="qmi-list">
+    <div class="qmi-list-header">
+      <p class="qmi-eyebrow">&#9733; Quick Move-In Homes</p>
+      <h1>Ready Now &amp; Under Construction</h1>
+      <p class="qmi-list-meta"><strong id="qmi-total">0</strong> homes available &nbsp;&middot;&nbsp; Across <strong>16</strong> counties</p>
+    </div>
+
+    <div class="qmi-filters">
+      <span class="qmi-filter-label">Filter:</span>
+      <select class="qmi-fsel" id="f-county" onchange="filterQMI()">
+        <option value="">All counties</option>
+      </select>
+      <select class="qmi-fsel" id="f-status" onchange="filterQMI()">
+        <option value="">All statuses</option>
+        <option value="Available">Move-in ready</option>
+        <option value="Under Construction">Under construction</option>
+        <option value="Coming Soon">Coming soon</option>
+      </select>
+      <select class="qmi-fsel" id="f-price" onchange="filterQMI()">
+        <option value="">Price: Any</option>
+        <option value="350000">Up to $350K</option>
+        <option value="400000">Up to $400K</option>
+        <option value="500000">Up to $500K</option>
+      </select>
+      <select class="qmi-fsel" id="f-beds" onchange="filterQMI()">
+        <option value="">Beds: Any</option>
+        <option value="3">3+ beds</option>
+        <option value="4">4+ beds</option>
+      </select>
+      <span class="qmi-count" id="qmi-count">Showing 0</span>
+    </div>
+
+    <div id="qmi-cards"></div>
+
+    <!-- Footer inside scrollable list panel -->
+    <div class="list-footer">
+      <div class="footer-main" style="padding:2rem 1.5rem 1.5rem">
+        <div class="footer-brand">
+          <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+          <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+          <div class="footer-brand-phone">(321) 310-2849</div>
+          <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Our Homes</div>
+          <a href="communities.html">Where We Build</a>
+          <a href="floor-plans.html">Floor Plans</a>
+          <a href="quick-move-ins.html">Quick Move-Ins</a>
+          <a href="available-lots.html">Available Lots</a>
+          <a href="build-on-your-lot.html">Build on Your Lot</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Contact</div>
+          <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+          <a href="warranty.html">Customer Care</a>
+          <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Investors</div>
+          <a href="investor-marketplace.html">Investor Marketplace</a>
+          <a href="investor-marketplace.html">Build to Rent</a>
+          <a href="#">Build to Sell</a>
+          <a href="property-management.html">Property Management</a>
+          <a href="#">Investor Portal</a>
+        </div>
+      </div>
+      <hr class="footer-divider" style="margin:0">
+      <div class="footer-bottom">
+        <div class="footer-legal">
+          <div class="footer-eho">
+            <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+          </div>
+          <div class="footer-copyright">
+            &copy; 2026 Brightview Homes. All rights reserved.<br>
+            Brightview Homes, a Brightview Construction Group LLC company.
+          </div>
+        </div>
+        <div class="footer-legal-links">
+          <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+          <a href="#">Terms &amp; Conditions</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: MAP -->
+  <div class="qmi-map">
+    <div id="map">
+      <div class="map-placeholder">
+        <div class="map-key-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9933A" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        </div>
+        <p>Interactive Google Map loads here.<br><br>Open the HTML file and replace<br><code>YOUR_API_KEY_HERE</code><br>with your Google Maps API key.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bv-footer-full">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-brand-logo"><img src="logo.png" alt="Brightview Homes"></div>
+      <p>Brightview Homes is a Central Florida home builder dedicated to making new construction personal, attainable, and built to last. We build on scatter lots across 16 counties, giving every buyer the freedom to choose where they live — without sacrificing quality or craftsmanship. Your dream home should never be out of reach.</p>
+      <div class="footer-brand-phone">(321) 310-2849</div>
+      <div class="footer-brand-addr">480 N Orlando Ave, Suite 236<br>Winter Park, FL 32789</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Our Homes</div>
+      <a href="communities.html">Where We Build</a>
+      <a href="floor-plans.html">Floor Plans</a>
+      <a href="quick-move-ins.html">Quick Move-Ins</a>
+      <a href="available-lots.html">Available Lots</a>
+      <a href="build-on-your-lot.html">Build on Your Lot</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Contact Us</a>
+      <a href="warranty.html">Customer Care</a>
+      <a href="https://brightviewhomes.us/contact/" target="_blank">Schedule a Tour</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Investors</div>
+      <a href="investor-marketplace.html">Investor Marketplace</a>
+      <a href="investor-marketplace.html">Build to Rent</a>
+      <a href="#">Build to Sell</a>
+      <a href="property-management.html">Property Management</a>
+      <a href="#">Investor Portal</a>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      <div class="footer-eho">
+        <div class="footer-eho-icon">EQUAL<br>HOUSING<br>OPPORTUNITY</div>
+      </div>
+      <div class="footer-copyright">
+        &copy; 2026 Brightview Homes. All rights reserved.<br>
+        Brightview Homes, a Brightview Construction Group LLC company.
+      </div>
+    </div>
+    <div class="footer-legal-links">
+      <a href="https://brightviewhomes.us/privacy-policy/" target="_blank">Privacy Notice</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Accessibility</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════
+//  QUICK MOVE-IN DATA
+//  Replace these sample entries with your actual quick move-in listings.
+//  Each entry needs: address, city, county, countyId, lat, lng, price,
+//  plan, sqft, beds, baths, garage, status, listingUrl (optional)
+// ═══════════════════════════════════════
+var QUICK_MOVES = [
+  // ── SAMPLE DATA — Replace with your actual listings ──
+  {
+    id: 'qmi-1',
+    address: '1234 Sunrise Blvd',
+    city: 'Sanford',
+    county: 'Seminole County',
+    countyId: 'seminole',
+    lat: 28.8003,
+    lng: -81.2731,
+    price: 449900,
+    plan: 'Valencia',
+    sqft: 1920,
+    beds: 4,
+    baths: 2.5,
+    garage: 2,
+    status: 'Available',      // "Available", "Under Construction", or "Coming Soon"
+    listingUrl: ''            // optional link to MLS or detail page
+  },
+  {
+    id: 'qmi-2',
+    address: '5678 Oak Hammock Dr',
+    city: 'Sanford',
+    county: 'Seminole County',
+    countyId: 'seminole',
+    lat: 28.7895,
+    lng: -81.2650,
+    price: 419900,
+    plan: 'Legacy',
+    sqft: 1805,
+    beds: 4,
+    baths: 2,
+    garage: 2,
+    status: 'Under Construction',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-3',
+    address: '910 Citrus Ridge Way',
+    city: 'Orlando',
+    county: 'Orange County',
+    countyId: 'orange',
+    lat: 28.5020,
+    lng: -81.4100,
+    price: 469900,
+    plan: 'Kensington',
+    sqft: 2112,
+    beds: 4,
+    baths: 3,
+    garage: 2,
+    status: 'Available',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-4',
+    address: '2200 Palm Coast Pkwy',
+    city: 'Palm Coast',
+    county: 'Flagler County',
+    countyId: 'flagler',
+    lat: 29.5511,
+    lng: -81.2218,
+    price: 339900,
+    plan: 'Cambria',
+    sqft: 1665,
+    beds: 4,
+    baths: 2,
+    garage: 2,
+    status: 'Coming Soon',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-5',
+    address: '4455 Lakeland Hills Blvd',
+    city: 'Lakeland',
+    county: 'Polk County',
+    countyId: 'polk',
+    lat: 28.0395,
+    lng: -81.9498,
+    price: 379900,
+    plan: 'Brighton',
+    sqft: 2000,
+    beds: 4,
+    baths: 2.5,
+    garage: 2,
+    status: 'Under Construction',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-6',
+    address: '7890 Gulf Breeze Ln',
+    city: 'Bradenton',
+    county: 'Manatee County',
+    countyId: 'manatee',
+    lat: 27.4989,
+    lng: -82.5748,
+    price: 399900,
+    plan: 'Legacy',
+    sqft: 1805,
+    beds: 4,
+    baths: 2,
+    garage: 2,
+    status: 'Available',
+    listingUrl: ''
+  }
+];
+
+// Background colors for card thumbnails
+var COUNTY_COLORS = {
+  seminole:'#1E3A52', orange:'#2A4E6E', flagler:'#1A3348', polk:'#24475F',
+  manatee:'#20405A', brevard:'#2C5270', charlotte:'#183044', duval:'#264A65',
+  hillsborough:'#1C3750', lake:'#284B68', lee:'#163040', marion:'#22455D',
+  osceola:'#1E3F57', pasco:'#26496A', sarasota:'#1A3448', volusia:'#2E5474'
+};
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+// ═══════════════════════════════════════
+//  POPULATE COUNTY FILTER
+// ═══════════════════════════════════════
+(function() {
+  var counties = [];
+  QUICK_MOVES.forEach(function(q) {
+    if (counties.indexOf(q.county) === -1) counties.push(q.county);
+  });
+  counties.sort();
+  var sel = document.getElementById('f-county');
+  counties.forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+})();
+
+// ═══════════════════════════════════════
+//  RENDER CARDS
+// ═══════════════════════════════════════
+var activeQMI = null;
+
+function filterQMI() {
+  var county = document.getElementById('f-county').value;
+  var status = document.getElementById('f-status').value;
+  var maxPrice = document.getElementById('f-price').value;
+  var minBeds = document.getElementById('f-beds').value;
+
+  var filtered = QUICK_MOVES.filter(function(q) {
+    if (county && q.county !== county) return false;
+    if (status && q.status !== status) return false;
+    if (maxPrice && q.price > parseInt(maxPrice)) return false;
+    if (minBeds && q.beds < parseInt(minBeds)) return false;
+    return true;
+  });
+
+  // Sort by price
+  filtered.sort(function(a, b) { return a.price - b.price; });
+
+  renderCards(filtered);
+  document.getElementById('qmi-count').textContent = 'Showing ' + filtered.length;
+  document.getElementById('qmi-total').textContent = QUICK_MOVES.length;
+}
+
+function renderCards(list) {
+  var container = document.getElementById('qmi-cards');
+
+  if (list.length === 0) {
+    container.innerHTML = '<div class="qmi-empty">No quick move-in homes match your filters.<br>Try adjusting your search criteria.</div>';
+    return;
+  }
+
+  var html = '';
+  list.forEach(function(q) {
+    var bgColor = COUNTY_COLORS[q.countyId] || '#1E3A52';
+    var statusClass = q.status === 'Available' ? 'status-available' :
+                      q.status === 'Under Construction' ? 'status-under-construction' : 'status-coming-soon';
+
+    html += '<div class="qmi-card" data-id="' + q.id + '" onclick="selectQMI(\'' + q.id + '\')">' +
+      '<div class="qmi-card-img" style="background:' + bgColor + '">' +
+        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5" style="position:relative;z-index:1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' +
+      '</div>' +
+      '<div class="qmi-card-body">' +
+        '<span class="qmi-card-status ' + statusClass + '">' + q.status + '</span>' +
+        '<div class="qmi-card-address">' + q.address + '</div>' +
+        '<div class="qmi-card-county">' + q.city + ', ' + q.county + '</div>' +
+        '<div class="qmi-card-price"><span>' + fmt(q.price) + '</span></div>' +
+        '<div class="qmi-card-specs">' +
+          '<span class="qmi-spec"><strong>' + q.beds + '</strong> Beds</span>' +
+          '<span class="qmi-spec"><strong>' + q.baths + '</strong> Baths</span>' +
+          '<span class="qmi-spec"><strong>' + q.sqft.toLocaleString() + '</strong> Sq Ft</span>' +
+          '<span class="qmi-spec"><strong>' + q.garage + '</strong>-Car</span>' +
+        '</div>' +
+        '<div class="qmi-card-plan">' + q.plan + ' Floor Plan</div>' +
+        '<div class="qmi-card-actions">' +
+          '<button class="btn-view" onclick="event.stopPropagation(); viewQMI(\'' + q.id + '\')">View Details</button>' +
+          '<button class="btn-tour" onclick="event.stopPropagation(); window.open(\'https://brightviewhomes.us/contact/\',\'_blank\')">Schedule Tour</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function selectQMI(id) {
+  activeQMI = id;
+  // Highlight card
+  document.querySelectorAll('.qmi-card').forEach(function(c) {
+    c.classList.toggle('highlighted', c.getAttribute('data-id') === id);
+  });
+  // Pan map to marker if available
+  if (typeof panToQMI === 'function') panToQMI(id);
+}
+
+function viewQMI(id) {
+  var q = QUICK_MOVES.find(function(qm) { return qm.id === id; });
+  if (q && q.listingUrl) {
+    window.open(q.listingUrl, '_blank');
+  } else {
+    // Default: go to communities page for that county
+    window.location.href = 'communities.html#' + (q ? q.countyId : '');
+  }
+}
+
+// Initial render
+filterQMI();
+
+// ═══════════════════════════════════════
+//  GOOGLE MAPS
+// ═══════════════════════════════════════
+var map = null, markers = [];
+
+var MAP_STYLES = [
+  { featureType:'water',                              stylers:[{color:'#C5D8E8'}] },
+  { featureType:'landscape',  elementType:'geometry', stylers:[{color:'#F0EDE6'}] },
+  { featureType:'road',       elementType:'geometry', stylers:[{color:'#FFFFFF'}] },
+  { featureType:'road.arterial', elementType:'geometry', stylers:[{color:'#EAE6DC'}] },
+  { featureType:'poi',        elementType:'labels',   stylers:[{visibility:'off'}] },
+  { featureType:'transit',                            stylers:[{visibility:'off'}] },
+  { featureType:'administrative.locality', elementType:'labels.text.fill', stylers:[{color:'#1E3A52'}] },
+  { featureType:'administrative.locality', elementType:'labels.text.stroke', stylers:[{color:'#fff'},{weight:2}] }
+];
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: 28.3, lng: -81.8 }, zoom: 7,
+    mapTypeControl: false, streetViewControl: false, fullscreenControl: false,
+    styles: MAP_STYLES
+  });
+
+  QUICK_MOVES.forEach(function(q) {
+    var marker = new google.maps.Marker({
+      position: { lat: q.lat, lng: q.lng },
+      map: map, title: q.address,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10, fillColor: '#1E3A52', fillOpacity: 1,
+        strokeColor: '#C9933A', strokeWeight: 2.5
+      }
+    });
+
+    var iw = new google.maps.InfoWindow({
+      content: '<div style="font-family:DM Sans,sans-serif;padding:4px 2px;min-width:180px">' +
+        '<div style="font-size:10px;color:#C9933A;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;font-weight:500">' + q.status + '</div>' +
+        '<div style="font-family:Cormorant Garamond,serif;font-size:16px;font-weight:500;color:#1E3A52;margin-bottom:2px">' + q.address + '</div>' +
+        '<div style="font-size:12px;color:#5A7080;margin-bottom:4px">' + q.city + ', ' + q.county + '</div>' +
+        '<div style="font-size:14px;font-weight:500;color:#C9933A;margin-bottom:6px">' + fmt(q.price) + '</div>' +
+        '<div style="font-size:12px;color:#5A7080">' + q.beds + ' Beds &middot; ' + q.baths + ' Baths &middot; ' + q.sqft.toLocaleString() + ' Sq Ft</div>' +
+        '<div style="margin-top:8px"><a href="' + (q.listingUrl || 'communities.html#' + q.countyId) + '" style="font-size:12px;color:#1E3A52;font-weight:500;text-decoration:none;padding:4px 12px;border:1px solid #1E3A52;border-radius:3px;display:inline-block">View Details</a></div>' +
+      '</div>'
+    });
+
+    marker.addListener('click', function() {
+      markers.forEach(function(m) { if (m.iw) m.iw.close(); });
+      iw.open(map, marker);
+      selectQMI(q.id);
+      // Scroll card into view
+      var card = document.querySelector('.qmi-card[data-id="' + q.id + '"]');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    marker.qmiId = q.id;
+    marker.iw = iw;
+    markers.push(marker);
+  });
+
+  // Fit map to all markers
+  if (markers.length > 0) {
+    var bounds = new google.maps.LatLngBounds();
+    markers.forEach(function(m) { bounds.extend(m.getPosition()); });
+    map.fitBounds(bounds, 60);
+  }
+}
+
+function panToQMI(id) {
+  if (!map) return;
+  var marker = markers.find(function(m) { return m.qmiId === id; });
+  if (marker) {
+    map.panTo(marker.getPosition());
+    map.setZoom(12);
+    markers.forEach(function(m) { if (m.iw) m.iw.close(); });
+    marker.iw.open(map, marker);
+  }
+}
+</script>
+
+</body>
+</html>
