@@ -457,6 +457,111 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; b
   .fp-grid { grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); }
   .p2-hero-title { font-size: 32px; }
 }
+
+/* ══════════════════════
+   HAMBURGER + MOBILE NAV
+══════════════════════ */
+.nav-hamburger {
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; width: 44px; height: 44px;
+  background: transparent; border: none; cursor: pointer; padding: 8px;
+  border-radius: 4px; transition: background .15s;
+}
+.nav-hamburger:hover { background: rgba(255,255,255,.08); }
+.nav-hamburger svg { display: block; }
+
+.mobile-nav {
+  display: none;
+  position: fixed; inset: 0; z-index: 1100;
+  background: var(--navy-dark);
+  flex-direction: column;
+  overflow-y: auto;
+}
+.mobile-nav.open { display: flex; }
+
+.mobile-nav-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.25rem; height: var(--nav-h);
+  border-bottom: 2px solid var(--gold); flex-shrink: 0;
+}
+.mobile-nav-logo {
+  font-family: var(--serif); font-size: 20px; font-weight: 500;
+  color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px;
+}
+.mobile-nav-logo img { height: 28px; filter: brightness(0) invert(1); }
+.mobile-nav-close {
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.7);
+  border-radius: 4px; transition: background .15s, color .15s;
+}
+.mobile-nav-close:hover { background: rgba(255,255,255,.08); color: #fff; }
+
+.mobile-nav-links {
+  display: flex; flex-direction: column; padding: 1rem 0; flex: 1;
+}
+.mobile-nav-links a {
+  display: flex; align-items: center;
+  padding: 1rem 1.75rem; font-size: 18px; font-family: var(--serif);
+  color: rgba(255,255,255,.8); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  transition: color .15s, background .15s; min-height: 60px;
+}
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active { color: var(--gold); background: rgba(201,147,58,.06); }
+
+.mobile-nav-cta {
+  padding: 1.25rem 1.75rem; flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.mobile-nav-cta button {
+  width: 100%; padding: 14px 20px; font-family: var(--sans);
+  font-size: 14px; font-weight: 500; letter-spacing: .04em;
+  border: 1.5px solid var(--gold); border-radius: 6px;
+  color: var(--gold); background: transparent; cursor: pointer;
+  transition: background .15s, color .15s; min-height: 48px;
+}
+.mobile-nav-cta button:hover { background: var(--gold); color: var(--navy); }
+
+/* ══════════════════════
+   768px BREAKPOINT
+══════════════════════ */
+@media (max-width: 768px) {
+  .nav-hamburger { display: flex; }
+  .nav-links { display: none !important; }
+  .nav-cta { display: none; }
+
+  /* Communities list/map */
+  .p1-layout { grid-template-columns: 1fr; height: auto; min-height: calc(100vh - var(--nav-h)); }
+  #map { display: none; }
+  .p1-list { height: auto; max-height: none; overflow-y: visible; }
+  .p1-list-header h1 { font-size: 22px; }
+
+  /* Community card */
+  .comm-card { grid-template-columns: 80px 1fr; }
+  .comm-card-img { width: 80px; min-height: 90px; font-size: 28px; }
+
+  /* Page 2 */
+  .p2-hero-title { font-size: 26px; }
+  .p2-body { grid-template-columns: 1fr; }
+  .p2-sidebar { order: 2; width: 100%; }
+  .fp-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+
+  /* Footer */
+  .footer-main { grid-template-columns: 1fr !important; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  .footer-legal-links { justify-content: center; }
+
+  /* Sections */
+  .p2-hero-strip { height: 200px; }
+}
+
+@media (max-width: 480px) {
+  .p1-list-header h1 { font-size: 20px; }
+  .p2-hero-title { font-size: 22px; }
+  .comm-card-name { font-size: 16px; }
+  .p1-filters { gap: 6px; }
+}
 </style>
 </head>
 <body>
@@ -475,7 +580,37 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; b
     <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
   </div>
   <button class="nav-cta" onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect y="0" width="22" height="2" rx="1" fill="white"/>
+      <rect y="7" width="22" height="2" rx="1" fill="white"/>
+      <rect y="14" width="22" height="2" rx="1" fill="white"/>
+    </svg>
+  </button>
 </nav>
+
+<!-- MOBILE NAV OVERLAY -->
+<div class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <div class="mobile-nav-header">
+    <a class="mobile-nav-logo" href="index.html"><img src="logo.png" alt="Brightview Homes"></a>
+    <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <nav class="mobile-nav-links">
+    <a href="communities.html" class="active">Where We Build</a>
+    <a href="floor-plans.html">Floor Plans</a>
+    <a href="quick-move-ins.html">Quick Move-Ins</a>
+    <a href="available-lots.html">Available Lots</a>
+    <a href="build-on-your-lot.html">Build on Your Lot</a>
+    <a href="https://brightviewhomes.us/our-services/" target="_blank">Services</a>
+  </nav>
+  <div class="mobile-nav-cta">
+    <button onclick="window.open('https://brightviewhomes.us/contact/','_blank')">Contact Us</button>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════
      PAGE 1 — ALL COMMUNITIES
@@ -1022,5 +1157,21 @@ function renderPlans() {
 // ═══════════════════════════════════════
 filterCards();
 </script>
+
+<script>
+// ── HAMBURGER MENU ──
+(function() {
+  var hamburger = document.getElementById('nav-hamburger');
+  var mobileNav = document.getElementById('mobile-nav');
+  var closeBtn  = document.getElementById('mobile-nav-close');
+  function openMenu() { mobileNav.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { mobileNav.classList.remove('open'); document.body.style.overflow = ''; }
+  if (hamburger) hamburger.addEventListener('click', openMenu);
+  if (closeBtn)  closeBtn.addEventListener('click', closeMenu);
+  if (mobileNav) mobileNav.addEventListener('click', function(e) { if (e.target === mobileNav) closeMenu(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
+})();
+</script>
+
 </body>
 </html>
