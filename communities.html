@@ -132,14 +132,19 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; b
 
 .comm-card-img {
   width: 110px; min-height: 115px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--serif); font-size: 36px; font-weight: 500;
-  color: rgba(255,255,255,.9); flex-shrink: 0;
-  position: relative;
+  flex-shrink: 0; position: relative; overflow: hidden;
 }
-.comm-card-img::after {
-  content: ''; position: absolute; inset: 0;
-  background: rgba(0,0,0,.15);
+.comm-card-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; transition: transform .4s ease;
+}
+.comm-card:hover .comm-card-img img { transform: scale(1.06); }
+.comm-card-img-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(30,58,82,.85) 0%, transparent 100%);
+  color: #fff; font-size: 9px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; padding: 14px 6px 5px; text-align: center;
+  font-family: var(--sans);
 }
 
 .comm-card-body { padding: .85rem 1.1rem; }
@@ -540,7 +545,7 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; b
 
   /* Community card */
   .comm-card { grid-template-columns: 80px 1fr; }
-  .comm-card-img { width: 80px; min-height: 90px; font-size: 28px; }
+  .comm-card-img { width: 80px; min-height: 90px; }
 
   /* Page 2 */
   .p2-hero-title { font-size: 26px; }
@@ -1014,7 +1019,10 @@ function renderCards(list) {
   document.getElementById('comm-list').innerHTML = list.map(function(c) {
     return '<div class="comm-card" data-id="' + c.id + '" onclick="openCounty(\'' + c.id + '\')" ' +
       'onmouseenter="pulseMarker(\'' + c.id + '\')" onmouseleave="unpulseMarker(\'' + c.id + '\')">' +
-      '<div class="comm-card-img" style="background:' + c.color + '">' + c.name.charAt(0) + '</div>' +
+      '<div class="comm-card-img">' +
+        '<img src="https://maps.googleapis.com/maps/api/staticmap?center=' + c.lat + ',' + c.lng + '&zoom=10&size=220x230&maptype=hybrid&markers=color:0xC9933A|size:small|' + c.lat + ',' + c.lng + '&key=AIzaSyD1bUgj6mV719Be5nVpRb4fmZx7SYNqFzg" alt="' + c.name + '" loading="lazy">' +
+        '<div class="comm-card-img-label">' + c.region + '</div>' +
+      '</div>' +
       '<div class="comm-card-body">' +
         '<div class="comm-card-region">★ ' + c.region + ' Florida</div>' +
         '<div class="comm-card-name">' + c.name + '</div>' +
