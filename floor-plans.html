@@ -764,7 +764,8 @@ var PLANS = [
     exteriors:['Modern Farmhouse','Craftsman','Coastal','Florida Traditional'],
     floors:['First Floor'],
     matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
-    photos:['images/floor-plans/belmont/front-elevation.jpg','images/floor-plans/belmont/left-elevation.jpg','images/floor-plans/belmont/right-elevation.jpg','images/floor-plans/belmont/rear-elevation.jpg']
+    photos:['images/floor-plans/belmont/front-elevation.jpg','images/floor-plans/belmont/left-elevation.jpg','images/floor-plans/belmont/right-elevation.jpg','images/floor-plans/belmont/rear-elevation.jpg'],
+    floorPlanImg:'images/floor-plans/belmont/floor-plan.jpg'
   },
   {
     id:'astoria', name:'Astoria', style:'Ranch', sqft:2551, beds:4, baths:3.5, garage:2, stories:1, price:409990,
@@ -998,7 +999,9 @@ function openPlan(id) {
   document.getElementById('pd-floor-tabs').innerHTML = p.floors.map(function(f, i) {
     return '<button class="floor-tab ' + (i===0?'active':'') + '" onclick="switchFloor(this,\'' + p.id + '\',\'' + f + '\')">' + f + '</button>';
   }).join('');
-  document.getElementById('pd-floorplan-canvas').innerHTML = buildFloorDiagram(p.id, p.floors[0]);
+  document.getElementById('pd-floorplan-canvas').innerHTML = p.floorPlanImg
+    ? '<img src="' + p.floorPlanImg + '" alt="' + p.name + ' floor plan" style="width:100%;border-radius:6px;border:1px solid var(--navy-bd)">'
+    : buildFloorDiagram(p.id, p.floors[0]);
 
   // exterior styles
   document.getElementById('pd-ext-grid').innerHTML = p.exteriors.map(function(e, i) {
