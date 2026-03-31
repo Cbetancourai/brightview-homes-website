@@ -13,7 +13,7 @@
   Get one at: https://console.cloud.google.com
   Enable: Maps JavaScript API + Geocoding API
 -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1bUgj6mV719Be5nVpRb4fmZx7SYNqFzg&callback=initMap" async defer></script>
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -550,33 +550,32 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; b
 //  plan, sqft, beds, baths, garage, status, listingUrl (optional)
 // ═══════════════════════════════════════
 var QUICK_MOVES = [
-  // ── SAMPLE DATA — Replace with your actual listings ──
   {
     id: 'qmi-1',
-    address: '1234 Sunrise Blvd',
-    city: 'Sanford',
-    county: 'Seminole County',
-    countyId: 'seminole',
-    lat: 28.8003,
-    lng: -81.2731,
-    price: 449900,
-    plan: 'Valencia',
-    sqft: 1920,
-    beds: 4,
-    baths: 2.5,
+    address: '536 E Beresford Ave',
+    city: 'DeLand',
+    county: 'Volusia County',
+    countyId: 'volusia',
+    lat: 29.01359,
+    lng: -81.2931119,
+    price: 0,
+    plan: 'Tribeca',
+    sqft: 1665,
+    beds: 3,
+    baths: 2,
     garage: 2,
-    status: 'Available',      // "Available", "Under Construction", or "Coming Soon"
-    listingUrl: ''            // optional link to MLS or detail page
+    status: 'Completed',
+    listingUrl: ''
   },
   {
     id: 'qmi-2',
-    address: '5678 Oak Hammock Dr',
+    address: '3512 Palmway Dr',
     city: 'Sanford',
     county: 'Seminole County',
     countyId: 'seminole',
-    lat: 28.7895,
-    lng: -81.2650,
-    price: 419900,
+    lat: 28.76463,
+    lng: -81.2664321,
+    price: 0,
     plan: 'Legacy',
     sqft: 1805,
     beds: 4,
@@ -587,70 +586,138 @@ var QUICK_MOVES = [
   },
   {
     id: 'qmi-3',
-    address: '910 Citrus Ridge Way',
-    city: 'Orlando',
-    county: 'Orange County',
-    countyId: 'orange',
-    lat: 28.5020,
-    lng: -81.4100,
-    price: 469900,
-    plan: 'Kensington',
-    sqft: 2112,
-    beds: 4,
-    baths: 3,
-    garage: 2,
-    status: 'Available',
-    listingUrl: ''
-  },
-  {
-    id: 'qmi-4',
-    address: '2200 Palm Coast Pkwy',
-    city: 'Palm Coast',
-    county: 'Flagler County',
-    countyId: 'flagler',
-    lat: 29.5511,
-    lng: -81.2218,
-    price: 339900,
-    plan: 'Cambria',
-    sqft: 1665,
-    beds: 4,
-    baths: 2,
-    garage: 2,
-    status: 'Coming Soon',
-    listingUrl: ''
-  },
-  {
-    id: 'qmi-5',
-    address: '4455 Lakeland Hills Blvd',
-    city: 'Lakeland',
-    county: 'Polk County',
-    countyId: 'polk',
-    lat: 28.0395,
-    lng: -81.9498,
-    price: 379900,
-    plan: 'Brighton',
-    sqft: 2000,
-    beds: 4,
+    address: '807 Santa Barbara Dr',
+    city: 'Sanford',
+    county: 'Seminole County',
+    countyId: 'seminole',
+    lat: 28.7811075,
+    lng: -81.2757331,
+    price: 0,
+    plan: 'Hudson',
+    sqft: 1821,
+    beds: 3,
     baths: 2.5,
     garage: 2,
     status: 'Under Construction',
     listingUrl: ''
   },
   {
-    id: 'qmi-6',
-    address: '7890 Gulf Breeze Ln',
-    city: 'Bradenton',
-    county: 'Manatee County',
-    countyId: 'manatee',
-    lat: 27.4989,
-    lng: -82.5748,
-    price: 399900,
-    plan: 'Legacy',
-    sqft: 1805,
-    beds: 4,
-    baths: 2,
+    id: 'qmi-4',
+    address: '8590 Blackberry Ave',
+    city: 'Orlando',
+    county: 'Orange County',
+    countyId: 'orange',
+    lat: 28.5595798,
+    lng: -81.2699426,
+    price: 0,
+    plan: 'Hudson',
+    sqft: 1821,
+    beds: 3,
+    baths: 2.5,
     garage: 2,
-    status: 'Available',
+    status: 'Under Construction',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-5',
+    address: '23245 SR 19',
+    city: 'Howey In The Hills',
+    county: 'Lake County',
+    countyId: 'lake',
+    lat: 28.6856104,
+    lng: -81.7826001,
+    price: 0,
+    plan: 'Stephanie Estate',
+    sqft: 3479,
+    beds: 4,
+    baths: 3.5,
+    garage: 2,
+    status: 'Permitting',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-6',
+    address: '1905 Pershing Ave',
+    city: 'Orlando',
+    county: 'Orange County',
+    countyId: 'orange',
+    lat: 28.4987529,
+    lng: -81.3552534,
+    price: 0,
+    plan: 'Stephanie Estate',
+    sqft: 3479,
+    beds: 4,
+    baths: 3.5,
+    garage: 2,
+    status: 'Demolition',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-7',
+    address: '5305 Wren St',
+    city: 'Orlando',
+    county: 'Orange County',
+    countyId: 'orange',
+    lat: 28.546054,
+    lng: -81.318029,
+    price: 0,
+    plan: 'Kensington',
+    sqft: 2112,
+    beds: 4,
+    baths: 3,
+    garage: 2,
+    status: 'Permitting',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-8',
+    address: '137 S Chandler Ave',
+    city: 'DeLand',
+    county: 'Volusia County',
+    countyId: 'volusia',
+    lat: 29.0267173,
+    lng: -81.287429,
+    price: 0,
+    plan: 'Brighton',
+    sqft: 2000,
+    beds: 4,
+    baths: 2.5,
+    garage: 2,
+    status: 'Permitting',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-9',
+    address: '205 E New Hampshire Ave',
+    city: 'DeLand',
+    county: 'Volusia County',
+    countyId: 'volusia',
+    lat: 29.006672,
+    lng: -81.299878,
+    price: 0,
+    plan: 'TBD',
+    sqft: 0,
+    beds: 0,
+    baths: 0,
+    garage: 0,
+    status: 'Planning',
+    listingUrl: ''
+  },
+  {
+    id: 'qmi-10',
+    address: '324 Cypress St',
+    city: 'Orlando',
+    county: 'Orange County',
+    countyId: 'orange',
+    lat: 28.433291,
+    lng: -81.373049,
+    price: 0,
+    plan: 'Kensington',
+    sqft: 2112,
+    beds: 4,
+    baths: 3,
+    garage: 2,
+    status: 'Permitting',
     listingUrl: ''
   }
 ];
@@ -731,12 +798,12 @@ function renderCards(list) {
         '<span class="qmi-card-status ' + statusClass + '">' + q.status + '</span>' +
         '<div class="qmi-card-address">' + q.address + '</div>' +
         '<div class="qmi-card-county">' + q.city + ', ' + q.county + '</div>' +
-        '<div class="qmi-card-price"><span>' + fmt(q.price) + '</span></div>' +
+        '<div class="qmi-card-price"><span>' + (q.price > 0 ? fmt(q.price) : 'Call for pricing') + '</span></div>' +
         '<div class="qmi-card-specs">' +
-          '<span class="qmi-spec"><strong>' + q.beds + '</strong> Beds</span>' +
-          '<span class="qmi-spec"><strong>' + q.baths + '</strong> Baths</span>' +
-          '<span class="qmi-spec"><strong>' + q.sqft.toLocaleString() + '</strong> Sq Ft</span>' +
-          '<span class="qmi-spec"><strong>' + q.garage + '</strong>-Car</span>' +
+          (q.beds > 0 ? '<span class="qmi-spec"><strong>' + q.beds + '</strong> Beds</span>' : '') +
+          (q.baths > 0 ? '<span class="qmi-spec"><strong>' + q.baths + '</strong> Baths</span>' : '') +
+          (q.sqft > 0 ? '<span class="qmi-spec"><strong>' + q.sqft.toLocaleString() + '</strong> Sq Ft</span>' : '') +
+          (q.garage > 0 ? '<span class="qmi-spec"><strong>' + q.garage + '</strong>-Car</span>' : '') +
         '</div>' +
         '<div class="qmi-card-plan">' + q.plan + ' Floor Plan</div>' +
         '<div class="qmi-card-actions">' +
@@ -797,24 +864,31 @@ function initMap() {
   });
 
   QUICK_MOVES.forEach(function(q) {
+    var pinColor = q.status === 'Completed' ? '#2E7D32' :
+                   q.status === 'Under Construction' ? '#C9933A' :
+                   q.status === 'Permitting' ? '#1565C0' :
+                   q.status === 'Demolition' ? '#B71C1C' :
+                   '#1E3A52';
     var marker = new google.maps.Marker({
       position: { lat: q.lat, lng: q.lng },
       map: map, title: q.address,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
-        scale: 10, fillColor: '#1E3A52', fillOpacity: 1,
-        strokeColor: '#C9933A', strokeWeight: 2.5
+        scale: 10, fillColor: pinColor, fillOpacity: 1,
+        strokeColor: '#fff', strokeWeight: 2
       }
     });
-
+    var priceDisplay = q.price > 0 ? fmt(q.price) : 'Call for pricing';
+    var specsDisplay = q.sqft > 0 ? q.beds + ' Beds &middot; ' + q.baths + ' Baths &middot; ' + q.sqft.toLocaleString() + ' Sq Ft' : q.plan;
     var iw = new google.maps.InfoWindow({
       content: '<div style="font-family:DM Sans,sans-serif;padding:4px 2px;min-width:180px">' +
-        '<div style="font-size:10px;color:#C9933A;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;font-weight:500">' + q.status + '</div>' +
+        '<div style="font-size:10px;color:' + pinColor + ';text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;font-weight:600">● ' + q.status + '</div>' +
         '<div style="font-family:Cormorant Garamond,serif;font-size:16px;font-weight:500;color:#1E3A52;margin-bottom:2px">' + q.address + '</div>' +
         '<div style="font-size:12px;color:#5A7080;margin-bottom:4px">' + q.city + ', ' + q.county + '</div>' +
-        '<div style="font-size:14px;font-weight:500;color:#C9933A;margin-bottom:6px">' + fmt(q.price) + '</div>' +
-        '<div style="font-size:12px;color:#5A7080">' + q.beds + ' Beds &middot; ' + q.baths + ' Baths &middot; ' + q.sqft.toLocaleString() + ' Sq Ft</div>' +
-        '<div style="margin-top:8px"><a href="' + (q.listingUrl || 'communities.html#' + q.countyId) + '" style="font-size:12px;color:#1E3A52;font-weight:500;text-decoration:none;padding:4px 12px;border:1px solid #1E3A52;border-radius:3px;display:inline-block">View Details</a></div>' +
+        '<div style="font-size:13px;font-weight:500;color:#C9933A;margin-bottom:4px">' + q.plan + ' Floor Plan</div>' +
+        '<div style="font-size:14px;font-weight:600;color:#1E3A52;margin-bottom:6px">' + priceDisplay + '</div>' +
+        '<div style="font-size:12px;color:#5A7080">' + specsDisplay + '</div>' +
+        '<div style="margin-top:8px"><a href="' + (q.listingUrl || 'communities.html#' + q.countyId) + '" style="font-size:12px;color:#1E3A52;font-weight:500;text-decoration:none;padding:4px 12px;border:1px solid #1E3A52;border-radius:3px;display:inline-block">View County →</a></div>' +
       '</div>'
     });
 
