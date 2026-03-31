@@ -513,6 +513,7 @@ html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #ff
 
   <div class="pd-hero">
     <div class="pd-hero-bg-letter" id="pd-hero-letter"></div>
+    <img class="pd-hero-img" id="pd-hero-img" src="" alt="" style="display:none">
     <div class="pd-hero-overlay"></div>
     <div class="pd-hero-content">
       <p class="pd-hero-eyebrow" id="pd-eyebrow">★ Brightview Homes · Home Design</p>
@@ -958,6 +959,12 @@ function openPlan(id) {
 
   document.getElementById('pd-bc-name').textContent = p.name;
   document.getElementById('pd-hero-letter').textContent = p.name.charAt(0);
+  var heroImg = document.getElementById('pd-hero-img');
+  if (p.photos && p.photos.length > 0) {
+    heroImg.src = p.photos[0]; heroImg.alt = p.name; heroImg.style.display = 'block'; heroImg.style.opacity = '0.6';
+  } else {
+    heroImg.style.display = 'none';
+  }
   document.getElementById('pd-eyebrow').textContent = '★ Brightview Homes · ' + p.style + ' · Home Design';
   document.getElementById('pd-hero-name').textContent = p.name;
   document.getElementById('pd-hero-price').textContent = 'Starting at ' + fmt(p.price);
