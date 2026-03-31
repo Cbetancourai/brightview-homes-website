@@ -170,7 +170,7 @@ html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #ff
 }
 .pd-hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to right, rgba(30,58,82,.95) 40%, rgba(30,58,82,.4) 100%);
+  background: linear-gradient(to right, rgba(30,58,82,.75) 30%, rgba(30,58,82,.2) 100%);
 }
 .pd-hero-content { position: relative; z-index: 1; padding: 2rem 1.75rem 2rem; flex: 1; }
 .pd-hero-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
@@ -961,7 +961,7 @@ function openPlan(id) {
   document.getElementById('pd-hero-letter').textContent = p.name.charAt(0);
   var heroImg = document.getElementById('pd-hero-img');
   if (p.photos && p.photos.length > 0) {
-    heroImg.src = p.photos[0]; heroImg.alt = p.name; heroImg.style.display = 'block'; heroImg.style.opacity = '0.6';
+    heroImg.src = p.photos[0]; heroImg.alt = p.name; heroImg.style.display = 'block'; heroImg.style.opacity = '1';
   } else {
     heroImg.style.display = 'none';
   }
