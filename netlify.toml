@@ -1,0 +1,27 @@
+# Force all HTTP traffic to HTTPS
+[[redirects]]
+  from   = "http://brightviewhomes.us/*"
+  to     = "https://brightviewhomes.us/:splat"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "http://www.brightviewhomes.us/*"
+  to     = "https://brightviewhomes.us/:splat"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "https://www.brightviewhomes.us/*"
+  to     = "https://brightviewhomes.us/:splat"
+  status = 301
+  force  = true
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    X-Frame-Options            = "SAMEORIGIN"
+    X-Content-Type-Options     = "nosniff"
+    Referrer-Policy            = "strict-origin-when-cross-origin"
