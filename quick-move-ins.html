@@ -13,7 +13,7 @@
   Get one at: https://console.cloud.google.com
   Enable: Maps JavaScript API + Geocoding API
 -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1bUgj6mV719Be5nVpRb4fmZx7SYNqFzg&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1bUgj6mV719Be5nVpRb4fmZx7SYNqFzg&loading=async&callback=initMap" async></script>
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -873,7 +873,7 @@ var MAP_STYLES = [
   { featureType:'administrative.locality', elementType:'labels.text.stroke', stylers:[{color:'#fff'},{weight:2}] }
 ];
 
-function initMap() {
+window.initMap = function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 28.3, lng: -81.8 }, zoom: 7,
     mapTypeControl: false, streetViewControl: false, fullscreenControl: false,
