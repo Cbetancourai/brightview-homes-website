@@ -863,14 +863,20 @@ filterQMI();
 var map = null, markers = [];
 
 var MAP_STYLES = [
-  { featureType:'water',                              stylers:[{color:'#C5D8E8'}] },
-  { featureType:'landscape',  elementType:'geometry', stylers:[{color:'#F0EDE6'}] },
-  { featureType:'road',       elementType:'geometry', stylers:[{color:'#FFFFFF'}] },
-  { featureType:'road.arterial', elementType:'geometry', stylers:[{color:'#EAE6DC'}] },
-  { featureType:'poi',        elementType:'labels',   stylers:[{visibility:'off'}] },
-  { featureType:'transit',                            stylers:[{visibility:'off'}] },
-  { featureType:'administrative.locality', elementType:'labels.text.fill', stylers:[{color:'#1E3A52'}] },
-  { featureType:'administrative.locality', elementType:'labels.text.stroke', stylers:[{color:'#fff'},{weight:2}] }
+  { featureType:'water',                                 elementType:'geometry',           stylers:[{color:'#7ec4de'}] },
+  { featureType:'landscape',                             elementType:'geometry',           stylers:[{color:'#eaf2e3'}] },
+  { featureType:'landscape.natural.terrain',             elementType:'geometry',           stylers:[{color:'#d6ebcb'}] },
+  { featureType:'road',                                  elementType:'geometry',           stylers:[{color:'#ffffff'}] },
+  { featureType:'road.arterial',                         elementType:'geometry',           stylers:[{color:'#f2ede3'}] },
+  { featureType:'road.highway',                          elementType:'geometry',           stylers:[{color:'#e8e0cf'}] },
+  { featureType:'road.highway',                          elementType:'geometry.stroke',    stylers:[{color:'#d6ccbb'}] },
+  { featureType:'poi',                                   elementType:'labels',             stylers:[{visibility:'off'}] },
+  { featureType:'poi.park',                              elementType:'geometry',           stylers:[{color:'#c8e6c9'}] },
+  { featureType:'transit',                                                                 stylers:[{visibility:'off'}] },
+  { featureType:'administrative.locality',               elementType:'labels.text.fill',   stylers:[{color:'#3d5a6e'}] },
+  { featureType:'administrative.locality',               elementType:'labels.text.stroke', stylers:[{color:'#ffffff'},{weight:2.5}] },
+  { featureType:'administrative.province',               elementType:'labels.text.fill',   stylers:[{color:'#2c4a5e'},{weight:1}] },
+  { featureType:'administrative.province',               elementType:'labels.text.stroke', stylers:[{color:'#ffffff'},{weight:2}] }
 ];
 
 window.initMap = function initMap() {
@@ -881,18 +887,28 @@ window.initMap = function initMap() {
   });
 
   QUICK_MOVES.forEach(function(q) {
-    var pinColor = q.status === 'Completed' ? '#2E7D32' :
+    var pinColor = q.status === 'Completed'          ? '#2e7d32' :
+                   q.status === 'Interior Finishes'  ? '#558b2f' :
+                   q.status === 'Rough Trades'       ? '#f57c00' :
+                   q.status === 'Frame'              ? '#ef6c00' :
                    q.status === 'Under Construction' ? '#C9933A' :
-                   q.status === 'Permitting' ? '#1565C0' :
-                   q.status === 'Demolition' ? '#B71C1C' :
+                   q.status === 'Permitting'         ? '#1565C0' :
+                   q.status === 'Demolition'         ? '#B71C1C' :
                    '#1E3A52';
+    // SVG pin: colored circle with white ring + drop shadow
+    var sz = 28;
+    var pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + sz + '" height="' + sz + '">'
+      + '<defs><filter id="ps"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.30)"/></filter></defs>'
+      + '<circle cx="' + (sz/2) + '" cy="' + (sz/2) + '" r="' + (sz/2-1) + '" fill="white" filter="url(#ps)"/>'
+      + '<circle cx="' + (sz/2) + '" cy="' + (sz/2) + '" r="' + (sz/2-4) + '" fill="' + pinColor + '"/>'
+      + '</svg>';
     var marker = new google.maps.Marker({
       position: { lat: q.lat, lng: q.lng },
       map: map, title: q.address,
       icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 10, fillColor: pinColor, fillOpacity: 1,
-        strokeColor: '#fff', strokeWeight: 2
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(pinSvg),
+        scaledSize: new google.maps.Size(sz, sz),
+        anchor: new google.maps.Point(sz/2, sz/2)
       }
     });
     var priceDisplay = q.price > 0 ? fmt(q.price) : 'Call for pricing';

@@ -942,15 +942,47 @@ var mapP1 = null, mapP2 = null, markers = [];
 var activeCounty = null;
 
 var MAP_STYLES = [
-  { featureType:'water',                              stylers:[{color:'#C5D8E8'}] },
-  { featureType:'landscape',  elementType:'geometry', stylers:[{color:'#F0EDE6'}] },
-  { featureType:'road',       elementType:'geometry', stylers:[{color:'#FFFFFF'}] },
-  { featureType:'road.arterial', elementType:'geometry', stylers:[{color:'#EAE6DC'}] },
-  { featureType:'poi',        elementType:'labels',   stylers:[{visibility:'off'}] },
-  { featureType:'transit',                            stylers:[{visibility:'off'}] },
-  { featureType:'administrative.locality', elementType:'labels.text.fill', stylers:[{color:'#1E3A52'}] },
-  { featureType:'administrative.locality', elementType:'labels.text.stroke', stylers:[{color:'#fff'},{weight:2}] }
+  { featureType:'water',                                 elementType:'geometry',           stylers:[{color:'#7ec4de'}] },
+  { featureType:'landscape',                             elementType:'geometry',           stylers:[{color:'#eaf2e3'}] },
+  { featureType:'landscape.natural.terrain',             elementType:'geometry',           stylers:[{color:'#d6ebcb'}] },
+  { featureType:'road',                                  elementType:'geometry',           stylers:[{color:'#ffffff'}] },
+  { featureType:'road.arterial',                         elementType:'geometry',           stylers:[{color:'#f2ede3'}] },
+  { featureType:'road.highway',                          elementType:'geometry',           stylers:[{color:'#e8e0cf'}] },
+  { featureType:'road.highway',                          elementType:'geometry.stroke',    stylers:[{color:'#d6ccbb'}] },
+  { featureType:'poi',                                   elementType:'labels',             stylers:[{visibility:'off'}] },
+  { featureType:'poi.park',                              elementType:'geometry',           stylers:[{color:'#c8e6c9'}] },
+  { featureType:'transit',                                                                 stylers:[{visibility:'off'}] },
+  { featureType:'administrative.locality',               elementType:'labels.text.fill',   stylers:[{color:'#3d5a6e'}] },
+  { featureType:'administrative.locality',               elementType:'labels.text.stroke', stylers:[{color:'#ffffff'},{weight:2.5}] },
+  { featureType:'administrative.province',               elementType:'labels.text.fill',   stylers:[{color:'#2c4a5e'},{weight:1}] },
+  { featureType:'administrative.province',               elementType:'labels.text.stroke', stylers:[{color:'#ffffff'},{weight:2}] }
 ];
+
+// Build a white pill label SVG for each county marker
+function makeCountyIcon(label, active) {
+  var bg    = active ? '#1558A8' : '#ffffff';
+  var tc    = active ? '#ffffff' : '#1558A8';
+  var bord  = active ? '#0d4a9b' : 'rgba(0,0,0,0.13)';
+  var cw    = 7.2, pad = 22;
+  var w     = Math.max(Math.ceil(label.length * cw) + pad, 78);
+  var h     = 26, tip = 7;
+  var mx    = w / 2;
+  var svg   = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + (h + tip) + '">'
+    + '<defs><filter id="s" x="-30%" y="-30%" width="160%" height="160%">'
+    + '<feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.20)"/>'
+    + '</filter></defs>'
+    + '<rect x="1" y="1" width="' + (w-2) + '" height="' + (h-2) + '" rx="12" fill="' + bg + '" stroke="' + bord + '" stroke-width="1" filter="url(#s)"/>'
+    + '<text x="' + mx + '" y="' + (h/2 + 4.5) + '" text-anchor="middle" '
+    + 'font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-weight="700" '
+    + 'fill="' + tc + '" letter-spacing="0.5">' + label + '</text>'
+    + '<polygon points="' + (mx-5) + ',' + (h-2) + ' ' + (mx+5) + ',' + (h-2) + ' ' + mx + ',' + (h+tip-1) + '" fill="' + bg + '"/>'
+    + '</svg>';
+  return {
+    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+    scaledSize: new google.maps.Size(w, h + tip),
+    anchor: new google.maps.Point(mx, h + tip - 1)
+  };
+}
 
 window.initMap = function initMap() {
   mapP1 = new google.maps.Map(document.getElementById('map'), {
@@ -960,25 +992,16 @@ window.initMap = function initMap() {
   });
 
   COUNTIES.forEach(function(c) {
+    var label  = c.name.replace(' County', '').toUpperCase() + ', FL';
     var marker = new google.maps.Marker({
       position: { lat: c.lat, lng: c.lng },
       map: mapP1, title: c.name,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 10, fillColor: '#1E3A52', fillOpacity: 1,
-        strokeColor: '#C9933A', strokeWeight: 2.5
-      }
-    });
-    var iw = new google.maps.InfoWindow({
-      content: '<div style="font-family:DM Sans,sans-serif;padding:4px 2px;min-width:160px">' +
-        '<div style="font-size:13px;font-weight:500;color:#1E3A52;margin-bottom:2px">' + c.name + '</div>' +
-        '<div style="font-size:11px;color:#5A7080;margin-bottom:4px">' + c.cities + '</div>' +
-        '<div style="font-size:12px;color:#C9933A;font-weight:500">From $269,990</div></div>'
+      icon: makeCountyIcon(label, false)
     });
     marker.addListener('click', function() { openCounty(c.id); });
-    marker.addListener('mouseover', function() { iw.open(mapP1, marker); highlightCard(c.id); });
-    marker.addListener('mouseout', function() { iw.close(); unhighlightCards(); });
-    markers.push({ id: c.id, marker: marker });
+    marker.addListener('mouseover', function() { marker.setIcon(makeCountyIcon(label, true)); highlightCard(c.id); });
+    marker.addListener('mouseout',  function() { marker.setIcon(makeCountyIcon(label, false)); unhighlightCards(); });
+    markers.push({ id: c.id, marker: marker, label: label });
   });
 }
 
@@ -1045,17 +1068,13 @@ function renderCards(list) {
 
 function pulseMarker(id) {
   markers.forEach(function(m) {
-    if (m.id === id && mapP1) {
-      m.marker.setIcon({ path: google.maps.SymbolPath.CIRCLE, scale: 14, fillColor: '#C9933A', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2.5 });
-    }
+    if (m.id === id && mapP1) m.marker.setIcon(makeCountyIcon(m.label, true));
   });
   highlightCard(id);
 }
 function unpulseMarker(id) {
   markers.forEach(function(m) {
-    if (m.id === id && mapP1) {
-      m.marker.setIcon({ path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#1E3A52', fillOpacity: 1, strokeColor: '#C9933A', strokeWeight: 2.5 });
-    }
+    if (m.id === id && mapP1) m.marker.setIcon(makeCountyIcon(m.label, false));
   });
   unhighlightCards();
 }
