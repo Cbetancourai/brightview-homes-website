@@ -582,16 +582,16 @@ var COUNTIES = [
 ];
 
 var PLANS = [
-  { id:'cambria',   name:'Cambria',          sqft:1665, beds:4, baths:2,   garage:2, price:269990, style:'Ranch' },
-  { id:'tribeca',   name:'Tribeca',          sqft:1665, beds:3, baths:2,   garage:2, price:269990, style:'Ranch' },
-  { id:'legacy',    name:'Legacy',           sqft:1805, beds:4, baths:2,   garage:2, price:299990, style:'Ranch' },
-  { id:'hudson',    name:'Hudson',           sqft:1821, beds:3, baths:2.5, garage:2, price:299990, style:'Two Story' },
-  { id:'valencia',  name:'Valencia',         sqft:1920, beds:4, baths:2.5, garage:2, price:309990, style:'Ranch' },
-  { id:'brighton',  name:'Brighton',         sqft:2000, beds:4, baths:2.5, garage:2, price:329990, style:'Two Story' },
-  { id:'kensington',name:'Kensington',       sqft:2112, beds:4, baths:3,   garage:2, price:339990, style:'Ranch' },
-  { id:'belmont',   name:'Belmont',          sqft:2307, beds:4, baths:3,   garage:3, price:369990, style:'Ranch' },
-  { id:'astoria',   name:'Astoria',          sqft:2551, beds:4, baths:3.5, garage:2, price:409990, style:'Ranch' },
-  { id:'stephanie', name:'Stephanie Estate', sqft:3479, beds:4, baths:3.5, garage:2, price:559990, style:'Two Story' }
+  { id:'cambria',   name:'Cambria',          sqft:1665, beds:4, baths:2,   garage:2, price:269990, style:'Ranch',     img:'images/floor-plans/cambria/front-elevation.jpg' },
+  { id:'tribeca',   name:'Tribeca',          sqft:1665, beds:3, baths:2,   garage:2, price:269990, style:'Ranch',     img:'images/floor-plans/tribeca/front-elevation.jpg' },
+  { id:'legacy',    name:'Legacy',           sqft:1805, beds:4, baths:2,   garage:2, price:299990, style:'Ranch',     img:'images/floor-plans/legacy/front-elevation.jpg' },
+  { id:'hudson',    name:'Hudson',           sqft:1821, beds:3, baths:2.5, garage:2, price:299990, style:'Two Story', img:'images/floor-plans/hudson/front-elevation.jpg' },
+  { id:'valencia',  name:'Valencia',         sqft:1920, beds:4, baths:2.5, garage:2, price:309990, style:'Ranch',     img:'images/floor-plans/valencia/front-elevation.jpg' },
+  { id:'brighton',  name:'Brighton',         sqft:2000, beds:4, baths:2.5, garage:2, price:329990, style:'Two Story', img:'images/floor-plans/brighton/front-elevation.jpg' },
+  { id:'kensington',name:'Kensington',       sqft:2112, beds:4, baths:3,   garage:2, price:339990, style:'Ranch',     img:'images/floor-plans/kensington/front-elevation.jpg' },
+  { id:'belmont',   name:'Belmont',          sqft:2307, beds:4, baths:3,   garage:3, price:369990, style:'Ranch',     img:'images/floor-plans/belmont/front-elevation.jpg' },
+  { id:'astoria',   name:'Astoria',          sqft:2551, beds:4, baths:3.5, garage:2, price:409990, style:'Ranch',     img:'images/floor-plans/astoria/front-elevation.jpg' },
+  { id:'stephanie', name:'Stephanie Estate', sqft:3479, beds:4, baths:3.5, garage:2, price:559990, style:'Two Story', img:'images/floor-plans/stephanie/front-elevation.jpg' }
 ];
 
 function fmt(n) { return '$' + n.toLocaleString(); }
@@ -663,7 +663,8 @@ featured.forEach(function(p) {
   card.href = 'floor-plans.html#' + p.id;
   card.innerHTML =
     '<div class="plan-card-hero">' +
-      '<div class="plan-card-letter">' + p.name.charAt(0) + '</div>' +
+      (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1">' : '<div class="plan-card-letter">' + p.name.charAt(0) + '</div>') +
+      '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.15) 55%,transparent 100%)"></div>' +
       '<div class="plan-card-content">' +
         '<div class="plan-card-badge">' + p.style + '</div>' +
         '<div class="plan-card-name">' + p.name + '</div>' +
