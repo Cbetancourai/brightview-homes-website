@@ -726,6 +726,7 @@ html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #ff
         <h2 class="pd-section-title">Designed for Your Lifestyle</h2>
         <div class="pd-floor-tabs" id="pd-floor-tabs"></div>
         <div class="pd-floorplan-canvas" id="pd-floorplan-canvas"></div>
+        <div id="pd-pdf-cta" style="margin-top:1.25rem"></div>
       </div>
 
       <div id="pd-exterior-sec" style="margin-top:2rem">
@@ -836,7 +837,9 @@ var PLANS = [
     floors:['First Floor'],
     matterportUrl:'https://www.zillow.com/view-imx/4fb80bd6-0394-4d4f-a1c2-36d2fa97bda0?setAttribution=mls&wl=true&initialViewType=pano',
     videoUrl:'https://media.zillowmediaexperts.com/videos/019d2eaa-181d-73bd-b1b7-b855b0215170',
-    photos:['images/floor-plans/cambria/front-elevation.jpg']
+    photos:['images/floor-plans/cambria/front-elevation.jpg'],
+    pdfViewerUrl:'cambria-floor-plan.html',
+    pdfFile:'pdfs/cambria-4bed-2bath-1665sf.pdf'
   },
   {
     id:'tribeca', name:'Tribeca', style:'Ranch', sqft:1665, beds:3, baths:2, garage:2, stories:1, price:269990,
@@ -1142,6 +1145,24 @@ function openPlan(id) {
   document.getElementById('pd-floor-tabs').innerHTML = p.floors.map(function(f, i) {
     return '<button class="floor-tab ' + (i===0?'active':'') + '" onclick="switchFloor(this,\'' + p.id + '\',\'' + f + '\')">' + f + '</button>';
   }).join('');
+  // PDF floor plan CTA (appears under the floor plan canvas when a plan has a viewer page)
+  var pdfCtaEl = document.getElementById('pd-pdf-cta');
+  if (p.pdfViewerUrl) {
+    pdfCtaEl.innerHTML =
+      '<div style="background:var(--gold-light);border:1px solid var(--gold-bd);border-radius:8px;padding:1rem 1.25rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between">' +
+        '<div style="min-width:220px">' +
+          '<div style="font-family:var(--serif);font-size:18px;font-weight:500;color:var(--navy);margin-bottom:2px">Full architectural floor plan</div>' +
+          '<div style="font-size:12px;color:var(--gray-text);line-height:1.5">View the detailed PDF with dimensions — downloadable and printable.</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+          '<a class="pd-btn-primary" href="' + p.pdfViewerUrl + '" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">View Full PDF →</a>' +
+          (p.pdfFile ? '<a class="pd-btn-outline" href="' + p.pdfFile + '" download style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">Download</a>' : '') +
+        '</div>' +
+      '</div>';
+  } else {
+    pdfCtaEl.innerHTML = '';
+  }
+
   document.getElementById('pd-floorplan-canvas').innerHTML = p.floorPlanImg
     ? '<img src="' + p.floorPlanImg + '" alt="' + p.name + ' floor plan" style="width:100%;border-radius:6px;border:1px solid var(--navy-bd)">'
     : buildFloorDiagram(p.id, p.floors[0]);

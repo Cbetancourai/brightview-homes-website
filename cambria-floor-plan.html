@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cambria Floor Plan — Brightview Homes</title>
+<meta name="description" content="View, download, or print the Cambria floor plan — 4 bed, 2 bath, 2-car garage, 1,665 sq ft single-story Ranch by Brightview Homes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #fff; }
+
+:root {
+  --navy:       #1E3A52;
+  --navy-dark:  #152B3E;
+  --navy-bd:    #C5D3DF;
+  --gold:       #C9933A;
+  --gold-bd:    #E8C98A;
+  --gray-bg:    #F5F7F9;
+  --gray-bd:    rgba(30,58,82,.12);
+  --gray-text:  #5A7080;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'DM Sans', sans-serif;
+  --nav-h:      60px;
+}
+
+/* ── NAV (matches rest of site) ── */
+.bv-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h); background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.75rem; border-bottom: 2px solid var(--gold);
+}
+.nav-logo { font-family: var(--serif); font-size: 22px; font-weight: 500; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; transition: color .15s; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-cta { font-size: 12px; font-weight: 500; padding: 8px 20px; border: 1.5px solid var(--gold); border-radius: 4px; color: var(--gold); background: transparent; cursor: pointer; font-family: var(--sans); letter-spacing: .04em; text-decoration: none; }
+.nav-cta:hover { background: var(--gold); color: var(--navy); }
+
+/* ── PAGE ── */
+main { padding-top: var(--nav-h); }
+
+.viewer-hero {
+  background: var(--navy); padding: 2rem 1.75rem 1.75rem;
+  border-bottom: 3px solid var(--gold);
+}
+.viewer-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
+.viewer-hero h1 { font-family: var(--serif); font-size: 36px; font-weight: 500; color: #fff; margin-bottom: 4px; line-height: 1.1; }
+.viewer-hero p { font-size: 13px; color: rgba(255,255,255,.7); max-width: 640px; line-height: 1.6; }
+.viewer-hero-stats { display: flex; gap: 2.25rem; margin-top: 1.1rem; }
+.viewer-stat { }
+.viewer-stat-val { font-family: var(--serif); font-size: 24px; font-weight: 500; color: var(--gold); line-height: 1; }
+.viewer-stat-label { font-size: 10.5px; color: rgba(255,255,255,.6); margin-top: 3px; letter-spacing: .05em; text-transform: uppercase; }
+
+.viewer-bar {
+  display: flex; gap: 10px; padding: .85rem 1.75rem;
+  border-bottom: 1px solid var(--gray-bd); background: var(--gray-bg);
+  align-items: center; flex-wrap: wrap; position: sticky; top: var(--nav-h); z-index: 10;
+}
+.viewer-back { font-size: 13px; color: var(--navy); text-decoration: none; font-weight: 500; }
+.viewer-back:hover { color: var(--gold); }
+.viewer-actions { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+
+.btn {
+  font-family: var(--sans); font-size: 12px; font-weight: 500; letter-spacing: .04em;
+  padding: 9px 18px; border-radius: 4px; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 7px; transition: background .15s, color .15s;
+  border: 1.5px solid transparent;
+}
+.btn-primary { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.btn-primary:hover { background: #B27F28; border-color: #B27F28; }
+.btn-outline { background: transparent; color: var(--navy); border-color: var(--navy-bd); }
+.btn-outline:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+.btn svg { width: 14px; height: 14px; }
+
+.pdf-frame-wrap {
+  padding: 1.25rem 1.75rem 2rem;
+  background: var(--gray-bg);
+  min-height: calc(100vh - var(--nav-h) - 240px);
+}
+.pdf-frame {
+  width: 100%; height: calc(100vh - var(--nav-h) - 180px); min-height: 640px;
+  border: 1px solid var(--navy-bd); border-radius: 8px; background: #fff;
+  box-shadow: 0 2px 12px rgba(30,58,82,.08);
+}
+.pdf-fallback {
+  padding: 2rem 1.5rem; text-align: center; background: #fff;
+  border: 1px solid var(--navy-bd); border-radius: 8px;
+}
+.pdf-fallback p { font-size: 14px; color: var(--gray-text); margin-bottom: 1rem; }
+
+/* ── CONTACT STRIP ── */
+.contact-strip {
+  background: #fff; padding: 1.75rem 1.75rem;
+  border-top: 1px solid var(--gray-bd);
+  display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between;
+}
+.contact-strip-title { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--navy); }
+.contact-strip-phone { font-size: 15px; color: var(--navy); font-weight: 500; }
+.contact-strip-sub { font-size: 12px; color: var(--gray-text); margin-top: 2px; }
+
+/* ── FOOTER ── */
+footer { background: var(--navy-dark); color: rgba(255,255,255,.7); padding: 2rem 1.75rem; text-align: center; font-size: 12px; }
+footer a { color: var(--gold); text-decoration: none; }
+
+@media (max-width: 720px) {
+  .nav-links { display: none; }
+  .viewer-hero h1 { font-size: 28px; }
+  .viewer-hero-stats { gap: 1.25rem; }
+  .pdf-frame { height: 70vh; min-height: 480px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="bv-nav">
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Brightview Homes"></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="floor-plans.html" class="active">Floor Plans</a>
+    <a href="communities.html">Communities</a>
+    <a href="available-lots.html">Lots</a>
+    <a href="build-on-your-lot.html">Build On Your Lot</a>
+  </div>
+  <a href="https://brightviewhomes.us/contact/" class="nav-cta" target="_blank">Contact</a>
+</nav>
+
+<main>
+  <section class="viewer-hero">
+    <div class="viewer-eyebrow">★ Floor Plan Document</div>
+    <h1>Cambria</h1>
+    <p>Single-story Ranch — 4 bedrooms, 2 baths, 2-car garage, 1,665 sq ft. View the full architectural floor plan below, or download the PDF for offline reference and printing.</p>
+    <div class="viewer-hero-stats">
+      <div class="viewer-stat"><div class="viewer-stat-val">1,665</div><div class="viewer-stat-label">Sq Ft</div></div>
+      <div class="viewer-stat"><div class="viewer-stat-val">4</div><div class="viewer-stat-label">Beds</div></div>
+      <div class="viewer-stat"><div class="viewer-stat-val">2</div><div class="viewer-stat-label">Baths</div></div>
+      <div class="viewer-stat"><div class="viewer-stat-val">2</div><div class="viewer-stat-label">Car Garage</div></div>
+      <div class="viewer-stat"><div class="viewer-stat-val">1</div><div class="viewer-stat-label">Story</div></div>
+    </div>
+  </section>
+
+  <div class="viewer-bar">
+    <a href="floor-plans.html#cambria" class="viewer-back">← Back to Cambria overview</a>
+    <div class="viewer-actions">
+      <button class="btn btn-outline" onclick="printPdf()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+      <a class="btn btn-primary" href="pdfs/cambria-4bed-2bath-1665sf.pdf" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF
+      </a>
+    </div>
+  </div>
+
+  <div class="pdf-frame-wrap">
+    <iframe id="pdf-frame" class="pdf-frame" src="pdfs/cambria-4bed-2bath-1665sf.pdf#view=FitH" title="Cambria floor plan PDF"></iframe>
+    <noscript>
+      <div class="pdf-fallback">
+        <p>Your browser needs JavaScript enabled, or PDF support, to view this document inline.</p>
+        <a class="btn btn-primary" href="pdfs/cambria-4bed-2bath-1665sf.pdf" download>Download PDF instead</a>
+      </div>
+    </noscript>
+  </div>
+
+  <div class="contact-strip">
+    <div>
+      <div class="contact-strip-title">Ready to build the Cambria?</div>
+      <div class="contact-strip-sub">Available on scatter lots across all 16 Central Florida counties.</div>
+    </div>
+    <div style="text-align:right">
+      <div class="contact-strip-phone">(321) 310-2849</div>
+      <a href="https://brightviewhomes.us/contact/" target="_blank" class="btn btn-primary" style="margin-top:8px">Schedule a consultation</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  © Brightview Homes · <a href="index.html">Home</a> · <a href="floor-plans.html">Floor Plans</a> · <a href="https://brightviewhomes.us/contact/">Contact</a>
+</footer>
+
+<script>
+function printPdf() {
+  var frame = document.getElementById('pdf-frame');
+  try {
+    frame.contentWindow.focus();
+    frame.contentWindow.print();
+  } catch (e) {
+    // Cross-origin or browser block — fall back to opening in a new tab for the user to print manually
+    window.open('pdfs/cambria-4bed-2bath-1665sf.pdf', '_blank');
+  }
+}
+</script>
+
+</body>
+</html>
