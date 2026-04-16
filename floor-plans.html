@@ -839,7 +839,7 @@ var PLANS = [
     videoUrl:'https://media.zillowmediaexperts.com/videos/019d2eaa-181d-73bd-b1b7-b855b0215170',
     photos:['images/floor-plans/cambria/front-elevation.jpg'],
     floorPlanImg:'images/floor-plans/cambria/floor-plan.jpg',
-    pdfViewerUrl:'cambria-floor-plan.html',
+    pdfViewerUrl:'plan-pdf.html?plan=cambria',
     pdfFile:'pdfs/cambria-4bed-2bath-1665sf.pdf'
   },
   {
@@ -910,7 +910,9 @@ var PLANS = [
     floors:['First Floor'],
     matterportUrl:'', // Add Matterport 3D tour URL here, e.g. 'https://my.matterport.com/show/?m=XXXXX'
     photos:['images/floor-plans/belmont/front-elevation.jpg','images/floor-plans/belmont/left-elevation.jpg','images/floor-plans/belmont/right-elevation.jpg','images/floor-plans/belmont/rear-elevation.jpg'],
-    floorPlanImg:'images/floor-plans/belmont/floor-plan.jpg'
+    floorPlanImg:'images/floor-plans/belmont/floor-plan.jpg',
+    pdfViewerUrl:'plan-pdf.html?plan=belmont',
+    pdfFile:'pdfs/belmont-4bed-3bath-2307sf.pdf'
   },
   {
     id:'astoria', name:'Astoria', style:'Ranch', sqft:2551, beds:4, baths:3.5, garage:2, stories:1, price:409990,
@@ -1146,22 +1148,33 @@ function openPlan(id) {
   document.getElementById('pd-floor-tabs').innerHTML = p.floors.map(function(f, i) {
     return '<button class="floor-tab ' + (i===0?'active':'') + '" onclick="switchFloor(this,\'' + p.id + '\',\'' + f + '\')">' + f + '</button>';
   }).join('');
-  // PDF floor plan CTA (appears under the floor plan canvas when a plan has a viewer page)
+  // PDF floor plan CTA (renders under the floor plan canvas on every plan)
   var pdfCtaEl = document.getElementById('pd-pdf-cta');
-  if (p.pdfViewerUrl) {
-    pdfCtaEl.innerHTML =
-      '<div style="background:var(--gold-light);border:1px solid var(--gold-bd);border-radius:8px;padding:1rem 1.25rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between">' +
-        '<div style="min-width:220px">' +
-          '<div style="font-family:var(--serif);font-size:18px;font-weight:500;color:var(--navy);margin-bottom:2px">Full architectural floor plan</div>' +
-          '<div style="font-size:12px;color:var(--gray-text);line-height:1.5">View the detailed PDF with dimensions — downloadable and printable.</div>' +
-        '</div>' +
-        '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-          '<a class="pd-btn-primary" href="' + p.pdfViewerUrl + '" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">View Full PDF →</a>' +
-          (p.pdfFile ? '<a class="pd-btn-outline" href="' + p.pdfFile + '" download style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">Download</a>' : '') +
-        '</div>' +
-      '</div>';
+  var btnBase = 'text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:4px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:.02em;border:1.5px solid transparent;transition:background .15s,color .15s;cursor:pointer;';
+  var btnPrimary = btnBase + 'background:var(--gold);color:#fff;border-color:var(--gold);';
+  var btnOutline = btnBase + 'background:#fff;color:var(--navy);border-color:var(--navy);';
+  var cardOpen = '<div style="background:var(--gold-light);border:1px solid var(--gold-bd);border-radius:8px;padding:1.1rem 1.25rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between">';
+  var infoBlock = function(title, sub) {
+    return '<div style="min-width:240px">' +
+      '<div style="font-family:var(--serif);font-size:18px;font-weight:500;color:var(--navy);margin-bottom:2px">' + title + '</div>' +
+      '<div style="font-size:12px;color:var(--gray-text);line-height:1.5">' + sub + '</div>' +
+    '</div>';
+  };
+  if (p.pdfViewerUrl && p.pdfFile) {
+    pdfCtaEl.innerHTML = cardOpen +
+      infoBlock('Full architectural floor plan', 'View the detailed PDF with dimensions — downloadable and printable.') +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+        '<a href="' + p.pdfViewerUrl + '" style="' + btnPrimary + '">View Full PDF →</a>' +
+        '<a href="' + p.pdfFile + '" download style="' + btnOutline + '">Download</a>' +
+      '</div>' +
+    '</div>';
   } else {
-    pdfCtaEl.innerHTML = '';
+    pdfCtaEl.innerHTML = cardOpen +
+      infoBlock('Want the full architectural floor plan?', 'Request the detailed ' + p.name + ' PDF and our team will send it over — with dimensions and exterior options.') +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+        '<a href="https://brightviewhomes.us/contact/?plan=' + encodeURIComponent(p.name) + '" target="_blank" style="' + btnPrimary + '">Request Full PDF →</a>' +
+      '</div>' +
+    '</div>';
   }
 
   document.getElementById('pd-floorplan-canvas').innerHTML = p.floorPlanImg
