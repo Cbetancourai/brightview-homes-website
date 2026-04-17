@@ -44,7 +44,7 @@ html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #ff
 
 .bv-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--nav-h); background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; border-bottom: 2px solid var(--gold); }
 .nav-logo { text-decoration: none; display: flex; align-items: center; }
-.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
+.nav-logo img { height: 44px;  }
 .nav-links { display: flex; gap: 1.75rem; }
 .nav-links a { font-size: 13px; color: rgba(255,255,255,.75); text-decoration: none; cursor: pointer; transition: color .15s; letter-spacing: .02em; }
 .nav-links a:hover { color: var(--gold); }
@@ -161,7 +161,7 @@ html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #ff
   font-family: var(--serif); font-size: 20px; font-weight: 500;
   color: #fff; text-decoration: none; display: flex; align-items: center; gap: 6px;
 }
-.mobile-nav-logo img { height: 28px; filter: brightness(0) invert(1); }
+.mobile-nav-logo img { height: 36px;  }
 .mobile-nav-close {
   width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
   background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.7);
@@ -217,7 +217,7 @@ html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #ff
 <body>
 
 <nav class="bv-nav">
-  <a class="nav-logo" href="index.html"><img src="logo.png" alt="Brightview Homes"></a>
+  <a class="nav-logo" href="index.html"><img src="logo-nav.png" alt="Brightview Homes"></a>
   <div class="nav-links">
     <a href="communities.html">Where We Build</a>
     <a href="floor-plans.html">Floor Plans</a>
@@ -239,7 +239,7 @@ html, body { font-family: 'DM Sans', sans-serif; color: #1E3A52; background: #ff
 <!-- MOBILE NAV OVERLAY -->
 <div class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
   <div class="mobile-nav-header">
-    <a class="mobile-nav-logo" href="index.html"><img src="logo.png" alt="Brightview Homes"></a>
+    <a class="mobile-nav-logo" href="index.html"><img src="logo-nav.png" alt="Brightview Homes"></a>
     <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>

@@ -445,7 +445,7 @@ def render(p):
 <body>
 
 <nav class="bv-nav">
-  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Brightview Homes"></a>
+  <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Brightview Homes"></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
     <a href="floor-plans.html" class="active">Floor Plans</a>
