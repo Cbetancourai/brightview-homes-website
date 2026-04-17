@@ -760,6 +760,7 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; color: #1E3A52; b
         <p class="p2-about-text" id="p2-about-text"></p>
         <ul class="p2-highlights" id="p2-highlights"></ul>
         <div class="p2-tags" id="p2-tags"></div>
+        <div id="p2-city-links" style="margin-top:1.75rem"></div>
       </div>
 
       <div class="fp-section">
@@ -901,7 +902,8 @@ var COUNTIES = [
     highlights:['Available lots in Tampa, Brandon, and Riverview','Minutes from downtown Tampa, Ybor City, and Tampa Bay','Strong employment — healthcare, finance, tech, and Port Tampa Bay','Direct access to Tampa International Airport and I-275','All 10 floor plans available'] },
   { id:'lake',        name:'Lake County',        region:'Central',  cities:'Clermont · Leesburg · Mount Dora',          lat:28.7600, lng:-81.8329,
     desc:'Named for its more than 1,000 inland lakes, Lake County is one of the most scenic counties in Central Florida. Brightview Homes builds in Clermont, Leesburg, and Mount Dora — communities with a small-town feel and a big Florida lifestyle.',
-    highlights:['Available lots in Clermont, Leesburg, and Mount Dora','Scenic lake views and year-round outdoor recreation','30 minutes from Walt Disney World and Orlando attractions','Charming historic downtowns and growing communities','All 10 floor plans available'] },
+    highlights:['Available lots in Clermont, Leesburg, and Mount Dora','Scenic lake views and year-round outdoor recreation','30 minutes from Walt Disney World and Orlando attractions','Charming historic downtowns and growing communities','All 10 floor plans available'],
+    cityLinks:[{slug:'clermont',name:'Clermont'},{slug:'mount-dora',name:'Mount Dora'}] },
   { id:'lee',         name:'Lee County',         region:'South',    cities:'Fort Myers · Cape Coral · Bonita Springs',  lat:26.5629, lng:-81.8723,
     desc:'Lee County anchors Southwest Florida, centered on Fort Myers and Cape Coral — two of the fastest-growing cities in the United States. Brightview Homes builds scatter-lot homes for buyers drawn to the Gulf Coast lifestyle.',
     highlights:['Available lots in Fort Myers, Cape Coral, and Bonita Springs','Gateway to Gulf Islands National Seashore and Lee County beaches','One of the fastest-growing metro areas in the nation','Southwest Florida International Airport and I-75 access','All 10 floor plans available'] },
@@ -913,25 +915,30 @@ var COUNTIES = [
     highlights:['Available lots in Ocala, Belleview, and Silver Springs Shores','Lower cost of living with strong land value appreciation','Adjacent to Silver Springs State Park and Ocala National Forest','Florida\'s Turnpike and I-75 provide easy access south to Orlando','All 10 floor plans available'] },
   { id:'orange',      name:'Orange County',      region:'Central',  cities:'Orlando · Winter Park · Ocoee',             lat:28.5383, lng:-81.3792,
     desc:'Build a brand-new home in the heart of Central Florida. Brightview Homes builds on scatter lots across Orlando, Winter Park, and Ocoee — delivering new construction quality in the county\'s most sought-after neighborhoods.',
-    highlights:['Available lots across Orlando, Winter Park, and Ocoee','Central location near major employers, dining, and entertainment','Easy access to Orlando International Airport and I-4','Close to theme parks, medical centers, and universities','All 10 floor plans available'] },
+    highlights:['Available lots across Orlando, Winter Park, and Ocoee','Central location near major employers, dining, and entertainment','Easy access to Orlando International Airport and I-4','Close to theme parks, medical centers, and universities','All 10 floor plans available'],
+    cityLinks:[{slug:'orlando',name:'Orlando'},{slug:'winter-garden',name:'Winter Garden'}] },
   { id:'osceola',     name:'Osceola County',     region:'Central',  cities:'Kissimmee · St. Cloud · Celebration',       lat:28.1549, lng:-81.0977,
     desc:'Osceola County is one of Central Florida\'s fastest-growing areas. Brightview Homes builds on scatter lots in Kissimmee, St. Cloud, and the Celebration corridor, with direct access to Florida\'s Turnpike and US-192.',
-    highlights:['Available lots in Kissimmee, St. Cloud, and Celebration area','Rapidly growing county with strong infrastructure investment','Near Florida\'s Turnpike, US-192, and major employment centers','Strong short-term and long-term rental demand','All 10 floor plans available'] },
+    highlights:['Available lots in Kissimmee, St. Cloud, and Celebration area','Rapidly growing county with strong infrastructure investment','Near Florida\'s Turnpike, US-192, and major employment centers','Strong short-term and long-term rental demand','All 10 floor plans available'],
+    cityLinks:[{slug:'kissimmee',name:'Kissimmee'},{slug:'st-cloud',name:'St. Cloud'}] },
   { id:'pasco',       name:'Pasco County',       region:'Gulf',     cities:'Wesley Chapel · New Port Richey · Zephyrhills', lat:28.3239, lng:-82.4358,
     desc:'Pasco County is one of Florida\'s top-five fastest-growing counties, fueled by rapid development in Wesley Chapel and Tampa\'s northward expansion. Brightview Homes builds scatter-lot homes for buyers seeking value and long-term growth.',
     highlights:['Available lots in Wesley Chapel, New Port Richey, and Zephyrhills','Top-5 fastest-growing county in Florida','Excellent access to I-75, I-275, and US-19','Growing retail, dining, medical, and school infrastructure','All 10 floor plans available'] },
   { id:'polk',        name:'Polk County',        region:'Central',  cities:'Lakeland · Winter Haven · Haines City',     lat:27.9904, lng:-81.9549,
     desc:'Polk County sits at the geographic heart of Florida, midway between Orlando and Tampa on the I-4 corridor. Brightview Homes builds scatter-lot homes in Lakeland, Winter Haven, and Haines City — some of Florida\'s most affordable and fastest-growing communities.',
-    highlights:['Available lots in Lakeland, Winter Haven, and Haines City','Midpoint between Orlando and Tampa on the I-4 corridor','Home to Florida Polytechnic University and growing tech sector','Lower cost of living with strong long-term appreciation','All 10 floor plans available'] },
+    highlights:['Available lots in Lakeland, Winter Haven, and Haines City','Midpoint between Orlando and Tampa on the I-4 corridor','Home to Florida Polytechnic University and growing tech sector','Lower cost of living with strong long-term appreciation','All 10 floor plans available'],
+    cityLinks:[{slug:'lakeland',name:'Lakeland'},{slug:'winter-haven',name:'Winter Haven'}] },
   { id:'sarasota',    name:'Sarasota County',    region:'Gulf',     cities:'Sarasota · Venice · North Port',            lat:27.3364, lng:-82.5307,
     desc:'Sarasota County is renowned as one of Florida\'s premier Gulf Coast destinations — home to world-class beaches, arts, and dining. Brightview Homes builds scatter-lot new homes in Sarasota, Venice, and North Port.',
     highlights:['Available lots in Sarasota, Venice, and North Port','Minutes from Siesta Key and world-ranked Gulf Coast beaches','Home to the Ringling Museum and vibrant arts and dining scene','One of Florida\'s most desirable retirement and relocation destinations','All 10 floor plans available'] },
   { id:'seminole',    name:'Seminole County',    region:'Central',  cities:'Sanford · Lake Mary · Longwood',            lat:28.7175, lng:-81.2345,
     desc:'Brightview Homes builds on scatter lots throughout Seminole County, from Sanford to Lake Mary and Longwood. Each home is built to order on an available lot — giving you the flexibility of new construction in an established neighborhood.',
-    highlights:['Available lots in Sanford, Lake Mary, and Longwood','Highly rated Seminole County public schools throughout','Minutes from downtown Orlando and SR-417 / I-4 corridors','Close to Wekiva Springs, the St. Johns River, and major employers','All 10 floor plans available'] },
+    highlights:['Available lots in Sanford, Lake Mary, and Longwood','Highly rated Seminole County public schools throughout','Minutes from downtown Orlando and SR-417 / I-4 corridors','Close to Wekiva Springs, the St. Johns River, and major employers','All 10 floor plans available'],
+    cityLinks:[{slug:'sanford',name:'Sanford'},{slug:'lake-mary',name:'Lake Mary'}] },
   { id:'volusia',     name:'Volusia County',     region:'Atlantic', cities:'DeLand · Daytona Beach · New Smyrna',       lat:29.0469, lng:-81.0756,
     desc:'Volusia County stretches from the St. Johns River to the Atlantic Coast, encompassing DeLand, Daytona Beach, and New Smyrna Beach. Brightview Homes builds scatter-lot homes throughout the county for buyers seeking coastal proximity and a relaxed Florida lifestyle.',
-    highlights:['Available lots in DeLand, Daytona Beach, and New Smyrna Beach','Atlantic beach access and the Intracoastal Waterway throughout','Home to Stetson University and a vibrant historic downtown DeLand','Easy access to I-4 and US-1 for commuters','All 10 floor plans available'] }
+    highlights:['Available lots in DeLand, Daytona Beach, and New Smyrna Beach','Atlantic beach access and the Intracoastal Waterway throughout','Home to Stetson University and a vibrant historic downtown DeLand','Easy access to I-4 and US-1 for commuters','All 10 floor plans available'],
+    cityLinks:[{slug:'deland',name:'DeLand'},{slug:'new-smyrna-beach',name:'New Smyrna Beach'}] }
 ];
 
 var PLANS = [
@@ -1118,6 +1125,18 @@ function openCounty(id) {
   document.getElementById('p2-tags').innerHTML = [
     'Single-family homes', 'Scatter lots', '10 floor plans', 'From $269,990', c.region + ' Florida'
   ].map(function(t) { return '<span class="p2-tag">' + t + '</span>'; }).join('');
+
+  var cityLinksEl = document.getElementById('p2-city-links');
+  if (c.cityLinks && c.cityLinks.length) {
+    cityLinksEl.innerHTML = '<div style="font-family:var(--serif);font-size:18px;font-weight:500;color:var(--navy);margin-bottom:.75rem">Explore cities in ' + c.name + '</div>' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+      c.cityLinks.map(function(cl) {
+        return '<a href="new-homes-' + cl.slug + '.html" style="display:inline-flex;align-items:center;padding:8px 16px;border:1.5px solid var(--gold);border-radius:4px;color:var(--navy);background:var(--gold-light);text-decoration:none;font-size:13px;font-weight:500;transition:background .15s,color .15s" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'var(--gold-light)\';this.style.color=\'var(--navy)\'">New homes in ' + cl.name + ' →</a>';
+      }).join('') +
+      '</div>';
+  } else {
+    cityLinksEl.innerHTML = '';
+  }
 
   ['fp-f-style','fp-f-price','fp-f-beds'].forEach(function(fid) { document.getElementById(fid).value = ''; });
   document.getElementById('fp-f-sort2').value = 'price';
