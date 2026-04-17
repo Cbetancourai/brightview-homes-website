@@ -521,6 +521,34 @@ PLAN_DISPLAY = {
 }
 
 
+def build_faqs(city):
+    """Return list of (question, answer) tuples for this city."""
+    name = city["name"]
+    county = city["county"]
+    return [
+        (
+            f"Does Brightview Homes build new homes in {name}, FL?",
+            f"Yes. Brightview builds scatter-lot new construction homes in {name} and throughout {county} County. Whether you already own a lot or want us to find one, we build one of our 10 floor plans on an individual parcel rather than inside a master-planned subdivision — which is how you get new construction in established {name} neighborhoods.",
+        ),
+        (
+            f"How much does it cost to build a new home in {name}?",
+            f"Brightview base pricing starts at $269,990 for our Cambria and Tribeca plans (1,665 sq ft) and goes to $559,990 for the 3,479 sq ft Stephanie Estate — all before lot cost and selections. {name} lot pricing and {county} County impact fees affect the all-in price. We'll give you an itemized, transparent quote specific to the lot and plan at consultation.",
+        ),
+        (
+            f"Does Brightview have available lots in {name} right now?",
+            f"Lot availability in {name} changes weekly. Some lots we've acquired are under contract and available for a Brightview build; others are listed through our brokerage (LPT Realty). If you don't see active inventory, we also help you find and evaluate open-market lots in {name} and throughout {county} County. Call (321) 310-2849 or email through the contact form for current availability.",
+        ),
+        (
+            f"How long does permitting take in {county} County?",
+            f"Permitting in {county} County typically takes 6–12 weeks from application submission to issued permit, depending on complexity (standard infill vs. wetlands, flood zone, or HOA architectural review). Brightview handles the full permit process — including impact fees, tap fees, and inspections — so you don't navigate the county on your own.",
+        ),
+        (
+            f"Which Brightview floor plans work best in {name}?",
+            f"Any of our 10 floor plans can be built on a {name} scatter lot, but the most popular choices for {county} County buyers are: " + ", ".join(PLAN_DISPLAY[pid].split(" — ")[0] for pid in city["featured_plans"]) + f". You can browse all 10 on our <a href='floor-plans.html'>floor plans page</a> or view the full architectural PDF for any plan.",
+        ),
+    ]
+
+
 def render(city):
     slug = city["slug"]
     url = f"https://brightviewhomes.us/new-homes-{slug}.html"
@@ -582,6 +610,24 @@ def render(city):
         for pid in city["featured_plans"]
     )
 
+    faqs = build_faqs(city)
+    faq_html = "".join(
+        f'<details style="border-top:1px solid rgba(30,58,82,.12);padding:1.1rem 0"{" open" if i == 0 else ""}><summary style="font-family:var(--serif);font-size:20px;font-weight:500;color:var(--navy);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem">{q}<span style="color:var(--gold);font-size:20px">+</span></summary><p style="font-size:15px;color:var(--navy);line-height:1.75;margin-top:.9rem">{a}</p></details>'
+        for i, (q, a) in enumerate(faqs)
+    )
+    faq_schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": q,
+                "acceptedAnswer": {"@type": "Answer", "text": html.unescape(a.replace("<a href='floor-plans.html'>", "").replace("</a>", ""))},
+            }
+            for q, a in faqs
+        ],
+    }
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -609,6 +655,7 @@ def render(city):
 <link rel="stylesheet" href="bv-landing.css">
 <script type="application/ld+json">{json.dumps(jsonld)}</script>
 <script type="application/ld+json">{json.dumps(bc_jsonld)}</script>
+<script type="application/ld+json">{json.dumps(faq_schema)}</script>
 </head>
 <body>
 
@@ -690,6 +737,16 @@ def render(city):
       <h2>Brightview plans that work well in {city['name']}</h2>
       <p>Every Brightview floor plan is available as a scatter-lot build in {city['name']}. These are the most popular plans our {city['county']} County buyers choose — but you can filter and compare all 10 plans on our <a href="floor-plans.html">floor plans page</a>.</p>
       <div class="grid-3">{plan_cards}</div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="section-inner">
+      <div class="section-eyebrow">★ {city['name']} FAQ</div>
+      <h2>{city['name']} new-home questions</h2>
+      <div style="max-width:820px">
+        {faq_html}
+      </div>
     </div>
   </section>
 

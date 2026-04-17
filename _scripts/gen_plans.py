@@ -303,6 +303,38 @@ def city_display(slug):
     return slug.replace("-", " ").title().replace(" Fl", " FL")
 
 
+def build_faqs(p):
+    """Return list of (question, answer) tuples for this plan."""
+    name = p["name"]
+    sqft = f"{p['sqft']:,}"
+    price = f"${p['price']:,}"
+    garage = p["garage"]
+    style = p["style"]
+    story_word = "single-story" if p["stories"] == 1 else "two-story"
+    return [
+        (
+            f"How much does the {name} floor plan cost?",
+            f"The {name} starts at {price} for the base floor plan. That includes Brightview's standard finish package (quartz kitchen, wood-look flooring, stainless appliances, impact-rated windows where required, covered rear lanai), but does not include lot cost, site prep, impact fees, or structural options. We'll give you an itemized quote specific to your lot and selections at consultation.",
+        ),
+        (
+            f"Can I modify the {name} floor plan?",
+            f"Yes, within reason. The {name} offers structural options including extended lanais, alternate garage configurations, and in some elevations a bonus room. Larger modifications — moving load-bearing walls, changing the overall footprint, adding a second story to a Ranch plan — are possible but require a custom-plan review and usually add both cost and timeline. We'll quote honestly on any change.",
+        ),
+        (
+            f"How big of a lot do I need to build the {name}?",
+            f"The {name} is a {sqft} sq ft {style} home with a {garage}-car garage. For a standard elevation, we typically recommend a minimum lot width of 50–60 feet and a buildable depth sufficient for the home footprint plus setbacks, driveway, and a covered rear lanai. Every county and HOA has different setback requirements — send us your parcel and we'll confirm fit in a free feasibility review.",
+        ),
+        (
+            f"What exterior styles are available for the {name}?",
+            f"The {name} is available in multiple Brightview exterior styles — typically Craftsman, Florida Traditional, Modern Farmhouse, and Coastal, with Mediterranean available on larger plans. Each exterior shares the same floor plan but varies the roofline, window proportions, porch details, and siding package. You can pick the style that fits your neighborhood and HOA architectural guidelines.",
+        ),
+        (
+            f"How long does it take to build the {name}?",
+            f"A typical {name} build runs 8–12 months from signed contract to keys. Breakdown: feasibility and plan review (3–5 weeks), permit application and approval (6–12 weeks depending on county), site prep and foundation (3–4 weeks), vertical construction (4–6 months for a {story_word} home), and final inspections and CO (2–4 weeks). Polk and Volusia typically permit fastest; Orange and Seminole take longer.",
+        ),
+    ]
+
+
 def render(p):
     slug = p["slug"]
     url = f"https://brightviewhomes.us/{slug}.html"
@@ -361,6 +393,20 @@ def render(p):
         for c in p["cities"]
     )
 
+    faqs = build_faqs(p)
+    faq_html = "".join(
+        f'<details style="border-top:1px solid rgba(30,58,82,.12);padding:1.1rem 0"{" open" if i == 0 else ""}><summary style="font-family:var(--serif);font-size:20px;font-weight:500;color:var(--navy);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem">{q}<span style="color:var(--gold);font-size:20px">+</span></summary><p style="font-size:15px;color:var(--navy);line-height:1.75;margin-top:.9rem">{html.escape(a)}</p></details>'
+        for i, (q, a) in enumerate(faqs)
+    )
+    faq_schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
+            for q, a in faqs
+        ],
+    }
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -394,6 +440,7 @@ def render(p):
 </style>
 <script type="application/ld+json">{json.dumps(jsonld)}</script>
 <script type="application/ld+json">{json.dumps(bc_jsonld)}</script>
+<script type="application/ld+json">{json.dumps(faq_schema)}</script>
 </head>
 <body>
 
@@ -480,6 +527,16 @@ def render(p):
       <h2>Where Brightview builds the {p['name']}</h2>
       <p>The {p['name']} is available as a scatter-lot build across all 16 Central Florida counties Brightview serves. These cities are where it's been most popular:</p>
       <div class="grid-3">{city_cards}</div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="section-inner">
+      <div class="section-eyebrow">★ {p['name']} FAQ</div>
+      <h2>Common questions about the {p['name']}</h2>
+      <div style="max-width:820px">
+        {faq_html}
+      </div>
     </div>
   </section>
 
