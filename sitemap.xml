@@ -37,6 +37,12 @@
   <url><loc>https://brightviewhomes.us/new-homes-st-cloud.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://brightviewhomes.us/new-homes-lakeland.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://brightviewhomes.us/new-homes-winter-haven.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://brightviewhomes.us/new-homes-oviedo.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://brightviewhomes.us/new-homes-winter-park.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://brightviewhomes.us/new-homes-port-orange.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://brightviewhomes.us/new-homes-groveland.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://brightviewhomes.us/new-homes-celebration.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://brightviewhomes.us/new-homes-davenport.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
 
   <!-- Plan PDF viewer URLs -->
   <url><loc>https://brightviewhomes.us/plan-pdf.html?plan=cambria</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
